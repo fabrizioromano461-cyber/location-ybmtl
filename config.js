@@ -26,4 +26,18 @@ module.exports = {
   // URL de l'API du CRM. Les demandes de reservation y sont transferees
   // automatiquement (creation d'un prospect + notification courriel).
   crmApiUrl: process.env.CRM_API_URL || 'http://127.0.0.1:8000',
+
+  // Envoi de courriel directement par le site (independant du CRM).
+  // Permet de recevoir une notification meme quand le site est en ligne
+  // et que l'ordinateur/CRM est eteint. Utilise Gmail SMTP (mot de passe
+  // d'application). Les valeurs sensibles viennent de .env / des variables
+  // d'environnement Render.
+  mail: {
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT, 10) || 587,
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASSWORD || '',
+    // Adresse qui recoit les notifications de nouvelles demandes.
+    notify: process.env.NOTIFY_EMAIL || process.env.SMTP_USER || '',
+  },
 };

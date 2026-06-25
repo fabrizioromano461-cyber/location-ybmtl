@@ -114,8 +114,21 @@ router.post('/vehicule/:id/demande', (req, res) => {
     (message || '').trim() || null
   );
 
-  // 2. Transferer la demande au CRM (creation prospect + courriel au proprietaire).
-  //    En "fire-and-forget" : si le CRM est eteint, le site continue de fonctionner.
+  // 2. Envoyer un courriel de notification DIRECTEMENT depuis le site.
+  //    Fonctionne meme en ligne (Render) sans que l'ordinateur soit allume.
+  const mailer = require('../lib/mailer');
+  mailer.sendReservationNotification({
+    name: name.trim(),
+    email: email.trim(),
+    phone: phone.trim(),
+    vehicle: `${vehicle.make} ${vehicle.model}`,
+    depart: depart || null,
+    retour: retour || null,
+    message: (message || '').trim() || null,
+  });
+
+  // 3. Transferer la demande au CRM (creation prospect). En "fire-and-forget" :
+  //    ne marche que si le CRM local tourne ; sans effet en ligne.
   forwardToCrm({
     client_name: name.trim(),
     client_email: email.trim(),

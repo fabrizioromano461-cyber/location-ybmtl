@@ -22,3 +22,14 @@ _photos-audi-a-importer/
 .DS_Store
 npm-debug.log*
 _photos-originales-backup/
+
+# Le CRM est un projet separe (deplace ici par erreur) - ne pas l'inclure
+CRM-Location-Voiture/
+
+# Sauvegarde des photos originales (lourde, hors depot)
+Photos-originales-YBMTL-backup/
+# Captures d'ecran traInees a la racine
+/*.png
+
+# Fichiers personnels (hors site)
+dossier sans titre/
