@@ -1,0 +1,53 @@
+<%- include('partials/head', { title: 'Demandes de réservation' }) %>
+
+<div class="admin-page-head">
+  <h1>Demandes de réservation</h1>
+</div>
+
+<% if (requests.length === 0) { %>
+  <p class="muted">Aucune demande pour le moment. Les demandes envoyées via le site apparaîtront ici.</p>
+<% } else { %>
+  <div class="request-list">
+    <% requests.forEach(function(r) { %>
+      <div class="request-item <%= r.status === 'nouvelle' ? 'is-new' : '' %>">
+        <div class="request-main">
+          <div class="request-top">
+            <h3><%= r.name %></h3>
+            <% if (r.status === 'nouvelle') { %>
+              <span class="pill pill-new">Nouvelle</span>
+            <% } else { %>
+              <span class="pill pill-done">Traitée</span>
+            <% } %>
+          </div>
+          <p class="request-meta">
+            Reçue le <%= frDate(r.created_at.slice(0,10)) %>
+            &middot; Véhicule : <strong><%= r.make ? (r.make + ' ' + r.model) : 'supprimé' %></strong>
+          </p>
+          <p class="request-contact">
+            <a href="tel:<%= r.phone %>"><%= r.phone %></a> &middot;
+            <a href="mailto:<%= r.email %>"><%= r.email %></a>
+          </p>
+          <% if (r.start_date) { %>
+            <p class="request-dates">Dates souhaitées : <%= frDate(r.start_date) %> au <%= frDate(r.end_date) %></p>
+          <% } %>
+          <% if (r.message) { %>
+            <p class="request-message">&laquo; <%= r.message %> &raquo;</p>
+          <% } %>
+        </div>
+        <div class="request-actions">
+          <form method="post" action="/admin/demandes/<%= r.id %>/statut">
+            <button type="submit" class="btn btn-sm <%= r.status === 'nouvelle' ? 'btn-primary' : 'btn-outline' %>">
+              <%= r.status === 'nouvelle' ? 'Marquer traitée' : 'Rouvrir' %>
+            </button>
+          </form>
+          <form method="post" action="/admin/demandes/<%= r.id %>/supprimer"
+                onsubmit="return confirm('Supprimer cette demande ?');">
+            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+<% } %>
+
+<%- include('partials/foot') %>

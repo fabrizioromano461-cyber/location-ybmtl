@@ -1,0 +1,44 @@
+<%- include('partials/header', { title: 'Conditions & Contrat - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/">&larr; Retour à l'accueil</a>
+
+  <div class="conditions-content">
+    <h1>Conditions & Contrat de Location</h1>
+
+    <p>Avant de louer un véhicule chez Location YBMTL, veuillez lire attentivement nos conditions générales et notre contrat de location.</p>
+
+    <div class="contract-section">
+      <h2>Contrat de Location</h2>
+      <p>Vous pouvez consulter et télécharger notre contrat de location complet ci-dessous.</p>
+      <a href="/docs/Copie de Contrat YBMTL v4 final.pdf" class="btn btn-primary" download>
+        Télécharger le contrat (PDF)
+      </a>
+      <p class="muted small">4 pages | PDF | Dernière mise à jour : juin 2026</p>
+    </div>
+
+    <div class="conditions-summary">
+      <h2>Résumé des conditions principales</h2>
+      <ul>
+        <li><strong>Réservation :</strong> Les réservations se font par demande en ligne. Nous confirmons par téléphone ou courriel.</li>
+        <li><strong>Paiement :</strong> Aucun paiement en ligne. Le paiement se fait directement avec Location YBMTL au moment de la location (chèque, virement, cash).</li>
+        <li><strong>Assurance :</strong> Une assurance automobile est obligatoire. Nous acceptons votre assurance personnelle ou vous pouvez souscrire à notre assurance location.</li>
+        <li><strong>Dépôt de garantie :</strong> Un dépôt de garantie peut être demandé, selon la durée de la location et les options choisies.</li>
+        <li><strong>Kilométrage :</strong> Les conditions de kilométrage (limité ou illimité) sont spécifiques à chaque véhicule et précisées lors de la confirmation.</li>
+        <li><strong>État du véhicule :</strong> Un état des lieux est établi avant et après la location pour la protection de chacun.</li>
+        <li><strong>Âge minimum :</strong> Le conducteur principal doit être âgé de 25 ans minimum et posséder un permis de conduire valide depuis au moins 3 ans.</li>
+      </ul>
+    </div>
+
+    <div class="conditions-contact">
+      <h2>Questions ?</h2>
+      <p>Pour toute question sur nos conditions ou notre contrat, n'hésitez pas à nous contacter :</p>
+      <p>
+        <strong>Telephone :</strong> <a href="tel:+14384539983"><%= company.phone %></a><br>
+        <strong>Courriel :</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

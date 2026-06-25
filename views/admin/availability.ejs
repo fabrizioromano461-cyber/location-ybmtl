@@ -1,0 +1,23 @@
+<%- include('partials/head', { title: 'Disponibilité' }) %>
+
+<div class="admin-page-head">
+  <h1>Disponibilité : <%= vehicle.make %> <%= vehicle.model %></h1>
+  <a href="/admin/vehicules/<%= vehicle.id %>/modifier" class="btn btn-sm btn-outline">&larr; Retour au véhicule</a>
+</div>
+
+<div class="availability-intro">
+  <p>Cliquez sur une journée pour la <strong>bloquer</strong> (véhicule indisponible / loué).
+     Cliquez de nouveau pour la <strong>libérer</strong>. Les changements sont enregistrés automatiquement.</p>
+  <div class="calendar-legend">
+    <span><i class="dot dot-free"></i> Disponible</span>
+    <span><i class="dot dot-blocked"></i> Bloquée (indisponible)</span>
+  </div>
+</div>
+
+<div id="adminCalendar" class="calendar calendar-admin"
+     data-vehicle="<%= vehicle.id %>"
+     data-blocked='<%= JSON.stringify(blocked) %>'></div>
+
+<script src="/js/admin-availability.js"></script>
+
+<%- include('partials/foot') %>

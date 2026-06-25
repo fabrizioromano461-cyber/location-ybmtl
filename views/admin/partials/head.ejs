@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== 'undefined' ? title : 'Panneau admin' %> - Location YBMTL</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="/img/logo.png">
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a class="admin-brand" href="/admin">
+        <img src="/img/logo-rogne.png" alt="Location YBMTL">
+      </a>
+      <nav class="admin-nav">
+        <a href="/admin" class="<%= path === '/admin' ? 'active' : '' %>">Tableau de bord</a>
+        <a href="/admin/vehicules" class="<%= path.startsWith('/admin/vehicules') ? 'active' : '' %>">Véhicules</a>
+        <a href="/admin/demandes" class="<%= path.startsWith('/admin/demandes') ? 'active' : '' %>">Demandes</a>
+      </nav>
+      <div class="admin-user">
+        <a href="/" target="_blank" class="admin-viewsite">Voir le site &#8599;</a>
+        <form method="post" action="/admin/deconnexion">
+          <button type="submit" class="btn btn-sm btn-outline">Déconnexion</button>
+        </form>
+      </div>
+    </div>
+  </header>
+  <main class="admin-main">
+    <div class="admin-container">

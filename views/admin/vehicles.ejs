@@ -1,0 +1,43 @@
+<%- include('partials/head', { title: 'Véhicules' }) %>
+
+<div class="admin-page-head">
+  <h1>Véhicules</h1>
+  <a href="/admin/vehicules/nouveau" class="btn btn-primary">+ Ajouter un véhicule</a>
+</div>
+
+<% if (vehicles.length === 0) { %>
+  <p class="muted">Aucun véhicule. Cliquez sur "Ajouter un véhicule" pour commencer.</p>
+<% } else { %>
+  <table class="admin-table">
+    <thead>
+      <tr><th>Véhicule</th><th>Année</th><th>Tarif/sem.</th><th>Photos</th><th>Statut</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% vehicles.forEach(function(v) { %>
+        <tr>
+          <td><strong><%= v.make %> <%= v.model %></strong></td>
+          <td><%= v.year %></td>
+          <td><%= money(v.weekly_rate) %></td>
+          <td><%= v.photoCount %></td>
+          <td>
+            <% if (v.is_published) { %>
+              <span class="pill pill-done">Publié</span>
+            <% } else { %>
+              <span class="pill pill-muted">Masqué</span>
+            <% } %>
+          </td>
+          <td class="row-actions">
+            <a href="/admin/vehicules/<%= v.id %>/modifier" class="btn btn-sm btn-outline">Modifier</a>
+            <a href="/admin/vehicules/<%= v.id %>/disponibilite" class="btn btn-sm btn-outline">Disponibilité</a>
+            <form method="post" action="/admin/vehicules/<%= v.id %>/supprimer"
+                  onsubmit="return confirm('Supprimer définitivement ce véhicule et ses photos ?');">
+              <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('partials/foot') %>

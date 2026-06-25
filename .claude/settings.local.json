@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"public/docs\")",
+      "Bash(open \"public/docs\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(cd \"/Users/lassidy10/Desktop/CRM-Location-Voiture\" && find . -type f -name \"*.py\" -o -name \"*.tsx\" -o -name \"*.ts\" -o -name \"*.json\" | grep -v node_modules | sort)",
+      "Bash(curl -s \"http://localhost:5173/api/public/demandes\")",
+      "Bash(python3 -m json.tool)"
+    ]
+  }
+}

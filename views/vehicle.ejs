@@ -1,0 +1,179 @@
+<%- include('partials/header', { title: vehicle.make + ' ' + vehicle.model + ' - Location YBMTL' }) %>
+
+<div class="container vehicle-detail">
+  <a class="back-link" href="/">&larr; Retour à l'inventaire</a>
+
+  <div class="detail-grid">
+    <!-- Colonne gauche : galerie + infos -->
+    <div class="detail-main">
+      <div class="gallery">
+        <% if (photos.length > 0) { %>
+          <div class="gallery-main">
+            <img id="galleryMain" src="/uploads/<%= photos[0].filename %>"
+                 alt="<%= vehicle.make %> <%= vehicle.model %>">
+          </div>
+          <% if (photos.length > 1) { %>
+            <div class="gallery-thumbs">
+              <% photos.forEach(function(p, i) { %>
+                <button type="button" class="thumb <%= i === 0 ? 'active' : '' %>"
+                        data-src="/uploads/<%= p.filename %>">
+                  <img src="/uploads/<%= p.filename %>" alt="Photo <%= i + 1 %>" loading="lazy">
+                </button>
+              <% }); %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="gallery-main">
+            <img src="/img/placeholder-car.svg" alt="<%= vehicle.make %> <%= vehicle.model %>">
+          </div>
+        <% } %>
+      </div>
+
+      <div class="detail-header">
+        <div>
+          <h1><%= vehicle.make %> <%= vehicle.model %></h1>
+          <% if (vehicle.show_year) { %><p class="detail-sub"><%= vehicle.year %></p><% } %>
+        </div>
+        <% if (rentedToday) { %>
+          <span class="badge badge-rented">Loué actuellement</span>
+        <% } else { %>
+          <span class="badge badge-available">Disponible</span>
+        <% } %>
+      </div>
+
+      <ul class="spec-list">
+        <% if (vehicle.show_year) { %><li><span class="spec-label">Année</span><span class="spec-value"><%= vehicle.year %></span></li><% } %>
+        <li><span class="spec-label">Transmission</span><span class="spec-value"><%= vehicle.transmission %></span></li>
+        <li><span class="spec-label">Portes</span><span class="spec-value"><%= vehicle.doors %></span></li>
+        <li><span class="spec-label">Kilométrage</span><span class="spec-value"><%= vehicle.mileage_policy %></span></li>
+      </ul>
+
+      <% if (vehicle.description) { %>
+        <div class="detail-description">
+          <h2>Description</h2>
+          <p><%= vehicle.description %></p>
+        </div>
+      <% } %>
+
+      <div class="detail-availability">
+        <h2>Disponibilité</h2>
+        <p class="muted">Les dates en gris sont déjà réservées ou indisponibles. Ce calendrier est informatif&nbsp;: la réservation se fait par demande ci-dessous.</p>
+        <div id="calendar" class="calendar" data-blocked='<%= JSON.stringify(blocked) %>'></div>
+        <div class="calendar-legend">
+          <span><i class="dot dot-free"></i> Disponible</span>
+          <span><i class="dot dot-blocked"></i> Indisponible</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite : prix + formulaire de réservation -->
+    <aside class="detail-aside">
+      <div class="price-box">
+        <div class="price-header">À partir de</div>
+        <div class="price-big"><span id="weeklyRate" style="display:none;"><%= vehicle.weekly_rate %></span><span id="blockedDates" style="display:none;"><%= JSON.stringify(blocked) %></span><%= money(vehicle.weekly_rate) %><span>/ semaine</span></div>
+        <p class="muted"><%= vehicle.mileage_policy %></p>
+        <% if (vehicle.security_deposit > 0) { %>
+          <div class="deposit-info">
+            💳 Dépôt de garantie : <strong><%= money(vehicle.security_deposit) %></strong>
+          </div>
+        <% } %>
+        <p class="muted small" style="margin-top: 0.8rem;">Minimum 1 semaine de location</p>
+      </div>
+
+      <div class="request-box" id="demande">
+        <h2>Réserver cette voiture</h2>
+        <% if (sent) { %>
+          <div class="alert alert-success">
+            ✓ Votre réservation a bien été envoyée ! Nous vous contacterons rapidement pour confirmer les détails et la disponibilité.
+          </div>
+        <% } %>
+        <% if (error) { %>
+          <div class="alert alert-error" id="formError">
+            Veuillez remplir tous les champs obligatoires.
+          </div>
+        <% } %>
+        <form method="post" action="/vehicule/<%= vehicle.id %>/demande" class="request-form" id="reservationForm">
+          <div class="form-section">
+            <h3>Vos coordonnées</h3>
+            <label>Nom complet *
+              <input type="text" name="name" id="name" required placeholder="Jean Dupont">
+            </label>
+            <label>Téléphone *
+              <input type="tel" name="phone" id="phone" required placeholder="(514) 000-0000">
+            </label>
+            <label>Courriel *
+              <input type="email" name="email" id="email" required placeholder="vous@exemple.com">
+            </label>
+          </div>
+
+          <div class="form-section">
+            <h3>Dates de location</h3>
+            <p class="muted small">Cliquez sur les dates du calendrier ou utilisez les champs ci-dessous.</p>
+            <div id="bookingCalendar" class="booking-calendar"></div>
+            <div class="form-row">
+              <label>Départ *
+                <input type="date" name="depart" id="depart" required readonly style="background: #f5f7fb; cursor: pointer;">
+              </label>
+              <label>Retour *
+                <input type="date" name="retour" id="retour" required readonly style="background: #f5f7fb; cursor: pointer;">
+              </label>
+            </div>
+            <div id="priceError" class="alert alert-error" style="display:none; margin-top:0.5rem;">
+              La date de retour doit être après la date de départ.
+            </div>
+          </div>
+
+          <div class="price-summary">
+            <div class="price-line">
+              <span>Prix estimé :</span>
+              <span id="totalPrice">—</span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <label>Message (optionnel)
+              <textarea name="message" rows="3" placeholder="Questions, options spéciales, conditions particulières..."></textarea>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-large">Réserver cette voiture</button>
+          <p class="muted small">✓ Aucun paiement en ligne. Nous confirmons votre réservation par téléphone ou courriel.</p>
+        </form>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="/js/gallery.js"></script>
+<script src="/js/calendar.js"></script>
+<script src="/js/booking-calendar.js"></script>
+<script src="/js/reservation.js"></script>
+<script>
+  // Initialiser le calendrier de réservation
+  const blockedDates = <%= JSON.stringify(blocked) %>;
+  const departInput = document.getElementById('depart');
+  const retourInput = document.getElementById('retour');
+
+  const bookingCal = new BookingCalendar('bookingCalendar', blockedDates, function(depart, retour) {
+    if (departInput) departInput.value = depart || '';
+    if (retourInput) retourInput.value = retour || '';
+
+    // Déclencher le calcul du prix
+    if (departInput) departInput.dispatchEvent(new Event('change'));
+    if (retourInput) retourInput.dispatchEvent(new Event('change'));
+  });
+
+  // Mettre à jour le calendrier quand on change les dates
+  if (departInput) {
+    departInput.addEventListener('change', function() {
+      bookingCal.setSelectedDates(this.value, retourInput ? retourInput.value : null);
+    });
+  }
+  if (retourInput) {
+    retourInput.addEventListener('change', function() {
+      bookingCal.setSelectedDates(departInput ? departInput.value : null, this.value);
+    });
+  }
+</script>
+
+<%- include('partials/footer') %>

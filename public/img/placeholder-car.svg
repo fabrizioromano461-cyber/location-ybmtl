@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-label="Photo a venir">
+  <rect width="640" height="400" fill="#eef1f5"/>
+  <g fill="none" stroke="#b8c2d0" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M150 240 l36 -70 a18 18 0 0 1 16 -10 h156 a18 18 0 0 1 16 10 l36 70"/>
+    <path d="M132 240 h344 a14 14 0 0 1 14 14 v30 a10 10 0 0 1 -10 10 h-30"/>
+    <path d="M170 294 h-38 a10 10 0 0 1 -10 -10 v-30 a14 14 0 0 1 14 -14"/>
+    <circle cx="200" cy="296" r="26" fill="#dfe5ee"/>
+    <circle cx="420" cy="296" r="26" fill="#dfe5ee"/>
+  </g>
+  <text x="320" y="350" text-anchor="middle" font-family="-apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="22" fill="#9aa6b6">Photo a venir</text>
+</svg>

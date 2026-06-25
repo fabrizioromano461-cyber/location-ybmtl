@@ -1,0 +1,111 @@
+<%- include('partials/head', { title: vehicle ? 'Modifier un véhicule' : 'Nouveau véhicule' }) %>
+
+<div class="admin-page-head">
+  <h1><%= vehicle ? 'Modifier : ' + vehicle.make + ' ' + vehicle.model : 'Ajouter un véhicule' %></h1>
+  <a href="/admin/vehicules" class="btn btn-sm btn-outline">&larr; Retour à la liste</a>
+</div>
+
+<% if (typeof saved !== 'undefined' && saved) { %>
+  <div class="alert alert-success">Modifications enregistrées.</div>
+<% } %>
+
+<div class="form-columns">
+  <!-- Formulaire des infos -->
+  <form method="post"
+        action="<%= vehicle ? '/admin/vehicules/' + vehicle.id : '/admin/vehicules' %>"
+        enctype="multipart/form-data" class="admin-form">
+    <div class="form-grid">
+      <label>Marque *
+        <input type="text" name="make" required value="<%= vehicle ? vehicle.make : '' %>" placeholder="Audi">
+      </label>
+      <label>Modèle *
+        <input type="text" name="model" required value="<%= vehicle ? vehicle.model : '' %>" placeholder="S5 Coupé">
+      </label>
+      <label>Année *
+        <input type="number" name="year" required min="1980" max="2100"
+               value="<%= vehicle ? vehicle.year : '' %>" placeholder="2020">
+      </label>
+      <label>Tarif hebdomadaire ($) *
+        <input type="number" name="weekly_rate" required min="0"
+               value="<%= vehicle ? vehicle.weekly_rate : '' %>" placeholder="600">
+      </label>
+      <label>Dépôt de garantie ($)
+        <input type="number" name="security_deposit" min="0"
+               value="<%= vehicle ? vehicle.security_deposit : '0' %>" placeholder="500">
+      </label>
+      <label>Transmission
+        <select name="transmission">
+          <% var t = vehicle ? vehicle.transmission : 'Automatique'; %>
+          <option <%= t === 'Automatique' ? 'selected' : '' %>>Automatique</option>
+          <option <%= t === 'Manuelle' ? 'selected' : '' %>>Manuelle</option>
+        </select>
+      </label>
+      <label>Nombre de portes
+        <input type="number" name="doors" min="2" max="6"
+               value="<%= vehicle ? vehicle.doors : '4' %>">
+      </label>
+      <label class="full">Politique de kilométrage
+        <input type="text" name="mileage_policy"
+               value="<%= vehicle ? vehicle.mileage_policy : 'Kilométrage illimité' %>"
+               placeholder="Kilométrage illimité, ou 200 km/jour...">
+      </label>
+      <label class="full">Description
+        <textarea name="description" rows="4" placeholder="Détails, options, état..."><%= vehicle ? (vehicle.description || '') : '' %></textarea>
+      </label>
+      <label class="checkbox full">
+        <input type="checkbox" name="is_published" value="1"
+               <%= (!vehicle || vehicle.is_published) ? 'checked' : '' %>>
+        Publié sur le site (visible par les clients)
+      </label>
+      <label class="checkbox full">
+        <input type="checkbox" name="show_year" value="1"
+               <%= (!vehicle || vehicle.show_year) ? 'checked' : '' %>>
+        Afficher l'année sur le site public
+      </label>
+      <label class="full">Ajouter des photos (vous pouvez en sélectionner plusieurs)
+        <input type="file" name="photos" accept="image/*" multiple>
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <%= vehicle ? 'Enregistrer les modifications' : 'Créer le véhicule' %>
+    </button>
+    <% if (!vehicle) { %>
+      <p class="muted small">Après la création, vous pourrez gérer les photos et la disponibilité.</p>
+    <% } %>
+  </form>
+
+  <!-- Gestion des photos existantes (uniquement en modification) -->
+  <% if (vehicle) { %>
+    <div class="photo-manager">
+      <h2>Photos (<%= photos.length %>)</h2>
+      <% if (photos.length === 0) { %>
+        <p class="muted">Aucune photo. Ajoutez-en avec le champ à gauche.</p>
+      <% } else { %>
+        <div class="photo-grid">
+          <% photos.forEach(function(p) { %>
+            <div class="photo-item <%= p.is_primary ? 'is-primary' : '' %>">
+              <img src="/uploads/<%= p.filename %>" alt="">
+              <% if (p.is_primary) { %><span class="photo-tag">Principale</span><% } %>
+              <div class="photo-actions">
+                <% if (!p.is_primary) { %>
+                  <form method="post" action="/admin/photos/<%= p.id %>/principale">
+                    <button type="submit" class="btn btn-xs btn-outline">Définir principale</button>
+                  </form>
+                <% } %>
+                <form method="post" action="/admin/photos/<%= p.id %>/supprimer"
+                      onsubmit="return confirm('Supprimer cette photo ?');">
+                  <button type="submit" class="btn btn-xs btn-danger">Supprimer</button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+      <a href="/admin/vehicules/<%= vehicle.id %>/disponibilite" class="btn btn-outline btn-block" style="margin-top:1rem">
+        Gérer la disponibilité (calendrier)
+      </a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/foot') %>

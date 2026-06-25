@@ -1,0 +1,55 @@
+<%- include('partials/header', { title: 'Location YBMTL - Location de véhicules à Montréal' }) %>
+
+<section class="hero">
+  <div class="container">
+    <h1 class="hero-title">Louez votre prochaine voiture à Montréal</h1>
+    <p class="hero-subtitle">Consultez notre inventaire, les tarifs et la disponibilité. Une demande, on s'occupe du reste.</p>
+
+    <form class="search-bar" method="get" action="/#vehicules">
+      <div class="search-field">
+        <label for="depart">Date de départ</label>
+        <input type="date" id="depart" name="depart" value="<%= search.start %>">
+      </div>
+      <div class="search-field">
+        <label for="retour">Date de retour</label>
+        <input type="date" id="retour" name="retour" value="<%= search.end %>">
+      </div>
+      <button type="submit" class="btn btn-primary search-btn">Rechercher</button>
+    </form>
+    <% if (search.hasSearch) { %>
+      <p class="search-info">
+        Véhicules disponibles du <strong><%= frDate(search.start) %></strong>
+        au <strong><%= frDate(search.end) %></strong>.
+        <a href="/#vehicules">Effacer le filtre</a>
+      </p>
+    <% } %>
+  </div>
+</section>
+
+<section class="vehicles-section" id="vehicules">
+  <div class="container">
+    <div class="section-head">
+      <h2>Notre inventaire</h2>
+      <p><%= vehicles.length %> véhicule<%= vehicles.length > 1 ? 's' : '' %>
+        <%= search.hasSearch ? 'disponible' + (vehicles.length > 1 ? 's' : '') + ' pour ces dates' : 'au total' %></p>
+    </div>
+
+    <% if (vehicles.length === 0) { %>
+      <div class="empty-state">
+        <% if (search.hasSearch) { %>
+          <p>Aucun véhicule disponible pour ces dates. Essayez d'autres dates ou <a href="/#vehicules">voyez tout l'inventaire</a>.</p>
+        <% } else { %>
+          <p>Aucun véhicule pour le moment. Revenez bientôt !</p>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="vehicle-grid">
+        <% vehicles.forEach(function(v) { %>
+          <%- include('partials/vehicle-card', { v: v }) %>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

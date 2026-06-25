@@ -1,0 +1,24 @@
+# Dependances
+node_modules/
+
+# Base de donnees et sessions (donnees locales)
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/sessions.db
+
+# Photos : pour l'hebergement gratuit (Render), on COMMIT les photos du
+# catalogue afin qu'elles survivent aux redemarrages. On ignore juste les
+# fichiers temporaires.
+public/uploads/*.tmp
+
+# Variables d'environnement (secrets)
+.env
+
+# Dossier temporaire d'import de photos (originaux HEIC, conversions)
+_photos-audi-a-importer/
+
+# Divers
+.DS_Store
+npm-debug.log*
+_photos-originales-backup/

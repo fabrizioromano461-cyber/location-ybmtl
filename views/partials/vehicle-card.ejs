@@ -1,0 +1,23 @@
+<article class="vehicle-card">
+  <a class="card-photo" href="/vehicule/<%= v.id %>">
+    <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>"
+         alt="<%= v.make %> <%= v.model %>" loading="lazy">
+    <% if (v.rentedToday) { %>
+      <span class="badge badge-rented">Loué actuellement</span>
+    <% } else { %>
+      <span class="badge badge-available">Disponible</span>
+    <% } %>
+  </a>
+  <div class="card-body">
+    <h3 class="card-title"><%= v.make %> <%= v.model %></h3>
+    <p class="card-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= v.transmission %> &middot; <%= v.doors %> portes</p>
+    <div class="card-footer">
+      <div class="card-price">
+        <span class="price-amount"><%= money(v.weekly_rate) %></span>
+        <span class="price-unit">/ semaine</span>
+      </div>
+      <div class="card-deposit">💳 Dépôt: <%= money(v.security_deposit) %></div>
+      <a class="btn btn-sm" href="/vehicule/<%= v.id %>">Voir les détails</a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,56 @@
+<%- include('partials/head', { title: 'Tableau de bord' }) %>
+
+<div class="admin-page-head">
+  <h1>Tableau de bord</h1>
+  <a href="/admin/vehicules/nouveau" class="btn btn-primary">+ Ajouter un véhicule</a>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <span class="stat-num"><%= stats.vehicles %></span>
+    <span class="stat-label">Véhicules au total</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-num"><%= stats.published %></span>
+    <span class="stat-label">Publiés (visibles)</span>
+  </div>
+  <div class="stat-card <%= stats.newRequests > 0 ? 'stat-highlight' : '' %>">
+    <span class="stat-num"><%= stats.newRequests %></span>
+    <span class="stat-label">Nouvelles demandes</span>
+  </div>
+</div>
+
+<div class="admin-section">
+  <div class="admin-section-head">
+    <h2>Dernières demandes</h2>
+    <a href="/admin/demandes">Voir toutes &rarr;</a>
+  </div>
+  <% if (recent.length === 0) { %>
+    <p class="muted">Aucune demande pour le moment.</p>
+  <% } else { %>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Date</th><th>Client</th><th>Véhicule</th><th>Dates souhaitées</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <% recent.forEach(function(r) { %>
+          <tr>
+            <td><%= frDate(r.created_at.slice(0,10)) %></td>
+            <td><%= r.name %><br><span class="muted small"><%= r.phone %></span></td>
+            <td><%= r.make ? (r.make + ' ' + r.model) : 'Véhicule supprimé' %></td>
+            <td><%= r.start_date ? (frDate(r.start_date) + ' au ' + frDate(r.end_date)) : '-' %></td>
+            <td>
+              <% if (r.status === 'nouvelle') { %>
+                <span class="pill pill-new">Nouvelle</span>
+              <% } else { %>
+                <span class="pill pill-done">Traitée</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<%- include('partials/foot') %>

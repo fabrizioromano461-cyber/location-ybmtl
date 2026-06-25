@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connexion - Panneau admin Location YBMTL</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="/img/logo.png">
+</head>
+<body class="login-body">
+  <div class="login-card">
+    <img src="/img/logo-rogne.png" alt="Location YBMTL" class="login-logo">
+    <h1>Panneau d'administration</h1>
+    <% if (error) { %>
+      <div class="alert alert-error">Identifiant ou mot de passe incorrect.</div>
+    <% } %>
+    <form method="post" action="/admin/connexion" class="login-form">
+      <label>Identifiant
+        <input type="text" name="username" autofocus required>
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+    </form>
+    <a class="login-back" href="/">&larr; Retour au site</a>
+  </div>
+</body>
+</html>
