@@ -39,5 +39,10 @@ module.exports = {
     pass: process.env.SMTP_PASSWORD || '',
     // Adresse qui recoit les notifications de nouvelles demandes.
     notify: process.env.NOTIFY_EMAIL || process.env.SMTP_USER || '',
+    // Cle API Brevo (envoi par API web). Necessaire en ligne sur Render,
+    // car Render bloque le SMTP direct. Si presente, on l'utilise en priorite.
+    brevoApiKey: process.env.BREVO_API_KEY || '',
+    // Expediteur affiche (doit etre un expediteur verifie dans Brevo).
+    sender: process.env.SENDER_EMAIL || process.env.NOTIFY_EMAIL || process.env.SMTP_USER || '',
   },
 };
