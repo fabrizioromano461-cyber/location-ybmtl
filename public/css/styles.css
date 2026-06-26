@@ -381,17 +381,40 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 .5em; }
   .form-columns { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
-  .hero-title { font-size: 1.7rem; }
-  .search-bar { flex-direction: column; align-items: stretch; }
+  /* Affichage mobile plus compact ("plus recule") : titres et espacements reduits */
+  .container { padding: 0 16px; }
+  .hero { padding: 30px 0 26px; }
+  .hero-title { font-size: 1.55rem; line-height: 1.18; }
+  .hero-subtitle { font-size: .98rem; margin-bottom: 1.4rem; }
+  .search-bar { flex-direction: column; align-items: stretch; padding: .9rem 1rem; gap: .6rem; }
   .search-field { flex: 0 0 auto; }
+  .search-field input { font-size: 16px; } /* 16px = evite le zoom auto iOS au focus */
   .search-btn { width: 100%; }
-  .header-inner { height: 60px; }
-  .brand-logo { height: 36px; }
+  .vehicles-section { padding: 26px 0 40px; }
+  .section-head { margin-bottom: 1.1rem; }
+  .section-head h2 { font-size: 1.35rem; }
+  .section-head p { font-size: .9rem; }
+  .vehicle-grid { gap: 1rem; }
+  .card-body { padding: .9rem 1rem 1rem; }
+  .card-title { font-size: 1.05rem; }
+  .header-inner { height: 58px; }
+  .brand-logo { height: 34px; }
   .main-nav { gap: .8rem; }
   .main-nav a { font-size: .88rem; }
   .main-nav a:nth-child(2) { display: none; } /* masque "Contact" sur mobile (dispo dans le pied de page) */
+  /* Pages detail / formulaires plus compacts */
+  .vehicle-detail { padding-top: 1rem; }
+  .detail-header h1 { font-size: 1.5rem; }
+  .detail-main h2 { font-size: 1.2rem; }
+  .request-box, .price-box { padding: 1.1rem; }
+  .request-box h2 { font-size: 1.1rem; }
+  .price-big { font-size: 1.5rem; }
   .form-grid { grid-template-columns: 1fr; }
   .spec-list { grid-template-columns: 1fr; }
+  .request-form input, .request-form textarea { font-size: 16px; } /* evite zoom iOS */
+  /* Conditions */
+  .conditions-content h1 { font-size: 1.5rem; }
+  /* Admin */
   .admin-header-inner { gap: 1rem; }
   .admin-nav { gap: .1rem; }
   .admin-nav a { padding: .45rem .6rem; font-size: .85rem; }
@@ -399,4 +422,11 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 .5em; }
   .request-item { flex-direction: column; }
   .request-actions { flex-direction: row; }
   .photo-grid { grid-template-columns: 1fr; }
+  .admin-table { font-size: .85rem; }
+}
+/* Tres petits ecrans (iPhone SE, etc.) : encore un peu plus compact */
+@media (max-width: 400px) {
+  .hero-title { font-size: 1.4rem; }
+  .hero-subtitle { font-size: .92rem; }
+  .section-head h2 { font-size: 1.25rem; }
 }
