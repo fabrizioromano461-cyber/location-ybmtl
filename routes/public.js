@@ -161,4 +161,25 @@ function forwardToCrm(payload) {
     });
 }
 
+// SITEMAP.XML — aide Google a indexer toutes les pages du site
+router.get('/sitemap.xml', (req, res) => {
+  const BASE = 'https://locationybmtl.ca';
+  const vehicles = db.prepare('SELECT id FROM vehicles WHERE is_published = 1').all();
+  const today = new Date().toISOString().split('T')[0];
+
+  const urls = [
+    `<url><loc>${BASE}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
+    `<url><loc>${BASE}/conditions</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`,
+    ...vehicles.map(
+      (v) =>
+        `<url><loc>${BASE}/vehicule/${v.id}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`
+    ),
+  ];
+
+  res.set('Content-Type', 'application/xml');
+  res.send(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`
+  );
+});
+
 module.exports = router;
