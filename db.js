@@ -79,4 +79,9 @@ if (!vehicleCols.includes('security_deposit')) {
   db.exec('ALTER TABLE vehicles ADD COLUMN security_deposit INTEGER NOT NULL DEFAULT 0');
 }
 
+// Corrections de noms (idempotent, s'execute a chaque demarrage) : repare une
+// base deja seedee avec les anciens noms, meme si le disque persiste.
+db.prepare("UPDATE vehicles SET make = 'BMW' WHERE make = 'BMX'").run();
+db.prepare("UPDATE vehicles SET model = 'QX70' WHERE model = 'Qx70'").run();
+
 module.exports = db;
