@@ -21,5 +21,30 @@
       </div>
     </div>
   </footer>
+
+  <!-- Donnees structurees pour Google (referencement local) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoRental",
+    "name": "<%= company.name %>",
+    "description": "Location de voiture à Montréal : location hebdomadaire d'autos à prix abordable.",
+    "url": "https://locationybmtl.ca",
+    "telephone": "<%= company.phone %>",
+    "email": "<%= company.email %>",
+    "image": "https://locationybmtl.ca/img/logo-rogne.png",
+    "priceRange": "$$",
+    "areaServed": {
+      "@type": "City",
+      "name": "Montréal"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Montréal",
+      "addressRegion": "QC",
+      "addressCountry": "CA"
+    }
+  }
+  </script>
 </body>
 </html>
