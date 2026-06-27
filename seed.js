@@ -11,17 +11,30 @@ const db = require('./db');
 const config = require('./config');
 
 function seedAdmin() {
-  const count = db.prepare('SELECT COUNT(*) AS n FROM users').get().n;
-  if (count > 0) return;
-  const hash = bcrypt.hashSync(config.admin.password, 10);
-  db.prepare('INSERT INTO users (username, password_hash) VALUES (?, ?)').run(
-    config.admin.username,
-    hash
-  );
-  console.log(
-    `[seed] Compte admin cree -> identifiant: "${config.admin.username}" ` +
-      `(mot de passe defini dans .env / config.js). Changez-le !`
-  );
+  const existing = db
+    .prepare('SELECT id, password_hash FROM users WHERE username = ?')
+    .get(config.admin.username);
+
+  // Aucun admin : on le cree.
+  if (!existing) {
+    const hash = bcrypt.hashSync(config.admin.password, 10);
+    db.prepare('INSERT INTO users (username, password_hash) VALUES (?, ?)').run(
+      config.admin.username,
+      hash
+    );
+    console.log(`[seed] Compte admin cree -> identifiant: "${config.admin.username}".`);
+    return;
+  }
+
+  // Admin existant : on synchronise le mot de passe avec ADMIN_PASSWORD
+  // (variable d'environnement) s'il a change. Permet de changer le mot de
+  // passe en ligne sans recréer la base (la base persiste sur Render).
+  const matches = bcrypt.compareSync(config.admin.password, existing.password_hash);
+  if (!matches) {
+    const hash = bcrypt.hashSync(config.admin.password, 10);
+    db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hash, existing.id);
+    console.log('[seed] Mot de passe admin mis a jour depuis ADMIN_PASSWORD.');
+  }
 }
 
 function seedVehicles() {

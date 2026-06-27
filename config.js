@@ -12,7 +12,10 @@ module.exports = {
   // dans le panneau admin si on ajoute la gestion des comptes).
   admin: {
     username: process.env.ADMIN_USERNAME || 'admin',
-    password: process.env.ADMIN_PASSWORD || 'ybmtl2026',
+    // Le vrai mot de passe vient de ADMIN_PASSWORD (.env en local, variable
+    // d'environnement sur Render). Ce defaut n'est qu'un secours et doit etre
+    // remplace -- ne jamais s'y fier en production.
+    password: process.env.ADMIN_PASSWORD || 'changez-ce-mot-de-passe',
   },
 
   // Coordonnées de l'entreprise (affichées dans le pied de page / contact).
