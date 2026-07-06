@@ -84,4 +84,22 @@ if (!vehicleCols.includes('security_deposit')) {
 db.prepare("UPDATE vehicles SET make = 'BMW' WHERE make = 'BMX'").run();
 db.prepare("UPDATE vehicles SET model = 'QX70' WHERE model = 'Qx70'").run();
 
+// Tarifs et depots synchronises (idempotent, s'execute a chaque demarrage).
+// Garantit les bonnes valeurs en ligne meme si la base persiste entre les
+// deploiements. Pour changer un prix/depot de facon PERMANENTE : modifier ici
+// ET dans seed-catalog.json (les deux doivent rester coherents).
+const _majTarif = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ?');
+const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE make = ? AND model = ?');
+[
+  { make: 'Audi',     model: 'S5 Coupé',    rate: 800, deposit: 2000 },
+  { make: 'Infiniti', model: 'QX70',                   deposit: 700 },
+  { make: 'Cadillac', model: 'Escalade XT', rate: 500, deposit: 900 },
+  { make: 'Kia',      model: 'Sorento',     rate: 500, deposit: 800 },
+  { make: 'Mazda',    model: '6',                      deposit: 700 },
+  { make: 'Acura',    model: 'MDX',         rate: 400, deposit: 800 },
+].forEach((t) => {
+  if (t.rate != null) _majTarif.run(t.rate, t.make, t.model);
+  if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
+});
+
 module.exports = db;
