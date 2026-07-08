@@ -478,5 +478,55 @@
         "sort_order": 2
       }
     ]
+  },
+  {
+    "make": "Nissan",
+    "model": "Rogue",
+    "year": 2012,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilometrage illimite",
+    "description": "Spacieux, confortable et pratique, le Nissan Rogue offre une conduite agréable et un bon espace intérieur. Un excellent choix pour les déplacements quotidiens, les voyages et les escapades de fin de semaine.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "nissan-rogue-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "nissan-rogue-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "nissan-rogue-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      }
+    ]
+  },
+  {
+    "make": "Acura",
+    "model": "RDX",
+    "year": 2011,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilometrage illimite",
+    "description": "Sportif, confortable et polyvalent, l'Acura RDX offre une conduite agréable et un intérieur spacieux. Un excellent choix pour les déplacements quotidiens, les voyages et les escapades de fin de semaine.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "acura-rdx-arriere.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      }
+    ]
   }
 ]
