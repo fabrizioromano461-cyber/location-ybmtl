@@ -91,6 +91,12 @@ function seedVehicles() {
 function runSeed() {
   seedAdmin();
   seedVehicles();
+  // Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site. Placé ICI
+  // (après le chargement du catalogue) pour que ça fonctionne meme quand la
+  // base est recréée à neuf. Pour changer la vedette : modifier le WHERE.
+  // Pour n'en mettre AUCUNE : commenter la 2e ligne.
+  db.prepare('UPDATE vehicles SET is_new = 0').run();
+  db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Volkswagen' AND model = 'GTI'").run();
 }
 
 // Si lance directement (`node seed.js`), on execute tout de suite.
