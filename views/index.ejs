@@ -26,6 +26,32 @@
   </div>
 </section>
 
+<% if (typeof featured !== 'undefined' && featured.length > 0) { %>
+<section class="featured-section">
+  <div class="container">
+    <% featured.forEach(function(v) { %>
+      <a class="featured-card" href="/vehicule/<%= v.id %>">
+        <div class="featured-photo">
+          <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" alt="<%= v.make %> <%= v.model %>">
+          <span class="featured-flag">✨ Nouvel arrivé</span>
+        </div>
+        <div class="featured-info">
+          <span class="featured-eyebrow">Dernière arrivée dans notre inventaire</span>
+          <h2 class="featured-title"><%= v.make %> <%= v.model %></h2>
+          <p class="featured-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= v.transmission %> &middot; <%= v.doors %> portes</p>
+          <% if (v.description) { %><p class="featured-desc"><%= v.description.length > 180 ? v.description.slice(0, 180) + '…' : v.description %></p><% } %>
+          <div class="featured-meta">
+            <span class="featured-price"><%= money(v.weekly_rate) %> <small>/ semaine</small></span>
+            <span class="featured-deposit">Dépôt <%= money(v.security_deposit) %></span>
+          </div>
+          <span class="btn btn-primary featured-btn">Voir ce véhicule &rarr;</span>
+        </div>
+      </a>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
 <section class="vehicles-section" id="vehicules">
   <div class="container">
     <div class="section-head">

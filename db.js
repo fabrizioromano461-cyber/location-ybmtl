@@ -78,11 +78,15 @@ if (!vehicleCols.includes('show_year')) {
 if (!vehicleCols.includes('security_deposit')) {
   db.exec('ALTER TABLE vehicles ADD COLUMN security_deposit INTEGER NOT NULL DEFAULT 0');
 }
+if (!vehicleCols.includes('is_new')) {
+  db.exec('ALTER TABLE vehicles ADD COLUMN is_new INTEGER NOT NULL DEFAULT 0');
+}
 
 // Corrections de noms (idempotent, s'execute a chaque demarrage) : repare une
 // base deja seedee avec les anciens noms, meme si le disque persiste.
 db.prepare("UPDATE vehicles SET make = 'BMW' WHERE make = 'BMX'").run();
 db.prepare("UPDATE vehicles SET model = 'QX70' WHERE model = 'Qx70'").run();
+db.prepare("UPDATE vehicles SET mileage_policy = 'Kilométrage illimité' WHERE mileage_policy = 'Kilometrage illimite'").run();
 
 // Tarifs et depots synchronises (idempotent, s'execute a chaque demarrage).
 // Garantit les bonnes valeurs en ligne meme si la base persiste entre les
@@ -127,6 +131,16 @@ if (_nbVeh > 0) {
         { filename: 'acura-rdx-arriere.jpg', sort_order: 0, is_primary: 1 },
       ],
     },
+    {
+      make: 'Volkswagen', model: 'GTI', year: 2018, transmission: 'Automatique', doors: 4,
+      weekly_rate: 800, security_deposit: 2000, mileage_policy: 'Kilometrage illimite',
+      description: 'Compacte sportive iconique, la Volkswagen GTI incarne le plaisir de conduire. Son moteur turbo nerveux, sa tenue de route précise et son intérieur soigné offrent une expérience à la fois dynamique et raffinée. Un excellent choix pour rouler avec style au quotidien comme sur la route.',
+      photos: [
+        { filename: 'volkswagen-gti-face.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'volkswagen-gti-avant.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'volkswagen-gti-arriere.jpg', sort_order: 20, is_primary: 0 },
+      ],
+    },
   ];
   const _findVeh = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ? AND year = ?');
   const _insVeh = db.prepare(
@@ -150,5 +164,11 @@ if (_nbVeh > 0) {
     }
   }
 }
+
+// Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site (idempotent).
+// Pour changer la voiture vedette : modifier le WHERE ci-dessous.
+// Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
+db.prepare('UPDATE vehicles SET is_new = 0').run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Volkswagen' AND model = 'GTI'").run();
 
 module.exports = db;

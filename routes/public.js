@@ -46,8 +46,12 @@ router.get('/', (req, res) => {
     ? vehicles.filter((v) => v.availableForRange)
     : vehicles;
 
+  // Vehicule(s) « nouvel arrive » mis en vedette en haut (hors recherche par dates).
+  const featured = hasSearch ? [] : vehicles.filter((v) => v.is_new);
+
   res.render('index', {
     vehicles: list,
+    featured,
     totalCount: vehicles.length,
     search: { start, end, hasSearch },
   });

@@ -7,6 +7,9 @@
     <% } else { %>
       <span class="badge badge-available">Disponible</span>
     <% } %>
+    <% if (v.is_new) { %>
+      <span class="badge badge-new">✨ Nouveau</span>
+    <% } %>
   </a>
   <div class="card-body">
     <h3 class="card-title"><%= v.make %> <%= v.model %></h3>
