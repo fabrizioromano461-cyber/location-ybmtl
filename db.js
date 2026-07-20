@@ -200,6 +200,30 @@ if (_nbVeh > 0) {
   }
 }
 
+// Photos RETIREES apres coup (idempotent). Supprime des photos d'un vehicule
+// par nom de fichier, et re-designe une nouvelle photo principale au besoin.
+{
+  const _aRetirer = [
+    { make: 'Audi', model: 'S5 Coupé',
+      supprimer: ['audi-s5-face.jpg', 'audi-s5-profil.jpg', 'audi-s5-arriere.jpg'],
+      nouvellePrincipale: 'audi-s5-avant-2.jpg' },
+  ];
+  const _findVeh = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ?');
+  const _delPhoto = db.prepare('DELETE FROM vehicle_photos WHERE vehicle_id = ? AND filename = ?');
+  const _clearPrimary = db.prepare('UPDATE vehicle_photos SET is_primary = 0 WHERE vehicle_id = ?');
+  const _setPrimary = db.prepare('UPDATE vehicle_photos SET is_primary = 1 WHERE vehicle_id = ? AND filename = ?');
+  const _photoExiste = db.prepare('SELECT id FROM vehicle_photos WHERE vehicle_id = ? AND filename = ?');
+  for (const entry of _aRetirer) {
+    const veh = _findVeh.get(entry.make, entry.model);
+    if (!veh) continue;
+    for (const f of entry.supprimer) _delPhoto.run(veh.id, f);
+    if (entry.nouvellePrincipale && _photoExiste.get(veh.id, entry.nouvellePrincipale)) {
+      _clearPrimary.run(veh.id);
+      _setPrimary.run(veh.id, entry.nouvellePrincipale);
+    }
+  }
+}
+
 // Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site (idempotent).
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.

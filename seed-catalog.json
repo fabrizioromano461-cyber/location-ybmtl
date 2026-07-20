@@ -13,28 +13,13 @@
     "show_year": 1,
     "photos": [
       {
-        "filename": "audi-s5-face.jpg",
-        "is_primary": 1,
-        "sort_order": 0
-      },
-      {
-        "filename": "audi-s5-profil.jpg",
-        "is_primary": 0,
-        "sort_order": 10
-      },
-      {
-        "filename": "audi-s5-arriere.jpg",
-        "is_primary": 0,
-        "sort_order": 20
-      },
-      {
         "filename": "audi-s5-interieur-tableau.jpg",
         "is_primary": 0,
         "sort_order": 30
       },
       {
         "filename": "audi-s5-avant-2.jpg",
-        "is_primary": 0,
+        "is_primary": 1,
         "sort_order": 40
       },
       {
