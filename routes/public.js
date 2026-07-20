@@ -41,6 +41,19 @@ router.get('/', (req, res) => {
     };
   });
 
+  // Vehicules « mis en avant » : remontent en tete de la liste (sans etre
+  // techniquement epingles). Pour changer : modifier cette liste (ordre = priorite).
+  const MIS_EN_AVANT = [
+    { make: 'Audi', model: 'S5 Coupé' },
+    { make: 'BMW', model: '328i' },
+    { make: 'Mazda', model: '6' },
+  ];
+  const rangMiseEnAvant = (v) => {
+    const i = MIS_EN_AVANT.findIndex((p) => p.make === v.make && p.model === v.model);
+    return i === -1 ? MIS_EN_AVANT.length : i;
+  };
+  vehicles.sort((a, b) => rangMiseEnAvant(a) - rangMiseEnAvant(b));
+
   // Si une recherche par dates est faite, on ne garde que les vehicules libres.
   const list = hasSearch
     ? vehicles.filter((v) => v.availableForRange)
