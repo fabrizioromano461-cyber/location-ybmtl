@@ -574,5 +574,36 @@
         "sort_order": 20
       }
     ]
+  },
+  {
+    "make": "BMW",
+    "model": "X1",
+    "year": 2016,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 450,
+    "security_deposit": 1500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Compact et raffiné, le BMW X1 allie l'élégance allemande à la polyvalence d'un VUS. Sa conduite dynamique, son intérieur soigné et son format pratique en font un excellent choix pour la ville comme pour les escapades de fin de semaine.",
+    "is_published": 1,
+    "show_year": 1,
+    "is_new": 1,
+    "photos": [
+      {
+        "filename": "bmw-x1-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "bmw-x1-profil.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "bmw-x1-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      }
+    ]
   }
 ]

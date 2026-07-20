@@ -96,6 +96,7 @@ function runSeed() {
   // base est recréée à neuf. Pour changer la vedette : modifier le WHERE.
   // Pour n'en mettre AUCUNE : commenter la 2e ligne.
   db.prepare('UPDATE vehicles SET is_new = 0').run();
+  db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'BMW' AND model = 'X1'").run();
   db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Volkswagen' AND model = 'GTI'").run();
 }
 

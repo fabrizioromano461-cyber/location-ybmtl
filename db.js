@@ -141,6 +141,16 @@ if (_nbVeh > 0) {
         { filename: 'volkswagen-gti-arriere.jpg', sort_order: 20, is_primary: 0 },
       ],
     },
+    {
+      make: 'BMW', model: 'X1', year: 2016, transmission: 'Automatique', doors: 4,
+      weekly_rate: 450, security_deposit: 1500, mileage_policy: 'Kilométrage illimité',
+      description: "Compact et raffiné, le BMW X1 allie l'élégance allemande à la polyvalence d'un VUS. Sa conduite dynamique, son intérieur soigné et son format pratique en font un excellent choix pour la ville comme pour les escapades de fin de semaine.",
+      photos: [
+        { filename: 'bmw-x1-face.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'bmw-x1-profil.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'bmw-x1-arriere.jpg', sort_order: 20, is_primary: 0 },
+      ],
+    },
   ];
   const _findVeh = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ? AND year = ?');
   const _insVeh = db.prepare(
@@ -194,6 +204,7 @@ if (_nbVeh > 0) {
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'BMW' AND model = 'X1'").run();
 db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Volkswagen' AND model = 'GTI'").run();
 
 module.exports = db;
