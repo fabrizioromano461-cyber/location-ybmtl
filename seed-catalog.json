@@ -31,6 +31,21 @@
         "filename": "audi-s5-interieur-tableau.jpg",
         "is_primary": 0,
         "sort_order": 30
+      },
+      {
+        "filename": "audi-s5-avant-2.jpg",
+        "is_primary": 0,
+        "sort_order": 40
+      },
+      {
+        "filename": "audi-s5-arriere-2.jpg",
+        "is_primary": 0,
+        "sort_order": 50
+      },
+      {
+        "filename": "audi-s5-arriere-face.jpg",
+        "is_primary": 0,
+        "sort_order": 60
       }
     ]
   },

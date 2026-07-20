@@ -165,6 +165,31 @@ if (_nbVeh > 0) {
   }
 }
 
+// Photos ajoutees apres coup sur des vehicules existants (idempotent).
+// Verifie par nom de fichier pour ne jamais dupliquer.
+{
+  const _photosAjoutees = [
+    { make: 'Audi', model: 'S5 Coupé', photos: [
+      { filename: 'audi-s5-avant-2.jpg', sort_order: 40, is_primary: 0 },
+      { filename: 'audi-s5-arriere-2.jpg', sort_order: 50, is_primary: 0 },
+      { filename: 'audi-s5-arriere-face.jpg', sort_order: 60, is_primary: 0 },
+    ] },
+  ];
+  const _findVehId = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ?');
+  const _findPhoto = db.prepare('SELECT id FROM vehicle_photos WHERE vehicle_id = ? AND filename = ?');
+  const _insPhotoAjout = db.prepare(
+    'INSERT INTO vehicle_photos (vehicle_id, filename, sort_order, is_primary) VALUES (?, ?, ?, ?)'
+  );
+  for (const entry of _photosAjoutees) {
+    const veh = _findVehId.get(entry.make, entry.model);
+    if (!veh) continue;
+    for (const p of entry.photos) {
+      if (_findPhoto.get(veh.id, p.filename)) continue; // deja present
+      _insPhotoAjout.run(veh.id, p.filename, p.sort_order, p.is_primary);
+    }
+  }
+}
+
 // Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site (idempotent).
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
