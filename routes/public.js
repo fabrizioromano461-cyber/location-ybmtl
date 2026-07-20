@@ -60,7 +60,18 @@ router.get('/', (req, res) => {
     : vehicles;
 
   // Vehicule(s) « nouvel arrive » mis en vedette en haut (hors recherche par dates).
-  const featured = hasSearch ? [] : vehicles.filter((v) => v.is_new);
+  // Ordre d'affichage des vedettes (le plus recent en premier).
+  const ORDRE_VEDETTE = [
+    { make: 'BMW', model: 'X1' },
+    { make: 'Volkswagen', model: 'GTI' },
+  ];
+  const rangVedette = (v) => {
+    const i = ORDRE_VEDETTE.findIndex((p) => p.make === v.make && p.model === v.model);
+    return i === -1 ? ORDRE_VEDETTE.length : i;
+  };
+  const featured = hasSearch
+    ? []
+    : vehicles.filter((v) => v.is_new).sort((a, b) => rangVedette(a) - rangVedette(b));
 
   res.render('index', {
     vehicles: list,
