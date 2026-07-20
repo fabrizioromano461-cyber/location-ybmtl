@@ -1,0 +1,578 @@
+[
+  {
+    "make": "Audi",
+    "model": "S5 Coupé",
+    "year": 2012,
+    "transmission": "Automatique",
+    "doors": 2,
+    "weekly_rate": 800,
+    "security_deposit": 2000,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Coupé sportif alliant performance, confort et élégance. Son moteur puissant, son intérieur raffiné et sa conduite dynamique en font un excellent choix pour vos déplacements ou occasions spéciales.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "audi-s5-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "audi-s5-profil.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "audi-s5-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "audi-s5-interieur-tableau.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      },
+      {
+        "filename": "audi-s5-avant-2.jpg",
+        "is_primary": 0,
+        "sort_order": 40
+      },
+      {
+        "filename": "audi-s5-arriere-2.jpg",
+        "is_primary": 0,
+        "sort_order": 50
+      },
+      {
+        "filename": "audi-s5-arriere-face.jpg",
+        "is_primary": 0,
+        "sort_order": 60
+      }
+    ]
+  },
+  {
+    "make": "Infiniti",
+    "model": "QX70",
+    "year": 2014,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 400,
+    "security_deposit": 700,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "L'Infiniti QX70 2014 combine luxe, performance et confort dans un VUS au design sportif et élégant. Équipé d'un toit ouvrant, d'un intérieur haut de gamme en cuir, de sièges chauffants et d'un vaste espace de chargement, il offre une expérience de conduite raffinée autant en ville que sur la route. Son moteur puissant et sa tenue de route dynamique en font un véhicule aussi agréable à conduire qu'à regarder.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782236444575-518506.jpeg",
+        "is_primary": 1,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782236444511-49852.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782236444605-108853.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782236444645-253831.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      },
+      {
+        "filename": "photo-1782236444679-610658.png",
+        "is_primary": 0,
+        "sort_order": 4
+      }
+    ]
+  },
+  {
+    "make": "Cadillac",
+    "model": "Escalade XT",
+    "year": 2008,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 500,
+    "security_deposit": 900,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Pickup de luxe spacieux et puissant, parfait pour les voyages, les déménagements légers ou les déplacements en groupe. Alliant confort haut de gamme et grande capacité de chargement, il offre une expérience de conduite unique.",
+    "is_published": 1,
+    "show_year": 0,
+    "photos": [
+      {
+        "filename": "photo-1782237735187-58955.jpeg",
+        "is_primary": 1,
+        "sort_order": 3
+      },
+      {
+        "filename": "photo-1782237735098-694444.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782237735127-815730.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782237735137-981713.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782237735202-505153.png",
+        "is_primary": 0,
+        "sort_order": 4
+      }
+    ]
+  },
+  {
+    "make": "BMW",
+    "model": "328i",
+    "year": 2013,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 500,
+    "security_deposit": 750,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline élégante offrant un parfait équilibre entre confort, performance et économie de carburant. Idéale pour les déplacements quotidiens comme les longs trajets grâce à sa conduite agréable et son intérieur raffiné.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782238554664-117099.jpeg",
+        "is_primary": 1,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782238554648-858748.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782238554677-573541.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782238554684-458849.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      },
+      {
+        "filename": "photo-1782238554699-633400.jpeg",
+        "is_primary": 0,
+        "sort_order": 4
+      }
+    ]
+  },
+  {
+    "make": "Kia",
+    "model": "Sorento",
+    "year": 2016,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 500,
+    "security_deposit": 800,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "VUS spacieux et polyvalent offrant confort, sécurité et beaucoup d'espace pour les passagers et les bagages. Idéal pour les familles, les voyages et les déplacements quotidiens.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782238873571-670231.jpeg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782238873576-154855.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782238873579-495930.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      }
+    ]
+  },
+  {
+    "make": "Mazda",
+    "model": "6",
+    "year": 2016,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 500,
+    "security_deposit": 700,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline élégante et économique offrant une conduite confortable agréable. Son design moderne et son intérieur spacieux en font un excellent choix pour les déplacements quotidiens ou les longs trajets.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782239420886-374982.jpeg",
+        "is_primary": 1,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782239420819-353339.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782239420847-665483.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782239420896-54599.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      },
+      {
+        "filename": "photo-1782239420915-740597.jpeg",
+        "is_primary": 0,
+        "sort_order": 4
+      }
+    ]
+  },
+  {
+    "make": "Acura",
+    "model": "MDX",
+    "year": 2012,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 400,
+    "security_deposit": 800,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "VUS de luxe spacieux et polyvalent offrant confort, sécurité et performance. Idéal pour les familles, les voyages et les déplacements quotidiens grâce à son intérieur généreux et sa conduite agréable.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782240233408-90833.jpeg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782241619140-965246.png",
+        "is_primary": 0,
+        "sort_order": 1
+      }
+    ]
+  },
+  {
+    "make": "Honda",
+    "model": "Pilot",
+    "year": 2007,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "VUS spacieux et fiable pouvant accueillir toute la famille confortablement. Idéal pour les voyages, les sorties de groupe et les déplacements quotidiens grâce à son grand espace intérieur et sa conduite confortable.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782241168187-12202.jpeg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782241168203-19395.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782241168228-301316.png",
+        "is_primary": 0,
+        "sort_order": 2
+      }
+    ]
+  },
+  {
+    "make": "Honda",
+    "model": "Insight",
+    "year": 2010,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 275,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline hybride offrant une excellente consommation de carburant et une conduite confortable. Un choix idéal pour les déplacements quotidiens tout en réduisant les coûts d'essence.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782241524969-398489.png",
+        "is_primary": 1,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782241392846-453199.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      }
+    ]
+  },
+  {
+    "make": "Volkswagen",
+    "model": "Jetta",
+    "year": 2013,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline fiable et économique offrant une conduite confortable et une excellente consommation de carburant. Parfaite pour les déplacements quotidiens, les études ou les voyages sur route.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782241900565-915872.jpeg",
+        "is_primary": 1,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782241900544-668628.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782241900590-433828.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782241900623-962658.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      }
+    ]
+  },
+  {
+    "make": "Nissan",
+    "model": "Altima",
+    "year": 2010,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline fiable, confortable et économique. Un excellent choix pour la ville comme pour les longues distances.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782321688281-142248.png",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782321688311-113120.png",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782321688327-245098.png",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782321688373-462754.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      }
+    ]
+  },
+  {
+    "make": "Ford",
+    "model": "Focus",
+    "year": 2013,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Voiture compacte, économique et facile à conduire. Idéale pour les déplacements quotidiens grâce à sa faible consommation d'essence et son intérieur confortable.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782335526219-472677.jpeg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782335526233-971567.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782335526244-907517.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782335526250-920728.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      }
+    ]
+  },
+  {
+    "make": "Hyundai",
+    "model": "Santa Fe",
+    "year": 2011,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "VUS spacieux et polyvalent offrant confort, fiabilité et beaucoup d'espace pour les passagers et les bagages. Parfait pour les déplacements quotidiens, les voyages et les sorties en famille.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782336897911-981659.jpeg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782336897924-706560.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782336897947-832415.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      },
+      {
+        "filename": "photo-1782336897953-588155.jpeg",
+        "is_primary": 0,
+        "sort_order": 3
+      }
+    ]
+  },
+  {
+    "make": "Chevrolet",
+    "model": "Orlando",
+    "year": 2012,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Véhicule polyvalent offrant beaucoup d'espace pour les passagers et les bagages. Confortable et pratique, il est idéal pour les familles, les groupes ou les voyages sur de longues distances.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "photo-1782339048512-418538.jpeg",
+        "is_primary": 1,
+        "sort_order": 3
+      },
+      {
+        "filename": "photo-1782339048457-562600.jpeg",
+        "is_primary": 0,
+        "sort_order": 0
+      },
+      {
+        "filename": "photo-1782339048489-906739.jpeg",
+        "is_primary": 0,
+        "sort_order": 1
+      },
+      {
+        "filename": "photo-1782339048502-358759.jpeg",
+        "is_primary": 0,
+        "sort_order": 2
+      }
+    ]
+  },
+  {
+    "make": "Nissan",
+    "model": "Rogue",
+    "year": 2012,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Spacieux, confortable et pratique, le Nissan Rogue offre une conduite agréable et un bon espace intérieur. Un excellent choix pour les déplacements quotidiens, les voyages et les escapades de fin de semaine.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "nissan-rogue-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "nissan-rogue-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "nissan-rogue-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      }
+    ]
+  },
+  {
+    "make": "Acura",
+    "model": "RDX",
+    "year": 2011,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 300,
+    "security_deposit": 500,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Sportif, confortable et polyvalent, l'Acura RDX offre une conduite agréable et un intérieur spacieux. Un excellent choix pour les déplacements quotidiens, les voyages et les escapades de fin de semaine.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "acura-rdx-arriere.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      }
+    ]
+  },
+  {
+    "make": "Volkswagen",
+    "model": "GTI",
+    "year": 2018,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 800,
+    "security_deposit": 2000,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Compacte sportive iconique, la Volkswagen GTI incarne le plaisir de conduire. Son moteur turbo nerveux, sa tenue de route précise et son intérieur soigné offrent une expérience à la fois dynamique et raffinée. Un excellent choix pour rouler avec style au quotidien comme sur la route.",
+    "is_published": 1,
+    "show_year": 1,
+    "is_new": 1,
+    "photos": [
+      {
+        "filename": "volkswagen-gti-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "volkswagen-gti-avant.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "volkswagen-gti-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      }
+    ]
+  }
+]
