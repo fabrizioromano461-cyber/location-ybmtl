@@ -24,6 +24,10 @@ router.get('/', (req, res) => {
   const start = (req.query.depart || '').trim();
   const end = (req.query.retour || '').trim();
   const hasSearch = !!(start && end);
+  // Filtres du menu de recherche : par marque et par prix maximum / semaine.
+  const marque = (req.query.marque || '').trim();
+  const prixMax = parseInt(req.query.prixMax, 10) || null;
+  const hasFilter = !!(marque || prixMax);
 
   let vehicles = db
     .prepare('SELECT * FROM vehicles WHERE is_published = 1 ORDER BY make, model')
@@ -55,9 +59,12 @@ router.get('/', (req, res) => {
   vehicles.sort((a, b) => rangMiseEnAvant(a) - rangMiseEnAvant(b));
 
   // Si une recherche par dates est faite, on ne garde que les vehicules libres.
-  const list = hasSearch
+  let list = hasSearch
     ? vehicles.filter((v) => v.availableForRange)
     : vehicles;
+  // Filtres du menu de recherche (marque + prix max), cumulables avec les dates.
+  if (marque) list = list.filter((v) => v.make === marque);
+  if (prixMax) list = list.filter((v) => v.weekly_rate <= prixMax);
 
   // Vehicule(s) « nouvel arrive » mis en vedette en haut (hors recherche par dates).
   // Ordre d'affichage des vedettes (le plus recent en premier).
@@ -69,7 +76,7 @@ router.get('/', (req, res) => {
     const i = ORDRE_VEDETTE.findIndex((p) => p.make === v.make && p.model === v.model);
     return i === -1 ? ORDRE_VEDETTE.length : i;
   };
-  const featured = hasSearch
+  const featured = hasSearch || hasFilter
     ? []
     : vehicles.filter((v) => v.is_new).sort((a, b) => rangVedette(a) - rangVedette(b));
 
@@ -78,6 +85,7 @@ router.get('/', (req, res) => {
     featured,
     totalCount: vehicles.length,
     search: { start, end, hasSearch },
+    filtre: { marque, prixMax, hasFilter },
   });
 });
 
