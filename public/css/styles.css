@@ -499,11 +499,12 @@ body.menu-open { overflow: hidden; }
 .menu-brands { display: flex; flex-direction: column; gap: 2px; }
 .menu-brand {
   display: flex; align-items: center; gap: .6rem; padding: .58rem .7rem;
-  border-radius: 10px; cursor: pointer; transition: background .12s, color .12s; position: relative;
+  border-radius: 10px; cursor: pointer; transition: background .12s, color .12s;
+  position: relative; text-decoration: none; color: var(--text);
 }
-.menu-brand:hover { background: var(--gray-bg); }
+.menu-brand:hover { background: var(--gray-bg); text-decoration: none; }
 .menu-brand.is-active { background: var(--primary); color: #fff; }
-.menu-brand input { position: absolute; opacity: 0; width: 0; height: 0; }
+.menu-brand.is-active:hover { background: var(--primary); }
 .menu-brand-name { flex: 1; font-weight: 500; }
 .menu-brand-count {
   font-size: .8rem; font-weight: 600; color: var(--muted);
