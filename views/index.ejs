@@ -57,7 +57,15 @@
     <div class="section-head">
       <h2>Notre inventaire</h2>
       <p><%= vehicles.length %> véhicule<%= vehicles.length > 1 ? 's' : '' %>
-        <%= search.hasSearch ? 'disponible' + (vehicles.length > 1 ? 's' : '') + ' pour ces dates' : 'au total' %></p>
+        <%= search.hasSearch ? 'disponible' + (vehicles.length > 1 ? 's' : '') + ' pour ces dates' : (typeof filtre !== 'undefined' && filtre.hasFilter ? 'trouvé' + (vehicles.length > 1 ? 's' : '') : 'au total') %></p>
+      <% if (typeof filtre !== 'undefined' && filtre.hasFilter) { %>
+        <p class="filter-info">
+          Filtre :
+          <% if (filtre.marque) { %><span class="filter-tag"><%= filtre.marque %></span><% } %>
+          <% if (filtre.prixMax) { %><span class="filter-tag">≤ <%= money(filtre.prixMax) %>/sem.</span><% } %>
+          <a href="/#vehicules">Effacer</a>
+        </p>
+      <% } %>
     </div>
 
     <% if (vehicles.length === 0) { %>
