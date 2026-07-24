@@ -46,5 +46,70 @@
     }
   }
   </script>
+
+  <!-- Menu de recherche (ouverture + prix en direct) -->
+  <script>
+    (function () {
+      var toggle = document.getElementById('menuToggle');
+      var drawer = document.getElementById('menuDrawer');
+      var overlay = document.getElementById('menuOverlay');
+      var closeBtn = document.getElementById('menuClose');
+      if (!toggle || !drawer || !overlay) return;
+
+      function openMenu() {
+        drawer.classList.add('is-open');
+        overlay.hidden = false;
+        document.body.classList.add('menu-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+      }
+      function closeMenu() {
+        drawer.classList.remove('is-open');
+        overlay.hidden = true;
+        document.body.classList.remove('menu-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+      toggle.addEventListener('click', openMenu);
+      overlay.addEventListener('click', closeMenu);
+      if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMenu();
+      });
+
+      // Prix : met a jour l'etiquette en direct + surligne la marque choisie.
+      var range = document.getElementById('prixMaxRange');
+      var label = document.getElementById('prixMaxLabel');
+      var hint = document.getElementById('prixMaxHint');
+      function fmt(n) { return Number(n).toLocaleString('fr-CA') + ' $'; }
+      if (range && label) {
+        range.addEventListener('input', function () {
+          label.textContent = fmt(range.value);
+          if (hint) hint.hidden = Number(range.value) < Number(range.dataset.max);
+        });
+      }
+      // Surligne visuellement la marque selectionnee.
+      var brands = document.querySelectorAll('.menu-brand input[name="marque"]');
+      brands.forEach(function (input) {
+        input.addEventListener('change', function () {
+          document.querySelectorAll('.menu-brand').forEach(function (l) {
+            l.classList.remove('is-active');
+          });
+          if (input.checked) input.closest('.menu-brand').classList.add('is-active');
+        });
+      });
+
+      // A l'envoi : si le curseur est au maximum, on n'envoie pas de prix
+      // (= « tous les prix ») pour garder l'URL propre.
+      var form = document.getElementById('menuSearchForm');
+      if (form && range) {
+        form.addEventListener('submit', function () {
+          if (Number(range.value) >= Number(range.dataset.max)) {
+            range.removeAttribute('name');
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

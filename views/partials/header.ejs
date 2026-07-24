@@ -57,6 +57,57 @@
           <a href="/admin/connexion" class="nav-admin">Connexion</a>
         <% } %>
       </nav>
+      <button type="button" class="menu-toggle" id="menuToggle"
+              aria-label="Ouvrir la recherche" aria-controls="menuDrawer" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
+
+  <!-- Menu « table des matieres » : recherche par marque et par prix -->
+  <div class="menu-overlay" id="menuOverlay" hidden></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-hidden="true" aria-label="Rechercher un véhicule">
+    <div class="menu-drawer-head">
+      <span class="menu-drawer-title">Rechercher un véhicule</span>
+      <button type="button" class="menu-close" id="menuClose" aria-label="Fermer">&times;</button>
+    </div>
+
+    <form class="menu-search" method="get" action="/#vehicules" id="menuSearchForm">
+      <div class="menu-group">
+        <p class="menu-group-title">Par marque</p>
+        <div class="menu-brands">
+          <label class="menu-brand<%= !query.marque ? ' is-active' : '' %>">
+            <input type="radio" name="marque" value="" <%= !query.marque ? 'checked' : '' %>>
+            <span class="menu-brand-name">Toutes les marques</span>
+          </label>
+          <% menuMakes.forEach(function(m){ %>
+            <label class="menu-brand<%= query.marque === m.make ? ' is-active' : '' %>">
+              <input type="radio" name="marque" value="<%= m.make %>" <%= query.marque === m.make ? 'checked' : '' %>>
+              <span class="menu-brand-name"><%= m.make %></span>
+              <span class="menu-brand-count"><%= m.count %></span>
+            </label>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <p class="menu-group-title">Par prix / semaine</p>
+        <div class="menu-price">
+          <input type="range" name="prixMax" id="prixMaxRange"
+                 min="<%= priceBounds.min %>" max="<%= priceBounds.max %>" step="25"
+                 value="<%= query.prixMax || priceBounds.max %>"
+                 data-max="<%= priceBounds.max %>">
+          <div class="menu-price-label">
+            Jusqu'à <strong id="prixMaxLabel"><%= money(query.prixMax || priceBounds.max) %></strong>
+            <span class="menu-price-hint" id="prixMaxHint"<%= query.prixMax ? ' hidden' : '' %>>tous les prix</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-actions">
+        <button type="submit" class="btn btn-primary menu-submit">Voir les véhicules</button>
+        <a href="/#vehicules" class="menu-reset">Réinitialiser</a>
+      </div>
+    </form>
+  </aside>
   <main>
