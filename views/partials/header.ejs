@@ -72,25 +72,24 @@
       <button type="button" class="menu-close" id="menuClose" aria-label="Fermer">&times;</button>
     </div>
 
-    <form class="menu-search" method="get" action="/#vehicules" id="menuSearchForm">
+    <div class="menu-search">
       <div class="menu-group">
         <p class="menu-group-title">Par marque</p>
         <div class="menu-brands">
-          <label class="menu-brand<%= !query.marque ? ' is-active' : '' %>">
-            <input type="radio" name="marque" value="" <%= !query.marque ? 'checked' : '' %>>
+          <a class="menu-brand<%= !query.marque ? ' is-active' : '' %>" href="/#vehicules">
             <span class="menu-brand-name">Toutes les marques</span>
-          </label>
+          </a>
           <% menuMakes.forEach(function(m){ %>
-            <label class="menu-brand<%= query.marque === m.make ? ' is-active' : '' %>">
-              <input type="radio" name="marque" value="<%= m.make %>" <%= query.marque === m.make ? 'checked' : '' %>>
+            <a class="menu-brand<%= query.marque === m.make ? ' is-active' : '' %>" href="/?marque=<%= encodeURIComponent(m.make) %>#vehicules">
               <span class="menu-brand-name"><%= m.make %></span>
               <span class="menu-brand-count"><%= m.count %></span>
-            </label>
+            </a>
           <% }); %>
         </div>
       </div>
 
-      <div class="menu-group">
+      <form class="menu-group" method="get" action="/#vehicules" id="menuPriceForm">
+        <% if (query.marque) { %><input type="hidden" name="marque" value="<%= query.marque %>"><% } %>
         <p class="menu-group-title">Par prix / semaine</p>
         <div class="menu-price">
           <input type="range" name="prixMax" id="prixMaxRange"
@@ -102,12 +101,12 @@
             <span class="menu-price-hint" id="prixMaxHint"<%= query.prixMax ? ' hidden' : '' %>>tous les prix</span>
           </div>
         </div>
-      </div>
+        <button type="submit" class="btn btn-primary menu-submit">Appliquer le prix<%= query.marque ? ' (' + query.marque + ')' : '' %></button>
+      </form>
 
       <div class="menu-actions">
-        <button type="submit" class="btn btn-primary menu-submit">Voir les véhicules</button>
-        <a href="/#vehicules" class="menu-reset">Réinitialiser</a>
+        <a href="/#vehicules" class="menu-reset">Réinitialiser les filtres</a>
       </div>
-    </form>
+    </div>
   </aside>
   <main>

@@ -88,20 +88,10 @@
           if (hint) hint.hidden = Number(range.value) < Number(range.dataset.max);
         });
       }
-      // Surligne visuellement la marque selectionnee.
-      var brands = document.querySelectorAll('.menu-brand input[name="marque"]');
-      brands.forEach(function (input) {
-        input.addEventListener('change', function () {
-          document.querySelectorAll('.menu-brand').forEach(function (l) {
-            l.classList.remove('is-active');
-          });
-          if (input.checked) input.closest('.menu-brand').classList.add('is-active');
-        });
-      });
-
-      // A l'envoi : si le curseur est au maximum, on n'envoie pas de prix
-      // (= « tous les prix ») pour garder l'URL propre.
-      var form = document.getElementById('menuSearchForm');
+      // A l'envoi du filtre prix : si le curseur est au maximum, on n'envoie
+      // pas de prix (= « tous les prix ») pour garder l'URL propre. La marque
+      // eventuellement selectionnee est conservee via un champ cache.
+      var form = document.getElementById('menuPriceForm');
       if (form && range) {
         form.addEventListener('submit', function () {
           if (Number(range.value) >= Number(range.dataset.max)) {
