@@ -5,6 +5,7 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const config = require('./config');
+const db = require('./db');
 const { runSeed } = require('./seed');
 const { money, frDate } = require('./lib/format');
 
@@ -43,6 +44,22 @@ app.use((req, res, next) => {
   res.locals.money = money;
   res.locals.frDate = frDate;
   res.locals.path = req.path;
+  // Liste des marques (pour le menu « table des matieres » de recherche).
+  res.locals.menuMakes = db
+    .prepare(
+      `SELECT make, COUNT(*) AS count FROM vehicles
+       WHERE is_published = 1 GROUP BY make ORDER BY make`
+    )
+    .all();
+  // Bornes de prix hebdomadaire (pour la barre de recherche par prix).
+  res.locals.priceBounds = db
+    .prepare(
+      `SELECT MIN(weekly_rate) AS min, MAX(weekly_rate) AS max FROM vehicles
+       WHERE is_published = 1`
+    )
+    .get() || { min: 0, max: 1000 };
+  // Valeurs de recherche courantes (pour pre-remplir le menu de recherche).
+  res.locals.query = req.query || {};
   next();
 });
 
