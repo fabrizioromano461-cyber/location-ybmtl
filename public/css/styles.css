@@ -536,6 +536,7 @@ body.menu-open { overflow: hidden; }
   transition: max-width .25s ease, opacity .2s ease, margin .25s ease; }
 .fab:hover { width: 172px; justify-content: flex-start; padding: 0 18px; }
 .fab:hover .fab-label { max-width: 120px; opacity: 1; margin-left: 11px; }
+.fab-mail { background: #ea580c; }
 .fab-sms { background: #16a34a; }
 .fab-call { background: linear-gradient(135deg, var(--primary), var(--accent));
   animation: fabPulse 2.6s infinite; }
