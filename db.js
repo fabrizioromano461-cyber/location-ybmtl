@@ -224,6 +224,18 @@ if (_nbVeh > 0) {
   }
 }
 
+// Mises a jour de PRIX (idempotent) : applique les tarifs ci-dessous a la base
+// persistante (production) a chaque demarrage. Pour changer un prix : modifier
+// la valeur ici (et dans seed-catalog.json pour une base neuve).
+{
+  const _prix = [
+    { make: 'Volkswagen', model: 'GTI', weekly_rate: 600 },
+    { make: 'Acura', model: 'MDX', weekly_rate: 350 },
+  ];
+  const _majPrix = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ?');
+  for (const p of _prix) _majPrix.run(p.weekly_rate, p.make, p.model);
+}
+
 // Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site (idempotent).
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
