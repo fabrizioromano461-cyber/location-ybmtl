@@ -26,6 +26,30 @@
   </div>
 </section>
 
+<%
+// ===== BANNIERE PROMO (page d'accueil) =====
+// Pour RETIRER la promo : mettre « promoActive = false » ci-dessous.
+// Pour la MODIFIER : changer les valeurs (voiture, ancien prix, nouveau prix).
+const promoActive = true;
+const promo = { make: 'Volkswagen', model: 'GTI', ancien: 800, nouveau: 600 };
+const promoVeh = vehicles.find(function (v) { return v.make === promo.make && v.model === promo.model; });
+const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
+%>
+<% if (promoActive && !search.hasSearch) { %>
+<section class="promo-band">
+  <a class="container promo-inner" href="<%= promoLien %>">
+    <span class="promo-flag">★ Nouveau prix</span>
+    <span class="promo-car"><%= promo.make %> <%= promo.model %></span>
+    <span class="promo-prices">
+      <span class="promo-old"><%= money(promo.ancien) %></span>
+      <span class="promo-new"><%= money(promo.nouveau) %><small>/ semaine</small></span>
+    </span>
+    <span class="promo-save">Économisez <%= money(promo.ancien - promo.nouveau) %></span>
+    <span class="promo-cta">Voir ce véhicule &rarr;</span>
+  </a>
+</section>
+<% } %>
+
 <% if (typeof featured !== 'undefined' && featured.length > 0) { %>
 <section class="featured-section">
   <div class="container">
@@ -83,6 +107,55 @@
         <% }); %>
       </div>
     <% } %>
+  </div>
+</section>
+
+<%
+// ===== AVIS CLIENTS (Google) =====
+// Pour AJOUTER un avis : copier une ligne ci-dessous et remplacer le nom et le
+// texte. Le texte doit etre recopie MOT POUR MOT depuis Google. Mettre a jour
+// « avisTotal » (nombre total d'avis Google) et « avisNote » (note moyenne).
+const avisNote = '5,0';
+const avisTotal = 6;
+const avis = [
+  { nom: 'Amina A.',   texte: "Super expérience ! Service rapide, personnel très gentil et voiture impeccable. Honnêtement, c'est le meilleur service de location de voitures en ville. Je recommande à 100 % à tous ceux qui cherchent une location fiable et sans souci. Vous ne serez pas déçus !" },
+  { nom: 'Rafaelle Q.', texte: "Les propriétaires sont très professionnelle, ils sont toujours disponible pour nous aidez et pour répondre à nos questions. Les prix sont très abordable. Compagnie très fiable et honnête. Je recommande à 100%!" },
+  { nom: 'Francia S.',  texte: "Excellent service, voiture propre et conforme à la description. Je recommande cette location!" },
+  { nom: 'Ali M.',      texte: "Voitures ultra fiable , toujours bien entretenu , je recommande" },
+  { nom: 'Yas',         texte: "Thank you for your service. You have excellent prices, high-quality service, and prices to suit everyone." },
+  { nom: 'AG',          texte: "Very good service. and prices are affordable" },
+];
+%>
+<section class="reviews-section" id="avis">
+  <div class="container">
+    <div class="reviews-head">
+      <h2>Ce que nos clients disent</h2>
+      <div class="reviews-score">
+        <span class="reviews-stars">★★★★★</span>
+        <span class="reviews-note"><%= avisNote %></span>
+        <span class="reviews-count"><%= avisTotal %> avis Google</span>
+      </div>
+    </div>
+
+    <div class="reviews-grid">
+      <% avis.forEach(function(a) { %>
+        <article class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text"><%= a.texte %></p>
+          <div class="review-author">
+            <span class="review-avatar"><%= a.nom.charAt(0) %></span>
+            <div>
+              <strong><%= a.nom %></strong>
+              <small>Avis Google</small>
+            </div>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+
+    <div class="reviews-actions">
+      <a class="btn btn-outline" href="https://g.page/r/CfYRExE5jSAFEAI/review" target="_blank" rel="noopener">⭐ Laissez-nous un avis</a>
+    </div>
   </div>
 </section>
 
