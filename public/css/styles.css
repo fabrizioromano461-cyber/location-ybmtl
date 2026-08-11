@@ -523,6 +523,14 @@ body.menu-open { overflow: hidden; }
 .menu-reset { text-align: center; color: var(--muted); font-size: .9rem; }
 .menu-reset:hover { color: var(--primary); }
 
+/* Bloc « Pourquoi nous choisir » (page d'accueil) */
+.why-us { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1.5rem 0; }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.1rem; }
+.why-item { display: flex; align-items: flex-start; gap: .8rem; }
+.why-icon { font-size: 1.7rem; line-height: 1; flex: none; margin-top: .1rem; }
+.why-item strong { display: block; font-size: 1rem; margin-bottom: .2rem; }
+.why-item p { margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.4; }
+
 /* Banniere promo (page d'accueil) */
 .promo-band { background: linear-gradient(135deg, #e11d2e, #8f0f1c); }
 .promo-inner { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap;
