@@ -590,5 +590,41 @@
         "sort_order": 20
       }
     ]
+  },
+  {
+    "make": "Cadillac",
+    "model": "ATS-V",
+    "year": 2016,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 350,
+    "security_deposit": 800,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline sport de luxe au caractère affirmé. La Cadillac ATS-V séduit par sa conduite dynamique, sa silhouette élégante et son intérieur en cuir soigné avec toit ouvrant. Un véhicule qui allie prestance et plaisir de conduire, autant en ville que sur la route.",
+    "is_published": 1,
+    "show_year": 1,
+    "is_new": 1,
+    "photos": [
+      {
+        "filename": "cadillac-ats-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "cadillac-ats-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "cadillac-ats-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "cadillac-ats-interieur-2.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      }
+    ]
   }
 ]

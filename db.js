@@ -151,6 +151,17 @@ if (_nbVeh > 0) {
         { filename: 'bmw-x1-arriere.jpg', sort_order: 20, is_primary: 0 },
       ],
     },
+    {
+      make: 'Cadillac', model: 'ATS-V', year: 2016, transmission: 'Automatique', doors: 4,
+      weekly_rate: 350, security_deposit: 800, mileage_policy: 'Kilométrage illimité',
+      description: "Berline sport de luxe au caractère affirmé. La Cadillac ATS-V séduit par sa conduite dynamique, sa silhouette élégante et son intérieur en cuir soigné avec toit ouvrant. Un véhicule qui allie prestance et plaisir de conduire, autant en ville que sur la route.",
+      photos: [
+        { filename: 'cadillac-ats-face.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'cadillac-ats-arriere.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'cadillac-ats-interieur.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'cadillac-ats-interieur-2.jpg', sort_order: 30, is_primary: 0 },
+      ],
+    },
   ];
   const _findVeh = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ? AND year = ?');
   const _insVeh = db.prepare(
@@ -240,7 +251,7 @@ if (_nbVeh > 0) {
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'BMW' AND model = 'X1'").run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Cadillac' AND model = 'ATS-V'").run();
 db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Volkswagen' AND model = 'GTI'").run();
 
 module.exports = db;
