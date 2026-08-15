@@ -100,7 +100,7 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   { make: 'Cadillac', model: 'Escalade XT', rate: 500, deposit: 900 },
   { make: 'Kia',      model: 'Sorento',     rate: 500, deposit: 800 },
   { make: 'Mazda',    model: '6',                      deposit: 700 },
-  { make: 'Acura',    model: 'MDX',         rate: 400, deposit: 800 },
+  { make: 'Acura',    model: 'MDX',         rate: 350, deposit: 800 },
 ].forEach((t) => {
   if (t.rate != null) _majTarif.run(t.rate, t.make, t.model);
   if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
@@ -240,7 +240,7 @@ if (_nbVeh > 0) {
 // la valeur ici (et dans seed-catalog.json pour une base neuve).
 {
   const _prix = [
-    { make: 'Volkswagen', model: 'GTI', weekly_rate: 600 },
+    { make: 'Volkswagen', model: 'GTI', weekly_rate: 400 },
     { make: 'Acura', model: 'MDX', weekly_rate: 350 },
   ];
   const _majPrix = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ?');
