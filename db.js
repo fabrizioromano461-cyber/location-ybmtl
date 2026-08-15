@@ -106,6 +106,13 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
 });
 
+// Photos converties de PNG vers JPG (idempotent) : les originaux PNG etaient
+// tres lourds (jusqu'a 3 Mo chacun). Convertis en JPG pour alleger le site et
+// la bande passante. Met a jour les noms de fichiers dans la base persistante.
+db.prepare(
+  "UPDATE vehicle_photos SET filename = REPLACE(filename, '.png', '.jpg') WHERE filename LIKE '%.png'"
+).run();
+
 // Nouveaux vehicules ajoutes apres coup (idempotent). Sur la base EN LIGNE qui
 // persiste (deja seedee), on insere les vehicules manquants. Sur une base vide,
 // on ne fait rien ici : seedVehicles() chargera tout le catalogue (qui les
