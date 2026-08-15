@@ -82,7 +82,7 @@ const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
     <% featured.forEach(function(v) { %>
       <a class="featured-card" href="/vehicule/<%= v.id %>">
         <div class="featured-photo">
-          <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" alt="<%= v.make %> <%= v.model %>">
+          <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
           <span class="featured-flag">✨ Nouvel arrivé</span>
         </div>
         <div class="featured-info">
