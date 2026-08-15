@@ -57,7 +57,7 @@
 // Pour RETIRER la promo : mettre « promoActive = false » ci-dessous.
 // Pour la MODIFIER : changer les valeurs (voiture, ancien prix, nouveau prix).
 const promoActive = true;
-const promo = { make: 'Volkswagen', model: 'GTI', ancien: 800, nouveau: 600 };
+const promo = { make: 'Volkswagen', model: 'GTI', ancien: 800, nouveau: 400 };
 const promoVeh = vehicles.find(function (v) { return v.make === promo.make && v.model === promo.model; });
 const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
 %>
