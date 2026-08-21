@@ -88,6 +88,15 @@ db.prepare("UPDATE vehicles SET make = 'BMW' WHERE make = 'BMX'").run();
 db.prepare("UPDATE vehicles SET model = 'QX70' WHERE model = 'Qx70'").run();
 db.prepare("UPDATE vehicles SET mileage_policy = 'Kilométrage illimité' WHERE mileage_policy = 'Kilometrage illimite'").run();
 
+// Description mise a jour (idempotent) : precise que l'Orlando offre 7 places.
+db.prepare(
+  "UPDATE vehicles SET description = ? WHERE make = 'Chevrolet' AND model = 'Orlando'"
+).run(
+  "Véhicule polyvalent offrant beaucoup d'espace pour les passagers et les bagages. " +
+  "Confortable et pratique, il est idéal pour les familles, les groupes ou les voyages " +
+  "sur de longues distances. Offre 7 places, idéal pour les familles nombreuses ou les groupes."
+);
+
 // Tarifs et depots synchronises (idempotent, s'execute a chaque demarrage).
 // Garantit les bonnes valeurs en ligne meme si la base persiste entre les
 // deploiements. Pour changer un prix/depot de facon PERMANENTE : modifier ici
@@ -99,8 +108,10 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   { make: 'Infiniti', model: 'QX70',                   deposit: 700 },
   { make: 'Cadillac', model: 'Escalade XT', rate: 500, deposit: 900 },
   { make: 'Kia',      model: 'Sorento',     rate: 500, deposit: 800 },
-  { make: 'Mazda',    model: '6',                      deposit: 700 },
+  { make: 'Mazda',    model: '6',           rate: 450, deposit: 700 },
   { make: 'Acura',    model: 'MDX',         rate: 350, deposit: 800 },
+  { make: 'BMW',      model: '328i',        rate: 400, deposit: 750 },
+  { make: 'Honda',    model: 'Pilot',       rate: 200, deposit: 500 },
 ].forEach((t) => {
   if (t.rate != null) _majTarif.run(t.rate, t.make, t.model);
   if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
