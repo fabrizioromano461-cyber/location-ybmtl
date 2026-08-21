@@ -169,6 +169,17 @@ if (_nbVeh > 0) {
         { filename: 'cadillac-ats-interieur-2.jpg', sort_order: 30, is_primary: 0 },
       ],
     },
+    {
+      make: 'Jeep', model: 'Wrangler Unlimited', year: 2015, transmission: 'Automatique', doors: 4,
+      weekly_rate: 550, security_deposit: 1000, mileage_policy: 'Kilométrage illimité',
+      description: "Icône du tout-terrain, le Jeep Wrangler Unlimited combine robustesse et liberté avec son toit souple amovible. Format 4 portes spacieux, look aventurier et transmission automatique pour une conduite polyvalente, en ville comme sur la route.",
+      photos: [
+        { filename: 'jeep-wrangler-profil.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'jeep-wrangler-avant.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'jeep-wrangler-face.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'jeep-wrangler-interieur.jpg', sort_order: 30, is_primary: 0 },
+      ],
+    },
   ];
   const _findVeh = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ? AND year = ?');
   const _insVeh = db.prepare(
@@ -258,7 +269,7 @@ if (_nbVeh > 0) {
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Jeep' AND model = 'Wrangler Unlimited'").run();
 db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Cadillac' AND model = 'ATS-V'").run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Volkswagen' AND model = 'GTI'").run();
 
 module.exports = db;

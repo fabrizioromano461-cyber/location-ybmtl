@@ -626,5 +626,41 @@
         "sort_order": 30
       }
     ]
+  },
+  {
+    "make": "Jeep",
+    "model": "Wrangler Unlimited",
+    "year": 2015,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 550,
+    "security_deposit": 1000,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Icône du tout-terrain, le Jeep Wrangler Unlimited combine robustesse et liberté avec son toit souple amovible. Format 4 portes spacieux, look aventurier et transmission automatique pour une conduite polyvalente, en ville comme sur la route.",
+    "is_published": 1,
+    "show_year": 1,
+    "is_new": 1,
+    "photos": [
+      {
+        "filename": "jeep-wrangler-profil.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "jeep-wrangler-avant.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "jeep-wrangler-face.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "jeep-wrangler-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      }
+    ]
   }
 ]
