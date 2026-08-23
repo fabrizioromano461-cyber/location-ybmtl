@@ -104,14 +104,22 @@ db.prepare(
 const _majTarif = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ?');
 const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE make = ? AND model = ?');
 [
-  { make: 'Audi',     model: 'S5 Coupé',    rate: 800, deposit: 2000 },
-  { make: 'Infiniti', model: 'QX70',                   deposit: 700 },
-  { make: 'Cadillac', model: 'Escalade XT', rate: 500, deposit: 900 },
-  { make: 'Kia',      model: 'Sorento',     rate: 500, deposit: 800 },
-  { make: 'Mazda',    model: '6',           rate: 450, deposit: 700 },
-  { make: 'Acura',    model: 'MDX',         rate: 350, deposit: 800 },
-  { make: 'BMW',      model: '328i',        rate: 400, deposit: 750 },
-  { make: 'Honda',    model: 'Pilot',       rate: 200, deposit: 500 },
+  { make: 'Audi',      model: 'S5 Coupé',    rate: 600, deposit: 1500 },
+  { make: 'Infiniti',  model: 'QX70',        rate: 350, deposit: 700 },
+  { make: 'Cadillac',  model: 'Escalade XT', rate: 500, deposit: 900 },
+  { make: 'Kia',       model: 'Sorento',     rate: 400, deposit: 700 },
+  { make: 'Mazda',     model: '6',           rate: 400, deposit: 700 },
+  { make: 'Acura',     model: 'MDX',         rate: 300, deposit: 500 },
+  { make: 'BMW',       model: '328i',        rate: 400, deposit: 800 },
+  { make: 'Honda',     model: 'Pilot',       rate: 200, deposit: 300 },
+  { make: 'Acura',     model: 'RDX',         rate: 250, deposit: 500 },
+  { make: 'Nissan',    model: 'Rogue',       rate: 275, deposit: 500 },
+  { make: 'Ford',      model: 'Focus',       rate: 275, deposit: 500 },
+  { make: 'BMW',       model: 'X1',          rate: 400, deposit: 800 },
+  { make: 'Hyundai',   model: 'Santa Fe',    rate: 250, deposit: 400 },
+  { make: 'Honda',     model: 'Insight',     rate: 250, deposit: 350 },
+  { make: 'Chevrolet', model: 'Orlando',     rate: 225, deposit: 400 },
+  { make: 'Volkswagen',model: 'GTI',         rate: 400, deposit: 1000 },
 ].forEach((t) => {
   if (t.rate != null) _majTarif.run(t.rate, t.make, t.model);
   if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
@@ -262,18 +270,6 @@ if (_nbVeh > 0) {
       _setPrimary.run(veh.id, entry.nouvellePrincipale);
     }
   }
-}
-
-// Mises a jour de PRIX (idempotent) : applique les tarifs ci-dessous a la base
-// persistante (production) a chaque demarrage. Pour changer un prix : modifier
-// la valeur ici (et dans seed-catalog.json pour une base neuve).
-{
-  const _prix = [
-    { make: 'Volkswagen', model: 'GTI', weekly_rate: 400 },
-    { make: 'Acura', model: 'MDX', weekly_rate: 350 },
-  ];
-  const _majPrix = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ?');
-  for (const p of _prix) _majPrix.run(p.weekly_rate, p.make, p.model);
 }
 
 // Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site (idempotent).
