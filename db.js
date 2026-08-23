@@ -120,6 +120,7 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   { make: 'Honda',     model: 'Insight',     rate: 250, deposit: 350 },
   { make: 'Chevrolet', model: 'Orlando',     rate: 225, deposit: 400 },
   { make: 'Volkswagen',model: 'GTI',         rate: 400, deposit: 1000 },
+  { make: 'Jeep',      model: 'Wrangler Unlimited', rate: 500, deposit: 1000 },
 ].forEach((t) => {
   if (t.rate != null) _majTarif.run(t.rate, t.make, t.model);
   if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
@@ -190,7 +191,7 @@ if (_nbVeh > 0) {
     },
     {
       make: 'Jeep', model: 'Wrangler Unlimited', year: 2015, transmission: 'Automatique', doors: 4,
-      weekly_rate: 550, security_deposit: 1000, mileage_policy: 'Kilométrage illimité',
+      weekly_rate: 500, security_deposit: 1000, mileage_policy: 'Kilométrage illimité',
       description: "Icône du tout-terrain, le Jeep Wrangler Unlimited combine robustesse et liberté avec son toit souple amovible. Format 4 portes spacieux, look aventurier et transmission automatique pour une conduite polyvalente, en ville comme sur la route.",
       photos: [
         { filename: 'jeep-wrangler-profil.jpg', sort_order: 0, is_primary: 1 },
