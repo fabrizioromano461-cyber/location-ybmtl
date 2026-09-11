@@ -8,10 +8,11 @@
     <div class="detail-main">
       <div class="gallery">
         <% if (photos.length > 0) { %>
-          <div class="gallery-main">
+          <button type="button" class="gallery-main" id="galleryMainBtn" aria-label="Agrandir la photo">
             <img id="galleryMain" src="/uploads/<%= photos[0].filename %>"
                  alt="<%= vehicle.make %> <%= vehicle.model %>">
-          </div>
+            <span class="gallery-zoom">🔍 Agrandir</span>
+          </button>
           <% if (photos.length > 1) { %>
             <div class="gallery-thumbs">
               <% photos.forEach(function(p, i) { %>
@@ -29,16 +30,37 @@
         <% } %>
       </div>
 
+      <!-- Lightbox : photo agrandie plein ecran, avec navigation -->
+      <% if (photos.length > 0) { %>
+      <div class="lightbox" id="lightbox" hidden>
+        <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Fermer">&times;</button>
+        <% if (photos.length > 1) { %>
+          <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Photo précédente">&#8249;</button>
+        <% } %>
+        <img id="lightboxImg" src="" alt="<%= vehicle.make %> <%= vehicle.model %>">
+        <% if (photos.length > 1) { %>
+          <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Photo suivante">&#8250;</button>
+        <% } %>
+        <div class="lightbox-count" id="lightboxCount"></div>
+      </div>
+      <% } %>
+
       <div class="detail-header">
         <div>
           <h1><%= vehicle.make %> <%= vehicle.model %></h1>
           <% if (vehicle.show_year) { %><p class="detail-sub"><%= vehicle.year %></p><% } %>
         </div>
-        <% if (rentedToday) { %>
-          <span class="badge badge-rented">Loué actuellement</span>
-        <% } else { %>
-          <span class="badge badge-available">Disponible</span>
-        <% } %>
+        <div class="detail-header-actions">
+          <% if (rentedToday) { %>
+            <span class="badge badge-rented">Loué actuellement</span>
+          <% } else { %>
+            <span class="badge badge-available">Disponible</span>
+          <% } %>
+          <button type="button" class="share-btn" id="shareBtn" title="Partager ce véhicule">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+            Partager
+          </button>
+        </div>
       </div>
 
       <ul class="spec-list">
@@ -132,6 +154,28 @@
       </div>
     </aside>
   </div>
+
+  <!-- Vehicules similaires -->
+  <% if (typeof similaires !== 'undefined' && similaires.length > 0) { %>
+  <section class="similar-section">
+    <h2>Véhicules similaires</h2>
+    <div class="similar-grid">
+      <% similaires.forEach(function(v) { %>
+        <a class="similar-card" href="/vehicule/<%= v.id %>">
+          <div class="similar-photo">
+            <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>"
+                 alt="<%= v.make %> <%= v.model %>" loading="lazy">
+          </div>
+          <div class="similar-info">
+            <h3><%= v.make %> <%= v.model %></h3>
+            <p><%= v.transmission %> &middot; <%= v.doors %> portes</p>
+            <div class="similar-price"><%= money(v.weekly_rate) %> <small>/ semaine</small></div>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </section>
+  <% } %>
 </div>
 
 <script src="/js/gallery.js"></script>

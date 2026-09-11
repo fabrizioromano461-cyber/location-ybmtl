@@ -1,0 +1,64 @@
+<%- include('partials/header', { title: 'Comment ça marche - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/">&larr; Retour à l'accueil</a>
+
+  <div class="conditions-content">
+    <h1>Comment ça marche</h1>
+    <p>Réserver une voiture chez Location YBMTL, c'est simple et rapide. Voici comment ça se passe, en 4 étapes.</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Choisissez votre véhicule</h3>
+          <p>Parcourez notre <a href="/#vehicules">inventaire</a> et trouvez l'auto qui vous convient, selon vos besoins et votre budget.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Sélectionnez vos dates</h3>
+          <p>Choisissez votre date de départ et de retour sur la fiche du véhicule. Le prix estimé s'affiche automatiquement.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Remplissez la demande</h3>
+          <p>Indiquez votre nom, téléphone et courriel — c'est tout ce qu'il faut. Aucun paiement en ligne n'est requis.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>On vous confirme</h3>
+          <p>Nous vous contactons rapidement par téléphone ou courriel pour confirmer votre réservation et les détails de la prise en charge.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="conditions-summary">
+      <h2>Bon à savoir</h2>
+      <ul>
+        <li><strong>Sans carte de crédit :</strong> paiement simple par Interac ou comptant, sans carte de crédit ni vérification de crédit.</li>
+        <li><strong>Kilométrage illimité :</strong> roulez sans compter, où que vous alliez.</li>
+        <li><strong>Assurance incluse :</strong> chaque location comprend une assurance de base (responsabilité civile).</li>
+        <li><strong>Dépôt de garantie :</strong> requis au moment de la prise du véhicule, remis à la fin de la location (sous réserve du contrat).</li>
+        <li><strong>Court ou long terme :</strong> location à la semaine, au mois ou plus, selon vos besoins.</li>
+      </ul>
+    </div>
+
+    <div class="conditions-contact">
+      <h2>Des questions ?</h2>
+      <p>N'hésitez pas à nous contacter avant de réserver :</p>
+      <p>
+        <strong>Téléphone :</strong> <a href="tel:+14384539983"><%= company.phone %></a><br>
+        <strong>Courriel :</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a>
+      </p>
+      <a href="/#vehicules" class="btn btn-primary" style="margin-top: 1rem;">Voir l'inventaire</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
