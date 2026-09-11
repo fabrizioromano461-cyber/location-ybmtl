@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google tag (gtag.js) — Google Analytics (mesure des visites) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-38HEMEDK8E"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-38HEMEDK8E');
+  </script>
+
+  <title><%= typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal' %></title>
+  <meta name="description" content="Location de voiture à Montréal au meilleur prix. Louez une auto pour une semaine ou plus : Audi, BMW, Honda, Mazda et plus. Tarifs clairs, réservation en ligne simple, kilométrage illimité.">
+
+  <!-- Mots-cles / referencement local -->
+  <meta name="keywords" content="location voiture Montréal, louer auto Montréal, location auto pas cher, location véhicule Montréal, location de char Montréal, location auto hebdomadaire, Location YBMTL">
+  <meta name="author" content="Location YBMTL">
+  <meta name="robots" content="index, follow">
+  <meta name="geo.region" content="CA-QC">
+  <meta name="geo.placename" content="Montréal">
+  <meta name="theme-color" content="#1d4ed8">
+  <link rel="canonical" href="https://locationybmtl.ca<%= typeof path !== 'undefined' ? path : '' %>">
+
+  <!-- Apercu de partage (Facebook, Instagram, Messenger, WhatsApp) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Location YBMTL">
+  <meta property="og:locale" content="fr_CA">
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal' %>">
+  <meta property="og:description" content="Location de voiture à Montréal au meilleur prix. Réservez votre auto en ligne en quelques clics.">
+  <meta property="og:url" content="https://locationybmtl.ca<%= typeof path !== 'undefined' ? path : '' %>">
+  <meta property="og:image" content="https://locationybmtl.ca/img/logo-rogne.png">
+  <!-- Apercu de partage (X / Twitter) -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal' %>">
+  <meta name="twitter:description" content="Location de voiture à Montréal au meilleur prix. Réservez en ligne.">
+  <meta name="twitter:image" content="https://locationybmtl.ca/img/logo-rogne.png">
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="/img/logo.png">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <img src="/img/logo-rogne.png" alt="Location YBMTL" class="brand-logo">
+      </a>
+      <nav class="main-nav">
+        <a href="/">Véhicules</a>
+        <a href="/comment-ca-marche">Comment ça marche</a>
+        <a href="/conditions">Contrat & Conditions</a>
+        <% if (currentUser) { %>
+          <a href="/admin" class="btn btn-sm">Panneau admin</a>
+        <% } else { %>
+          <a href="/admin/connexion" class="nav-admin">Connexion</a>
+        <% } %>
+      </nav>
+      <button type="button" class="menu-toggle" id="menuToggle"
+              aria-label="Ouvrir la recherche" aria-controls="menuDrawer" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Menu « table des matieres » : recherche par marque et par prix -->
+  <div class="menu-overlay" id="menuOverlay" hidden></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-hidden="true" aria-label="Rechercher un véhicule">
+    <div class="menu-drawer-head">
+      <span class="menu-drawer-title">Rechercher un véhicule</span>
+      <button type="button" class="menu-close" id="menuClose" aria-label="Fermer">&times;</button>
+    </div>
+
+    <div class="menu-search">
+      <div class="menu-group">
+        <p class="menu-group-title">Par marque</p>
+        <div class="menu-brands">
+          <a class="menu-brand<%= !query.marque ? ' is-active' : '' %>" href="/#vehicules">
+            <span class="menu-brand-name">Toutes les marques</span>
+          </a>
+          <% menuMakes.forEach(function(m){ %>
+            <a class="menu-brand<%= query.marque === m.make ? ' is-active' : '' %>" href="/?marque=<%= encodeURIComponent(m.make) %>#vehicules">
+              <span class="menu-brand-name"><%= m.make %></span>
+              <span class="menu-brand-count"><%= m.count %></span>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+
+      <form class="menu-group" method="get" action="/#vehicules" id="menuPriceForm">
+        <% if (query.marque) { %><input type="hidden" name="marque" value="<%= query.marque %>"><% } %>
+        <p class="menu-group-title">Par prix / semaine</p>
+        <div class="menu-price">
+          <input type="range" name="prixMax" id="prixMaxRange"
+                 min="<%= priceBounds.min %>" max="<%= priceBounds.max %>" step="25"
+                 value="<%= query.prixMax || priceBounds.max %>"
+                 data-max="<%= priceBounds.max %>">
+          <div class="menu-price-label">
+            Jusqu'à <strong id="prixMaxLabel"><%= money(query.prixMax || priceBounds.max) %></strong>
+            <span class="menu-price-hint" id="prixMaxHint"<%= query.prixMax ? ' hidden' : '' %>>tous les prix</span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary menu-submit">Appliquer le prix<%= query.marque ? ' (' + query.marque + ')' : '' %></button>
+      </form>
+
+      <div class="menu-actions">
+        <a href="/#vehicules" class="menu-reset">Réinitialiser les filtres</a>
+      </div>
+    </div>
+  </aside>
+  <main>
