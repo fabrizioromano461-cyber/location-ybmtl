@@ -89,6 +89,11 @@ router.get('/', (req, res) => {
   });
 });
 
+// PAGE COMMENT CA MARCHE
+router.get('/comment-ca-marche', (req, res) => {
+  res.render('comment-ca-marche');
+});
+
 // PAGE CONDITIONS & CONTRAT
 router.get('/conditions', (req, res) => {
   const config = require('../config');
@@ -111,10 +116,24 @@ router.get('/vehicule/:id', (req, res) => {
 
   const blocked = availability.getBlockedDates(vehicle.id);
 
+  // Vehicules similaires : meme marque, ou prix proche (+/- 100$), publies,
+  // en excluant le vehicule courant. Limite a 3, les plus proches en prix d'abord.
+  const similaires = db
+    .prepare(
+      `SELECT * FROM vehicles
+       WHERE is_published = 1 AND id != ?
+         AND (make = ? OR ABS(weekly_rate - ?) <= 100)
+       ORDER BY (make = ?) DESC, ABS(weekly_rate - ?) ASC
+       LIMIT 3`
+    )
+    .all(vehicle.id, vehicle.make, vehicle.weekly_rate, vehicle.make, vehicle.weekly_rate)
+    .map((v) => ({ ...v, photo: primaryPhoto(v.id) ? primaryPhoto(v.id).filename : null }));
+
   res.render('vehicle', {
     vehicle,
     photos,
     blocked,
+    similaires,
     rentedToday: availability.isRentedToday(vehicle.id),
     sent: req.query.envoye === '1',
     error: req.query.erreur === '1',
