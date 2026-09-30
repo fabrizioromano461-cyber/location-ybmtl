@@ -82,7 +82,7 @@
     <aside class="detail-aside">
       <div class="price-box">
         <div class="price-header">À partir de</div>
-        <div class="price-big"><span id="weeklyRate" style="display:none;"><%= vehicle.weekly_rate %></span><span id="blockedDates" style="display:none;"><%= JSON.stringify(blocked) %></span><%= money(vehicle.weekly_rate) %><span>/ semaine</span></div>
+        <div class="price-big"><span id="weeklyRate" style="display:none;"><%= vehicle.weekly_rate %></span><span id="blockedDates" style="display:none;"><%= JSON.stringify(blocked) %></span><span id="taxRates" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>" style="display:none;"></span><%= money(vehicle.weekly_rate) %><span>/ semaine</span><span class="tax-note">+ taxes</span></div>
         <p class="muted"><%= vehicle.mileage_policy %></p>
         <% if (vehicle.security_deposit > 0) { %>
           <div class="deposit-info">
@@ -90,6 +90,7 @@
           </div>
         <% } %>
         <p class="muted small" style="margin-top: 0.8rem;">Minimum 1 semaine de location</p>
+        <p class="muted small">Prix avant taxes : la TPS et la TVQ s'ajoutent au prix de location. Le dépôt de garantie n'est pas taxé.</p>
       </div>
 
       <div class="request-box" id="demande">
@@ -140,6 +141,7 @@
               <span>Prix estimé :</span>
               <span id="totalPrice">—</span>
             </div>
+            <div class="price-breakdown" id="priceBreakdown" hidden></div>
           </div>
 
           <div class="form-section">
@@ -169,7 +171,7 @@
           <div class="similar-info">
             <h3><%= v.make %> <%= v.model %></h3>
             <p><%= v.transmission %> &middot; <%= v.doors %> portes</p>
-            <div class="similar-price"><%= money(v.weekly_rate) %> <small>/ semaine</small></div>
+            <div class="similar-price"><%= money(v.weekly_rate) %> <small>/ semaine + taxes</small></div>
           </div>
         </a>
       <% }); %>

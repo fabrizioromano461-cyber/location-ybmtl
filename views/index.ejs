@@ -75,7 +75,7 @@ const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
     <span class="promo-car"><%= promo.make %> <%= promo.model %></span>
     <span class="promo-prices">
       <span class="promo-old"><%= money(promo.ancien) %></span>
-      <span class="promo-new"><%= money(promo.nouveau) %><small>/ semaine</small></span>
+      <span class="promo-new"><%= money(promo.nouveau) %><small>/ semaine + taxes</small></span>
     </span>
     <span class="promo-save">Économisez <%= money(promo.ancien - promo.nouveau) %></span>
     <span class="promo-cta">Voir ce véhicule &rarr;</span>
@@ -98,7 +98,7 @@ const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
           <p class="featured-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= v.transmission %> &middot; <%= v.doors %> portes</p>
           <% if (v.description) { %><p class="featured-desc"><%= v.description.length > 180 ? v.description.slice(0, 180) + '…' : v.description %></p><% } %>
           <div class="featured-meta">
-            <span class="featured-price"><%= money(v.weekly_rate) %> <small>/ semaine</small></span>
+            <span class="featured-price"><%= money(v.weekly_rate) %> <small>/ semaine + taxes</small></span>
             <span class="featured-deposit">Dépôt <%= money(v.security_deposit) %></span>
           </div>
           <span class="btn btn-primary featured-btn">Voir ce véhicule &rarr;</span>
