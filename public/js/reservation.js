@@ -8,6 +8,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const weeklyRateEl = document.getElementById('weeklyRate');
   const weeklyRate = weeklyRateEl ? parseFloat(weeklyRateEl.textContent) : 0;
 
+  // Taux de taxes (TPS / TVQ), fournis par le serveur
+  const taxEl = document.getElementById('taxRates');
+  const tpsRate = taxEl ? parseFloat(taxEl.dataset.tps) : 0;
+  const tvqRate = taxEl ? parseFloat(taxEl.dataset.tvq) : 0;
+  const breakdownEl = document.getElementById('priceBreakdown');
+
+  const fmt = (cents) => (cents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+  const pct = (rate) => (rate * 100).toLocaleString('fr-CA', { maximumFractionDigits: 3 });
+
+  function resetPrice() {
+    if (priceDisplay) priceDisplay.innerHTML = '—';
+    if (breakdownEl) breakdownEl.hidden = true;
+  }
+
   // Récupérer les dates bloquées
   const blockedDatesEl = document.getElementById('blockedDates');
   const blockedDates = blockedDatesEl ? JSON.parse(blockedDatesEl.textContent) : [];
@@ -15,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Fonction pour calculer le prix total
   function calculatePrice() {
     if (!departInput || !departInput.value || !retourInput || !retourInput.value) {
-      if (priceDisplay) priceDisplay.innerHTML = '—';
+      resetPrice();
       return;
     }
 
@@ -29,11 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
         priceError.style.display = 'block';
         priceError.textContent = 'La date de retour doit être après la date de départ.';
       }
-      if (priceDisplay) priceDisplay.innerHTML = '—';
+      resetPrice();
       return;
     }
 
-    const days = Math.floor((retour - depart) / (1000 * 60 * 60 * 24));
+    // Math.round : un changement d'heure ne doit pas faire perdre une journée
+    const days = Math.round((retour - depart) / (1000 * 60 * 60 * 24));
 
     // Vérifier minimum 1 semaine (7 jours)
     if (days < 7) {
@@ -41,18 +56,30 @@ document.addEventListener('DOMContentLoaded', function() {
         priceError.style.display = 'block';
         priceError.textContent = '⚠️ Minimum 1 semaine de location requise (7 jours minimum).';
       }
-      if (priceDisplay) priceDisplay.innerHTML = '—';
+      resetPrice();
       return;
     }
 
     if (priceError) priceError.style.display = 'none';
 
     const weeks = Math.ceil(days / 7);
-    const total = weeks * weeklyRate;
+    const subtotal = weeks * weeklyRate * 100;
+    const tps = Math.round((subtotal * Math.round(tpsRate * 100000)) / 100000);
+    const tvq = Math.round((subtotal * Math.round(tvqRate * 100000)) / 100000);
+    const total = subtotal + tps + tvq;
 
     if (priceDisplay) {
-      priceDisplay.innerHTML = `<strong class="price-total">$${total.toFixed(2)}</strong>
-        <span class="price-detail">${days} jour${days > 1 ? 's' : ''} (${weeks} semaine${weeks > 1 ? 's' : ''})</span>`;
+      priceDisplay.innerHTML = `<strong class="price-total">${fmt(total)}</strong>
+        <span class="price-detail">${days} jour${days > 1 ? 's' : ''} (${weeks} semaine${weeks > 1 ? 's' : ''}) · taxes incluses</span>`;
+    }
+    if (breakdownEl) {
+      breakdownEl.innerHTML = `
+        <div class="breakdown-line"><span>Sous-total (${weeks} sem. × ${fmt(weeklyRate * 100)})</span><span>${fmt(subtotal)}</span></div>
+        <div class="breakdown-line"><span>TPS (${pct(tpsRate)} %)</span><span>${fmt(tps)}</span></div>
+        <div class="breakdown-line"><span>TVQ (${pct(tvqRate)} %)</span><span>${fmt(tvq)}</span></div>
+        <div class="breakdown-line breakdown-total"><span>Total (taxes incluses)</span><span>${fmt(total)}</span></div>
+        <div class="breakdown-note">Le dépôt de garantie n'est pas taxé.</div>`;
+      breakdownEl.hidden = false;
     }
   }
 
@@ -127,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
       }
 
-      const days = Math.floor((retourDate - departDate) / (1000 * 60 * 60 * 24));
+      const days = Math.round((retourDate - departDate) / (1000 * 60 * 60 * 24));
       if (days < 7) {
         e.preventDefault();
         if (formError) {
