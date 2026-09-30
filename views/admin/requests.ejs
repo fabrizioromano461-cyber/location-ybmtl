@@ -30,6 +30,12 @@
           <% if (r.start_date) { %>
             <p class="request-dates">Dates souhaitées : <%= frDate(r.start_date) %> au <%= frDate(r.end_date) %></p>
           <% } %>
+          <% if (r.est_total != null) { %>
+            <p class="request-estimate">
+              Estimation : <%= moneyCents(r.est_subtotal) %> + TPS <%= moneyCents(r.est_tps) %> + TVQ <%= moneyCents(r.est_tvq) %>
+              = <strong><%= moneyCents(r.est_total) %></strong> (taxes incluses)
+            </p>
+          <% } %>
           <% if (r.message) { %>
             <p class="request-message">&laquo; <%= r.message %> &raquo;</p>
           <% } %>
