@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const tvqRate = taxEl ? parseFloat(taxEl.dataset.tvq) : 0;
   const breakdownEl = document.getElementById('priceBreakdown');
 
-  const fmt = (cents) => (cents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+  // \u00a0 = espace insecable : « 275,00 $ » ne se coupe jamais en fin de ligne sur mobile
+  const fmt = (cents) => (cents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0$';
   const pct = (rate) => (rate * 100).toLocaleString('fr-CA', { maximumFractionDigits: 3 });
 
   function resetPrice() {
@@ -70,13 +71,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (priceDisplay) {
       priceDisplay.innerHTML = `<strong class="price-total">${fmt(total)}</strong>
-        <span class="price-detail">${days} jour${days > 1 ? 's' : ''} (${weeks} semaine${weeks > 1 ? 's' : ''}) · taxes incluses</span>`;
+        <span class="price-detail">${days}\u00a0jour${days > 1 ? 's' : ''} (${weeks}\u00a0semaine${weeks > 1 ? 's' : ''}) ·\u00a0taxes\u00a0incluses</span>`;
     }
     if (breakdownEl) {
       breakdownEl.innerHTML = `
-        <div class="breakdown-line"><span>Sous-total (${weeks} sem. × ${fmt(weeklyRate * 100)})</span><span>${fmt(subtotal)}</span></div>
-        <div class="breakdown-line"><span>TPS (${pct(tpsRate)} %)</span><span>${fmt(tps)}</span></div>
-        <div class="breakdown-line"><span>TVQ (${pct(tvqRate)} %)</span><span>${fmt(tvq)}</span></div>
+        <div class="breakdown-line"><span>Sous-total (${weeks}\u00a0sem.\u00a0×\u00a0${fmt(weeklyRate * 100)})</span><span>${fmt(subtotal)}</span></div>
+        <div class="breakdown-line"><span>TPS (${pct(tpsRate)}\u00a0%)</span><span>${fmt(tps)}</span></div>
+        <div class="breakdown-line"><span>TVQ (${pct(tvqRate)}\u00a0%)</span><span>${fmt(tvq)}</span></div>
         <div class="breakdown-line breakdown-total"><span>Total (taxes incluses)</span><span>${fmt(total)}</span></div>
         <div class="breakdown-note">Le dépôt de garantie n'est pas taxé.</div>`;
       breakdownEl.hidden = false;
