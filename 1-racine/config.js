@@ -1,0 +1,59 @@
+// Configuration centrale du site Location YBMTL.
+// Les valeurs sensibles (mot de passe admin, secret de session) viennent
+// du fichier .env. Voir .env.example pour la liste.
+require('dotenv').config();
+
+module.exports = {
+  port: process.env.PORT || 3000,
+  sessionSecret: process.env.SESSION_SECRET || 'changez-ce-secret-en-production',
+
+  // Identifiants du tout premier compte administrateur, créé au démarrage
+  // s'il n'existe aucun utilisateur. À changer ensuite via .env (ou plus tard
+  // dans le panneau admin si on ajoute la gestion des comptes).
+  admin: {
+    username: process.env.ADMIN_USERNAME || 'admin',
+    // Le vrai mot de passe vient de ADMIN_PASSWORD (.env en local, variable
+    // d'environnement sur Render). Ce defaut n'est qu'un secours et doit etre
+    // remplace -- ne jamais s'y fier en production.
+    password: process.env.ADMIN_PASSWORD || 'changez-ce-mot-de-passe',
+  },
+
+  // Coordonnées de l'entreprise (affichées dans le pied de page / contact).
+  company: {
+    name: 'Location YBMTL',
+    city: 'Montréal, Québec',
+    phone: process.env.COMPANY_PHONE || '(514) 000-0000',
+    email: process.env.COMPANY_EMAIL || 'yblocation514@outlook.com',
+  },
+
+  // Taxes ajoutees au prix de location (le depot de garantie n'est pas taxe).
+  // Les taxes s'appliquent aux demandes envoyees a partir de startDate (AAAA-MM-JJ, heure de Montreal).
+  tax: {
+    tps: 0.05,
+    tvq: 0.09975,
+    startDate: process.env.TAX_START_DATE || '2026-10-01',
+  },
+
+  // URL de l'API du CRM. Les demandes de reservation y sont transferees
+  // automatiquement (creation d'un prospect + notification courriel).
+  crmApiUrl: process.env.CRM_API_URL || 'http://127.0.0.1:8000',
+
+  // Envoi de courriel directement par le site (independant du CRM).
+  // Permet de recevoir une notification meme quand le site est en ligne
+  // et que l'ordinateur/CRM est eteint. Utilise Gmail SMTP (mot de passe
+  // d'application). Les valeurs sensibles viennent de .env / des variables
+  // d'environnement Render.
+  mail: {
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT, 10) || 587,
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASSWORD || '',
+    // Adresse qui recoit les notifications de nouvelles demandes.
+    notify: process.env.NOTIFY_EMAIL || process.env.SMTP_USER || '',
+    // Cle API Brevo (envoi par API web). Necessaire en ligne sur Render,
+    // car Render bloque le SMTP direct. Si presente, on l'utilise en priorite.
+    brevoApiKey: process.env.BREVO_API_KEY || '',
+    // Expediteur affiche (doit etre un expediteur verifie dans Brevo).
+    sender: process.env.SENDER_EMAIL || process.env.NOTIFY_EMAIL || process.env.SMTP_USER || '',
+  },
+};

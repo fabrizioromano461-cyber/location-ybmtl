@@ -8,11 +8,21 @@ const config = require('./config');
 const db = require('./db');
 const { runSeed } = require('./seed');
 const { money, frDate } = require('./lib/format');
+const { moneyCents, taxesActive, taxStartLabel } = require('./lib/pricing');
 
 // Cree le compte admin + le vehicule de demo au premier lancement.
 runSeed();
 
 const app = express();
+
+// En-tetes de securite de base (pas de nouvelle dependance, juste des en-tetes HTTP).
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  next();
+});
 
 // Moteur de pages (EJS = HTML avec des variables, aucune compilation).
 app.set('view engine', 'ejs');
@@ -43,6 +53,10 @@ app.use((req, res, next) => {
   res.locals.company = config.company;
   res.locals.money = money;
   res.locals.frDate = frDate;
+  res.locals.moneyCents = moneyCents;
+  res.locals.tax = config.tax;
+  res.locals.taxOn = taxesActive();
+  res.locals.taxStartLabel = taxStartLabel();
   res.locals.path = req.path;
   // Liste des marques (pour le menu « table des matieres » de recherche).
   res.locals.menuMakes = db
