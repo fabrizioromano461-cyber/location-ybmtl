@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const availability = require('../lib/availability');
+const pricing = require('../lib/pricing');
 
 // Recupere la photo principale d'un vehicule (ou la premiere, ou null).
 function primaryPhoto(vehicleId) {
@@ -143,7 +144,7 @@ router.get('/vehicule/:id', (req, res) => {
 // RECEPTION DU FORMULAIRE DE DEMANDE
 router.post('/vehicule/:id/demande', (req, res) => {
   const vehicle = db
-    .prepare('SELECT id, make, model FROM vehicles WHERE id = ?')
+    .prepare('SELECT id, make, model, weekly_rate FROM vehicles WHERE id = ?')
     .get(req.params.id);
   if (!vehicle) return res.status(404).render('404');
 
@@ -154,11 +155,15 @@ router.post('/vehicule/:id/demande', (req, res) => {
     return res.redirect(`/vehicule/${vehicle.id}?erreur=1#demande`);
   }
 
+  // Estimation du prix avec TPS et TVQ (calculee ici, pas fiee au navigateur).
+  const estimate = pricing.estimateRental(vehicle.weekly_rate, depart, retour);
+
   // 1. Enregistrer la demande dans la base du site (comme avant)
   db.prepare(
     `INSERT INTO requests
-     (vehicle_id, name, phone, email, start_date, end_date, message)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`
+     (vehicle_id, name, phone, email, start_date, end_date, message,
+      est_subtotal, est_tps, est_tvq, est_total)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).run(
     vehicle.id,
     name.trim(),
@@ -166,7 +171,11 @@ router.post('/vehicule/:id/demande', (req, res) => {
     email.trim(),
     depart || null,
     retour || null,
-    (message || '').trim() || null
+    (message || '').trim() || null,
+    estimate ? estimate.subtotal : null,
+    estimate ? estimate.tps : null,
+    estimate ? estimate.tvq : null,
+    estimate ? estimate.total : null
   );
 
   // 2. Envoyer un courriel de notification DIRECTEMENT depuis le site.
@@ -180,6 +189,7 @@ router.post('/vehicule/:id/demande', (req, res) => {
     depart: depart || null,
     retour: retour || null,
     message: (message || '').trim() || null,
+    estimate,
   });
 
   // 3. Transferer la demande au CRM (creation prospect). En "fire-and-forget" :
