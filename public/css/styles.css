@@ -288,9 +288,22 @@ body.lightbox-open { overflow: hidden; }
 .form-section h3 { font-size: .95rem; font-weight: 700; margin-bottom: .6rem; color: var(--text); }
 .price-summary { background: var(--gray-bg); padding: 1rem; border-radius: var(--radius-sm); margin: 1.2rem 0; }
 .price-line { display: flex; justify-content: space-between; align-items: center; }
-.price-line > span:first-child { color: var(--muted); font-weight: 500; }
+.price-line > span:first-child { color: var(--muted); font-weight: 500; white-space: nowrap; }
+.price-line #totalPrice { text-align: right; }
 .price-total { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
 .price-detail { display: block; font-size: .8rem; color: var(--muted); font-weight: 400; margin-top: .2rem; }
+/* Taxes : mention « + taxes » et detail du calcul dans la reservation */
+.price-big .tax-note { display: inline-block; margin-left: .5rem; padding: .1rem .5rem; border-radius: 999px;
+  background: var(--gray-bg); font-size: .75rem; font-weight: 700; color: var(--muted); vertical-align: middle; }
+.price-breakdown { margin-top: .8rem; padding-top: .7rem; border-top: 1px dashed var(--border); font-size: .88rem; }
+.breakdown-line { display: flex; justify-content: space-between; gap: 1rem; padding: .18rem 0; color: var(--muted); }
+.breakdown-line span:last-child { color: var(--text); font-weight: 600; white-space: nowrap; }
+.breakdown-total { margin-top: .3rem; padding-top: .4rem; border-top: 1px solid var(--border); color: var(--text); font-weight: 800; }
+.breakdown-total span:last-child { color: var(--primary); font-weight: 800; }
+.breakdown-note { margin-top: .4rem; font-size: .78rem; color: var(--muted); }
+.price-breakdown[hidden] { display: none; }
+.request-estimate { font-size: .9rem; margin-top: .3rem; }
+
 .deposit-info { background: #f0f4fa; padding: 0.7rem; border-radius: var(--radius-sm); margin-top: 0.8rem; font-size: .9rem; color: var(--text); border-left: 3px solid var(--primary); }
 .request-form input[type="date"] { font-family: inherit; }
 .request-form input:valid { border-color: var(--border); }
