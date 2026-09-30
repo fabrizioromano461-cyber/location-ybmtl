@@ -8,6 +8,7 @@ const config = require('./config');
 const db = require('./db');
 const { runSeed } = require('./seed');
 const { money, frDate } = require('./lib/format');
+const { moneyCents } = require('./lib/pricing');
 
 // Cree le compte admin + le vehicule de demo au premier lancement.
 runSeed();
@@ -52,6 +53,8 @@ app.use((req, res, next) => {
   res.locals.company = config.company;
   res.locals.money = money;
   res.locals.frDate = frDate;
+  res.locals.moneyCents = moneyCents;
+  res.locals.tax = config.tax;
   res.locals.path = req.path;
   // Liste des marques (pour le menu « table des matieres » de recherche).
   res.locals.menuMakes = db

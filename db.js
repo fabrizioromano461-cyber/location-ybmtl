@@ -82,6 +82,12 @@ if (!vehicleCols.includes('is_new')) {
   db.exec('ALTER TABLE vehicles ADD COLUMN is_new INTEGER NOT NULL DEFAULT 0');
 }
 
+// Estimation du prix (en cents) enregistree avec chaque demande : sous-total, TPS, TVQ, total.
+const requestCols = db.prepare('PRAGMA table_info(requests)').all().map((c) => c.name);
+['est_subtotal', 'est_tps', 'est_tvq', 'est_total'].forEach((col) => {
+  if (!requestCols.includes(col)) db.exec(`ALTER TABLE requests ADD COLUMN ${col} INTEGER`);
+});
+
 // Corrections de noms (idempotent, s'execute a chaque demarrage) : repare une
 // base deja seedee avec les anciens noms, meme si le disque persiste.
 db.prepare("UPDATE vehicles SET make = 'BMW' WHERE make = 'BMX'").run();

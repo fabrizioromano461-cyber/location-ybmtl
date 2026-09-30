@@ -23,7 +23,13 @@ module.exports = {
     name: 'Location YBMTL',
     city: 'Montréal, Québec',
     phone: process.env.COMPANY_PHONE || '(514) 000-0000',
-    email: process.env.COMPANY_EMAIL || 'locationyb514@outlook.com',
+    email: process.env.COMPANY_EMAIL || 'yblocation514@outlook.com',
+  },
+
+  // Taxes ajoutees au prix de location (le depot de garantie n'est pas taxe).
+  tax: {
+    tps: 0.05,
+    tvq: 0.09975,
   },
 
   // URL de l'API du CRM. Les demandes de reservation y sont transferees
