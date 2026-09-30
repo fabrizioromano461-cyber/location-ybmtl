@@ -18,6 +18,7 @@
       <div class="card-price">
         <span class="price-amount"><%= money(v.weekly_rate) %></span>
         <span class="price-unit">/ semaine</span>
+        <span class="price-unit">+ taxes</span>
       </div>
       <div class="card-deposit">💳 Dépôt: <%= money(v.security_deposit) %></div>
       <a class="btn btn-sm" href="/vehicule/<%= v.id %>">Voir les détails</a>
