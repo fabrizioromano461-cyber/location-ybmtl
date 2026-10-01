@@ -90,7 +90,7 @@
           </div>
         <% } %>
         <p class="muted small" style="margin-top: 0.8rem;">Minimum 1 semaine de location</p>
-        <p class="muted small">Prix avant taxes : la TPS et la TVQ s'ajoutent au prix de location. Le dépôt de garantie n'est pas taxé.</p>
+        <%- include('partials/tax-notice') %>
       </div>
 
       <div class="request-box" id="demande">

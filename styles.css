@@ -84,7 +84,7 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 .5em; }
   background: var(--surface); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 50;
 }
-.header-inner { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 70px; }
 .brand { display: flex; align-items: center; flex-shrink: 0; }
 .brand-logo { height: 44px; width: auto; border-radius: 8px; display: block; }
 .main-nav { display: flex; align-items: center; gap: 1.4rem; }
@@ -209,7 +209,7 @@ body.lightbox-open { overflow: hidden; }
 .lightbox-count { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
   color: #e6e6e6; font-size: .9rem; font-weight: 600; background: rgba(255,255,255,.1); padding: .3rem .8rem; border-radius: 999px; }
 
-.detail-header { display: flex; align-items: flex-start; justify-content: space-between; margin: 1.8rem 0 1rem; gap: .8rem; }
+.detail-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; margin: 1.8rem 0 1rem; gap: .8rem; }
 .detail-header .badge { position: static; }
 .detail-header h1 { font-size: 1.9rem; margin: 0; }
 .detail-sub { color: var(--muted); margin: .2rem 0 0; }
@@ -239,6 +239,18 @@ body.lightbox-open { overflow: hidden; }
 .trust-badge { display: inline-flex; align-items: center; gap: .35rem; background: var(--surface);
   border: 1px solid var(--border); color: var(--text); font-size: .85rem; font-weight: 700;
   padding: .4rem .9rem; border-radius: 999px; box-shadow: var(--shadow-sm); }
+
+/* Avis TPS/TVQ (accueil + fiche vehicule, voir partials/tax-notice.ejs) */
+.tax-notice { display: flex; align-items: flex-start; gap: .55rem; max-width: 640px; margin: 0 auto 1.4rem;
+  padding: .7rem 1rem; background: #fff8e6; border: 1px solid #f5d98f; border-left: 4px solid #e0a526;
+  border-radius: var(--radius-sm); color: #5b4300; font-size: .92rem; line-height: 1.45; text-align: left; }
+.tax-notice strong { color: #3f2f00; }
+.tax-notice sup { font-size: .7em; line-height: 0; }
+.tax-notice-icon { flex: none; }
+.price-box .tax-notice { max-width: none; margin: .7rem 0 0; font-size: .85rem; }
+@media (max-width: 640px) {
+  .tax-notice { font-size: .86rem; padding: .6rem .8rem; }
+}
 
 /* Page « Comment ca marche » */
 .steps-list { display: flex; flex-direction: column; gap: 1.1rem; margin: 1.6rem 0 2rem; }
@@ -277,7 +289,11 @@ body.lightbox-open { overflow: hidden; }
 .admin-form input:focus, .admin-form textarea:focus, .admin-form select:focus {
   outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29,78,216,.12);
 }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+/* Petits ecrans : Depart et Retour l'un sous l'autre (un champ date ne tient pas a moitie de largeur, la page debordait) */
+@media (max-width: 420px) {
+  .form-row { grid-template-columns: 1fr; }
+}
 
 /* ---------- Formulaire de réservation ---------- */
 .price-header { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .2rem; }
@@ -287,7 +303,7 @@ body.lightbox-open { overflow: hidden; }
 .form-section:last-of-type { border-bottom: none; }
 .form-section h3 { font-size: .95rem; font-weight: 700; margin-bottom: .6rem; color: var(--text); }
 .price-summary { background: var(--gray-bg); padding: 1rem; border-radius: var(--radius-sm); margin: 1.2rem 0; }
-.price-line { display: flex; justify-content: space-between; align-items: center; }
+.price-line { display: flex; justify-content: space-between; align-items: center; gap: .75rem; }
 .price-line > span:first-child { color: var(--muted); font-weight: 500; white-space: nowrap; }
 .price-line #totalPrice { text-align: right; }
 .price-total { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
@@ -374,6 +390,7 @@ body.lightbox-open { overflow: hidden; }
 .footer-note { color: #8c97a9; font-size: .85rem; max-width: 320px; margin-top: .6rem; }
 .footer-bottom { border-top: 1px solid #232b3b; padding: 16px 0; font-size: .85rem; color: #8c97a9; }
 .footer-bottom-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-links { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; }
 .footer-link { color: #8c97a9; text-decoration: none; }
 .footer-link:hover { color: #cdd4e0; text-decoration: underline; }
 
@@ -509,6 +526,7 @@ body.lightbox-open { overflow: hidden; }
   .main-nav { gap: .8rem; }
   .main-nav a { font-size: .88rem; }
   .main-nav a:nth-child(3) { display: none; } /* masque "Contrat & Conditions" sur mobile (dispo dans le pied de page) */
+  .main-nav .nav-admin, .main-nav .btn { display: none; } /* masque "Connexion" / "Panneau admin" sur mobile (dispo dans le pied de page) : evite que le bouton menu deborde de l'ecran */
   /* Pages detail / formulaires plus compacts */
   .vehicle-detail { padding-top: 1rem; }
   .detail-header h1 { font-size: 1.5rem; }
@@ -541,13 +559,27 @@ body.lightbox-open { overflow: hidden; }
 /* ===== Menu de recherche « table des matieres » (hamburger) ===== */
 .menu-toggle {
   display: inline-flex; flex-direction: column; justify-content: center; gap: 5px;
-  width: 46px; height: 42px; padding: 0 11px; margin-left: .7rem;
+  width: 46px; height: 42px; padding: 0 11px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; cursor: pointer; flex: none;
   transition: border-color .15s, box-shadow .15s;
 }
 .menu-toggle:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
 .menu-toggle span { display: block; height: 2px; width: 100%; background: var(--text); border-radius: 2px; }
+/* Tablette et mobile : liens coupes sur 2 lignes plus compacts et centres (restent dans l'en-tete) */
+@media (max-width: 900px) {
+  .main-nav a { line-height: 1.2; text-align: center; }
+}
+/* Mobile : espace entre logo, liens et bouton menu un peu reduit, sans deborder de l'ecran */
+@media (max-width: 640px) {
+  .header-inner { gap: .6rem; }
+}
+/* Tres petits ecrans (320-350 px) : bandeau telephone sur une seule ligne, logo un peu plus petit */
+@media (max-width: 350px) {
+  .phone-topbar { font-size: .9rem; }
+  .brand-logo { height: 30px; }
+  .main-nav { gap: .6rem; }
+}
 
 .menu-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, .45); z-index: 60; animation: menuFade .2s ease; }
 @keyframes menuFade { from { opacity: 0; } to { opacity: 1; } }
