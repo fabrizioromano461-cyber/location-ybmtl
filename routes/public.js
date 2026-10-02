@@ -7,6 +7,7 @@ const router = express.Router();
 const db = require('../db');
 const availability = require('../lib/availability');
 const pricing = require('../lib/pricing');
+const { minDepartDate } = require('../lib/format');
 
 // Recupere la photo principale d'un vehicule (ou la premiere, ou null).
 function primaryPhoto(vehicleId) {
@@ -138,6 +139,7 @@ router.get('/vehicule/:id', (req, res) => {
     rentedToday: availability.isRentedToday(vehicle.id),
     sent: req.query.envoye === '1',
     error: req.query.erreur === '1',
+    dateError: req.query.erreur === 'date',
   });
 });
 
@@ -153,6 +155,11 @@ router.post('/vehicule/:id/demande', (req, res) => {
   // Validation minimale : nom, telephone et courriel sont obligatoires.
   if (!name || !phone || !email) {
     return res.redirect(`/vehicule/${vehicle.id}?erreur=1#demande`);
+  }
+
+  // Pas de location qui commence le jour meme : depart au plus tot le lendemain (heure de Montreal).
+  if (depart && !(/^\d{4}-\d{2}-\d{2}$/.test(depart) && depart >= minDepartDate())) {
+    return res.redirect(`/vehicule/${vehicle.id}?erreur=date#demande`);
   }
 
   // Estimation du prix avec TPS et TVQ (calculee ici, pas fiee au navigateur).
