@@ -8,7 +8,9 @@ class BookingCalendar {
     this.onDatesSelected = onDatesSelected;
     this.selectedDepart = null;
     this.selectedRetour = null;
-    this.currentMonth = new Date();
+    // Premier jour de départ possible : le lendemain (date fournie par le serveur, heure de Montréal)
+    this.minDate = this.parseMinDate(this.container.dataset.minDepart);
+    this.currentMonth = new Date(this.minDate.getFullYear(), this.minDate.getMonth(), 1);
 
     this.render();
   }
@@ -78,7 +80,7 @@ class BookingCalendar {
 
       const dateStr = this.formatDate(date);
       const isCurrentMonth = date.getMonth() === month;
-      const isPast = date < today;
+      const isPast = date < this.minDate; // aujourd'hui inclus : pas de départ le jour même
       const isBlocked = this.blockedDates.includes(dateStr);
       const isSelected = dateStr === this.selectedDepart || dateStr === this.selectedRetour;
       const isBetween = this.isDateBetween(date, this.selectedDepart, this.selectedRetour);
@@ -89,6 +91,7 @@ class BookingCalendar {
       } else if (isPast) {
         cell.classList.add('past');
         cell.disabled = true;
+        if (date >= today) cell.title = 'Départ possible au plus tôt demain';
       } else if (isBlocked) {
         cell.classList.add('blocked');
         cell.disabled = true;
@@ -109,6 +112,16 @@ class BookingCalendar {
     }
 
     this.container.appendChild(grid);
+  }
+
+  // "AAAA-MM-JJ" -> minuit local ; sans date valide : demain selon l'appareil
+  parseMinDate(str) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str || '');
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 1);
+    return d;
   }
 
   formatDate(date) {

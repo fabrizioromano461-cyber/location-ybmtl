@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // \u00a0 = espace insecable : « 275,00 $ » ne se coupe jamais en fin de ligne sur mobile
   const fmt = (cents) => (cents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0$';
   const pct = (rate) => (rate * 100).toLocaleString('fr-CA', { maximumFractionDigits: 3 });
+  const frDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  // Premier jour de départ possible : le lendemain (attribut min fourni par le serveur, heure de Montréal)
+  const minDepart = departInput ? departInput.getAttribute('min') || '' : '';
+  const minDepartMsg = minDepart ? `Le départ doit être au plus tôt le ${frDate(minDepart)} : une location ne peut pas commencer le jour même.` : '';
 
   function resetPrice() {
     if (priceDisplay) priceDisplay.innerHTML = '—';
@@ -38,6 +43,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const retour = new Date(retourInput.value + 'T00:00:00');
 
     const priceError = document.getElementById('priceError');
+
+    if (minDepart && departInput.value < minDepart) {
+      if (priceError) {
+        priceError.style.display = 'block';
+        priceError.textContent = minDepartMsg;
+      }
+      resetPrice();
+      return;
+    }
 
     if (retour <= depart) {
       if (priceError) {
@@ -94,10 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
     retourInput.addEventListener('input', calculatePrice);
   }
 
-  // Définir la date minimum (aujourd'hui)
-  const today = new Date().toISOString().split('T')[0];
+  // Le retour ne peut pas être avant le départ choisi
   if (departInput) {
-    departInput.setAttribute('min', today);
     departInput.addEventListener('change', function() {
       if (this.value && retourInput) {
         retourInput.setAttribute('min', this.value);
@@ -119,6 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
       const emailEl = document.getElementById('email');
       const formError = document.getElementById('formError');
 
+      // Bloque l'envoi et affiche le message en haut du formulaire (défilé à l'écran)
+      const showError = (msg) => {
+        e.preventDefault();
+        if (formError) {
+          formError.style.display = 'block';
+          formError.textContent = msg;
+          formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return false;
+      };
+
       const name = nameEl ? nameEl.value.trim() : '';
       const phone = phoneEl ? phoneEl.value.trim() : '';
       const email = emailEl ? emailEl.value.trim() : '';
@@ -126,43 +149,27 @@ document.addEventListener('DOMContentLoaded', function() {
       const retour = retourInput ? retourInput.value : '';
 
       if (!name || !phone || !email) {
-        e.preventDefault();
-        if (formError) {
-          formError.style.display = 'block';
-          formError.textContent = 'Veuillez remplir tous les champs obligatoires (nom, téléphone, courriel).';
-        }
-        return false;
+        return showError('Veuillez remplir tous les champs obligatoires (nom, téléphone, courriel).');
       }
 
       if (!depart || !retour) {
-        e.preventDefault();
-        if (formError) {
-          formError.style.display = 'block';
-          formError.textContent = 'Veuillez sélectionner les dates de départ et de retour.';
-        }
-        return false;
+        return showError('Veuillez sélectionner les dates de départ et de retour.');
+      }
+
+      if (minDepart && depart < minDepart) {
+        return showError(minDepartMsg);
       }
 
       const departDate = new Date(depart + 'T00:00:00');
       const retourDate = new Date(retour + 'T00:00:00');
 
       if (retourDate <= departDate) {
-        e.preventDefault();
-        if (formError) {
-          formError.style.display = 'block';
-          formError.textContent = 'La date de retour doit être après la date de départ.';
-        }
-        return false;
+        return showError('La date de retour doit être après la date de départ.');
       }
 
       const days = Math.round((retourDate - departDate) / (1000 * 60 * 60 * 24));
       if (days < 7) {
-        e.preventDefault();
-        if (formError) {
-          formError.style.display = 'block';
-          formError.textContent = '⚠️ Minimum 1 semaine de location requise (7 jours minimum).';
-        }
-        return false;
+        return showError('⚠️ Minimum 1 semaine de location requise (7 jours minimum).');
       }
 
       if (formError) formError.style.display = 'none';
