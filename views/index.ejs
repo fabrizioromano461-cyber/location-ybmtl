@@ -16,11 +16,11 @@
     <form class="search-bar" method="get" action="/#vehicules">
       <div class="search-field">
         <label for="depart">Date de départ</label>
-        <input type="date" id="depart" name="depart" value="<%= search.start %>">
+        <input type="date" id="depart" name="depart" min="<%= minDepart %>" value="<%= search.start %>">
       </div>
       <div class="search-field">
         <label for="retour">Date de retour</label>
-        <input type="date" id="retour" name="retour" value="<%= search.end %>">
+        <input type="date" id="retour" name="retour" min="<%= minDepart %>" value="<%= search.end %>">
       </div>
       <button type="submit" class="btn btn-primary search-btn">Rechercher</button>
     </form>

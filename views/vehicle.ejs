@@ -100,11 +100,13 @@
             ✓ Votre réservation a bien été envoyée ! Nous vous contacterons rapidement pour confirmer les détails et la disponibilité.
           </div>
         <% } %>
-        <% if (error) { %>
-          <div class="alert alert-error" id="formError">
+        <div class="alert alert-error" id="formError"<%- (error || dateError) ? '' : ' style="display:none;"' %>>
+          <% if (dateError) { %>
+            Le départ doit être au plus tôt demain : une location ne peut pas commencer le jour même. Veuillez choisir une autre date de départ.
+          <% } else if (error) { %>
             Veuillez remplir tous les champs obligatoires.
-          </div>
-        <% } %>
+          <% } %>
+        </div>
         <form method="post" action="/vehicule/<%= vehicle.id %>/demande" class="request-form" id="reservationForm">
           <div class="form-section">
             <h3>Vos coordonnées</h3>
@@ -121,14 +123,14 @@
 
           <div class="form-section">
             <h3>Dates de location</h3>
-            <p class="muted small">Cliquez sur les dates du calendrier ou utilisez les champs ci-dessous.</p>
-            <div id="bookingCalendar" class="booking-calendar"></div>
+            <p class="muted small">Cliquez sur les dates du calendrier ou utilisez les champs ci-dessous. Départ possible au plus tôt demain, le <%= frDate(minDepart) %> : une location ne peut pas commencer le jour même.</p>
+            <div id="bookingCalendar" class="booking-calendar" data-min-depart="<%= minDepart %>"></div>
             <div class="form-row">
               <label>Départ *
-                <input type="date" name="depart" id="depart" required readonly style="background: #f5f7fb; cursor: pointer;">
+                <input type="date" name="depart" id="depart" min="<%= minDepart %>" required readonly style="background: #f5f7fb; cursor: pointer;">
               </label>
               <label>Retour *
-                <input type="date" name="retour" id="retour" required readonly style="background: #f5f7fb; cursor: pointer;">
+                <input type="date" name="retour" id="retour" min="<%= minDepart %>" required readonly style="background: #f5f7fb; cursor: pointer;">
               </label>
             </div>
             <div id="priceError" class="alert alert-error" style="display:none; margin-top:0.5rem;">
