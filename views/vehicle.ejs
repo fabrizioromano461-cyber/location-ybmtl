@@ -1,4 +1,4 @@
-<%- include('partials/header', { title: vehicle.make + ' ' + vehicle.model + ' - Location YBMTL' }) %>
+<%- include('partials/header', { title: vehicle.make + ' ' + vehicle.model + (vehicle.coming_soon ? ' - Bientôt disponible' : '') + ' - Location YBMTL' }) %>
 
 <div class="container vehicle-detail">
   <a class="back-link" href="/">&larr; Retour à l'inventaire</a>
@@ -51,7 +51,9 @@
           <% if (vehicle.show_year) { %><p class="detail-sub"><%= vehicle.year %></p><% } %>
         </div>
         <div class="detail-header-actions">
-          <% if (rentedToday) { %>
+          <% if (vehicle.coming_soon) { %>
+            <span class="badge badge-soon">🕒 Bientôt disponible</span>
+          <% } else if (rentedToday) { %>
             <span class="badge badge-rented">Loué actuellement</span>
           <% } else { %>
             <span class="badge badge-available">Disponible</span>
@@ -67,7 +69,7 @@
         <% if (vehicle.show_year) { %><li><span class="spec-label">Année</span><span class="spec-value"><%= vehicle.year %></span></li><% } %>
         <li><span class="spec-label">Transmission</span><span class="spec-value"><%= vehicle.transmission %></span></li>
         <li><span class="spec-label">Portes</span><span class="spec-value"><%= vehicle.doors %></span></li>
-        <li><span class="spec-label">Kilométrage</span><span class="spec-value"><%= vehicle.mileage_policy %></span></li>
+        <% if (!vehicle.coming_soon) { %><li><span class="spec-label">Kilométrage</span><span class="spec-value"><%= vehicle.mileage_policy %></span></li><% } %>
       </ul>
 
       <% if (vehicle.description) { %>
@@ -80,6 +82,20 @@
 
     <!-- Colonne droite : prix + formulaire de réservation -->
     <aside class="detail-aside">
+      <% if (vehicle.coming_soon) { %>
+      <div class="soon-box">
+        <span class="soon-flag">🕒 Bientôt disponible</span>
+        <h2>Cette voiture arrive bientôt !</h2>
+        <p>La <%= vehicle.make %> <%= vehicle.model %><% if (vehicle.show_year) { %> <%= vehicle.year %><% } %> rejoindra très bientôt notre flotte. Le tarif et les réservations seront annoncés prochainement.</p>
+        <p>Cette voiture vous intéresse ? Contactez-nous : nous vous informerons dès qu'elle sera disponible.</p>
+        <div class="soon-actions">
+          <a class="btn btn-primary btn-block" href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>">📞 Appeler <%= company.phone %></a>
+          <a class="btn btn-outline btn-block" href="sms:<%= company.phone.replace(/[^0-9+]/g,'') %>">💬 Envoyer un texto</a>
+          <a class="btn btn-outline btn-block" href="mailto:<%= company.email %>?subject=<%= encodeURIComponent('Intérêt pour la ' + vehicle.make + ' ' + vehicle.model + (vehicle.show_year ? ' ' + vehicle.year : '')) %>">✉️ Nous écrire</a>
+        </div>
+        <a class="soon-link" href="/#vehicules">Voir les véhicules disponibles maintenant &rarr;</a>
+      </div>
+      <% } else { %>
       <div class="price-box">
         <div class="price-header">À partir de</div>
         <div class="price-big"><span id="weeklyRate" style="display:none;"><%= vehicle.weekly_rate %></span><span id="blockedDates" style="display:none;"><%= JSON.stringify(blocked) %></span><span id="taxRates" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>" style="display:none;"></span><%= money(vehicle.weekly_rate) %><span>/ semaine</span><span class="tax-note">+ taxes</span></div>
@@ -156,6 +172,7 @@
           <p class="muted small">✓ Aucun paiement en ligne. Nous confirmons votre réservation par téléphone ou courriel.</p>
         </form>
       </div>
+      <% } %>
     </aside>
   </div>
 
@@ -183,6 +200,7 @@
 </div>
 
 <script src="/js/gallery.js"></script>
+<% if (!vehicle.coming_soon) { %>
 <script src="/js/booking-calendar.js"></script>
 <script src="/js/reservation.js"></script>
 <script>
@@ -212,5 +230,6 @@
     });
   }
 </script>
+<% } %>
 
 <%- include('partials/footer') %>
