@@ -54,9 +54,9 @@ function seedVehicles() {
   const insertVehicle = db.prepare(
     `INSERT INTO vehicles
      (make, model, year, transmission, doors, weekly_rate, security_deposit,
-      mileage_policy, description, is_published, show_year)
+      mileage_policy, description, is_published, show_year, coming_soon)
      VALUES (@make, @model, @year, @transmission, @doors, @weekly_rate, @security_deposit,
-      @mileage_policy, @description, @is_published, @show_year)`
+      @mileage_policy, @description, @is_published, @show_year, @coming_soon)`
   );
   const insertPhoto = db.prepare(
     `INSERT INTO vehicle_photos (vehicle_id, filename, sort_order, is_primary)
@@ -77,6 +77,7 @@ function seedVehicles() {
         description: v.description || null,
         is_published: v.is_published != null ? v.is_published : 1,
         show_year: v.show_year != null ? v.show_year : 1,
+        coming_soon: v.coming_soon ? 1 : 0,
       });
       for (const p of v.photos || []) {
         insertPhoto.run(info.lastInsertRowid, p.filename, p.sort_order || 0, p.is_primary || 0);

@@ -662,5 +662,41 @@
         "sort_order": 30
       }
     ]
+  },
+  {
+    "make": "BMW",
+    "model": "750",
+    "year": 2019,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 0,
+    "security_deposit": 0,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline de luxe à la robe noir mat, la BMW 750 2019 impressionne par son intérieur en cuir clair, son toit ouvrant panoramique et ses jantes sport. Élégance, confort et puissance : une voiture qui ne passe pas inaperçue. Bientôt disponible à la location chez Location YBMTL : contactez-nous pour être informé dès son arrivée.",
+    "is_published": 1,
+    "show_year": 1,
+    "coming_soon": 1,
+    "photos": [
+      {
+        "filename": "bmw-750-profil.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "bmw-750-face.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "bmw-750-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "bmw-750-banquette.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      }
+    ]
   }
 ]

@@ -234,6 +234,46 @@ if (_nbVeh > 0) {
   }
 }
 
+// Vehicule(s) annonces « BIENTOT DISPONIBLE » (idempotent) : visibles sur le site
+// sans tarif ni formulaire de reservation. Quand la voiture est prete : dans
+// l'admin (Vehicules > Modifier), decocher « Bientot disponible » et entrer le
+// tarif + le depot. Pour la retirer du site : decocher « Publie » (ne PAS la
+// supprimer, elle reviendrait au prochain demarrage). Garder coherent avec seed-catalog.json.
+if (_nbVeh > 0) {
+  const _bientot = [
+    {
+      make: 'BMW', model: '750', year: 2019, transmission: 'Automatique', doors: 4,
+      description: 'Berline de luxe à la robe noir mat, la BMW 750 2019 impressionne par son intérieur en cuir clair, son toit ouvrant panoramique et ses jantes sport. Élégance, confort et puissance : une voiture qui ne passe pas inaperçue. Bientôt disponible à la location chez Location YBMTL : contactez-nous pour être informé dès son arrivée.',
+      photos: [
+        { filename: 'bmw-750-profil.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'bmw-750-face.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'bmw-750-interieur.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'bmw-750-banquette.jpg', sort_order: 30, is_primary: 0 },
+      ],
+    },
+  ];
+  const _findBientot = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ? AND year = ?');
+  const _insBientot = db.prepare(
+    `INSERT INTO vehicles (make, model, year, transmission, doors, weekly_rate,
+       security_deposit, mileage_policy, description, is_published, show_year, coming_soon)
+     VALUES (@make, @model, @year, @transmission, @doors, 0, 0, 'Kilométrage illimité',
+       @description, 1, 1, 1)`
+  );
+  const _insPhotoBientot = db.prepare(
+    'INSERT INTO vehicle_photos (vehicle_id, filename, sort_order, is_primary) VALUES (?, ?, ?, ?)'
+  );
+  for (const v of _bientot) {
+    if (_findBientot.get(v.make, v.model, v.year)) continue; // deja present
+    const info = _insBientot.run({
+      make: v.make, model: v.model, year: v.year, transmission: v.transmission,
+      doors: v.doors, description: v.description,
+    });
+    for (const p of v.photos) {
+      _insPhotoBientot.run(info.lastInsertRowid, p.filename, p.sort_order, p.is_primary);
+    }
+  }
+}
+
 // Photos ajoutees apres coup sur des vehicules existants (idempotent).
 // Verifie par nom de fichier pour ne jamais dupliquer.
 {
