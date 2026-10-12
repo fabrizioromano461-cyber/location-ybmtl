@@ -74,8 +74,7 @@ router.get('/', (req, res) => {
   // Vehicule(s) « nouvel arrive » mis en vedette en haut (hors recherche par dates).
   // Ordre d'affichage des vedettes (le plus recent en premier).
   const ORDRE_VEDETTE = [
-    { make: 'Jeep', model: 'Wrangler Unlimited' },
-    { make: 'Cadillac', model: 'ATS-V' },
+    { make: 'BMW', model: '750' },
   ];
   const rangVedette = (v) => {
     const i = ORDRE_VEDETTE.findIndex((p) => p.make === v.make && p.model === v.model);
