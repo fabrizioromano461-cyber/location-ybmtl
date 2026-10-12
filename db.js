@@ -327,7 +327,6 @@ if (_nbVeh > 0) {
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Jeep' AND model = 'Wrangler Unlimited'").run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'Cadillac' AND model = 'ATS-V'").run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'BMW' AND model = '750'").run();
 
 module.exports = db;
