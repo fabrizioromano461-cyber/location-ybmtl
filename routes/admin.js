@@ -233,21 +233,22 @@ function createOrUpdateVehicle(body, id) {
     description: (body.description || '').trim(),
     is_published: body.is_published ? 1 : 0,
     show_year: body.show_year ? 1 : 0,
+    coming_soon: body.coming_soon ? 1 : 0,
   };
   if (id) {
     db.prepare(
       `UPDATE vehicles SET make=@make, model=@model, year=@year,
        transmission=@transmission, doors=@doors, weekly_rate=@weekly_rate,
        security_deposit=@security_deposit, mileage_policy=@mileage_policy, description=@description,
-       is_published=@is_published, show_year=@show_year WHERE id=@id`
+       is_published=@is_published, show_year=@show_year, coming_soon=@coming_soon WHERE id=@id`
     ).run({ ...data, id });
     return id;
   }
   const info = db
     .prepare(
       `INSERT INTO vehicles
-       (make, model, year, transmission, doors, weekly_rate, security_deposit, mileage_policy, description, is_published, show_year)
-       VALUES (@make, @model, @year, @transmission, @doors, @weekly_rate, @security_deposit, @mileage_policy, @description, @is_published, @show_year)`
+       (make, model, year, transmission, doors, weekly_rate, security_deposit, mileage_policy, description, is_published, show_year, coming_soon)
+       VALUES (@make, @model, @year, @transmission, @doors, @weekly_rate, @security_deposit, @mileage_policy, @description, @is_published, @show_year, @coming_soon)`
     )
     .run(data);
   return info.lastInsertRowid;

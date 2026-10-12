@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
       photo: photo ? photo.filename : null,
       rentedToday: availability.isRentedToday(v.id),
       availableForRange: hasSearch
-        ? availability.isAvailableForRange(v.id, start, end)
+        ? !v.coming_soon && availability.isAvailableForRange(v.id, start, end)
         : true,
     };
   });
@@ -58,7 +58,10 @@ router.get('/', (req, res) => {
     const i = MIS_EN_AVANT.findIndex((p) => p.make === v.make && p.model === v.model);
     return i === -1 ? MIS_EN_AVANT.length : i;
   };
-  vehicles.sort((a, b) => rangMiseEnAvant(a) - rangMiseEnAvant(b));
+  // Les voitures « Bientot disponible » passent en tout premier, puis les mises en avant.
+  vehicles.sort(
+    (a, b) => (b.coming_soon - a.coming_soon) || (rangMiseEnAvant(a) - rangMiseEnAvant(b))
+  );
 
   // Si une recherche par dates est faite, on ne garde que les vehicules libres.
   let list = hasSearch
@@ -66,7 +69,7 @@ router.get('/', (req, res) => {
     : vehicles;
   // Filtres du menu de recherche (marque + prix max), cumulables avec les dates.
   if (marque) list = list.filter((v) => v.make === marque);
-  if (prixMax) list = list.filter((v) => v.weekly_rate <= prixMax);
+  if (prixMax) list = list.filter((v) => !v.coming_soon && v.weekly_rate <= prixMax);
 
   // Vehicule(s) « nouvel arrive » mis en vedette en haut (hors recherche par dates).
   // Ordre d'affichage des vedettes (le plus recent en premier).
@@ -123,7 +126,7 @@ router.get('/vehicule/:id', (req, res) => {
   const similaires = db
     .prepare(
       `SELECT * FROM vehicles
-       WHERE is_published = 1 AND id != ?
+       WHERE is_published = 1 AND coming_soon = 0 AND id != ?
          AND (make = ? OR ABS(weekly_rate - ?) <= 100)
        ORDER BY (make = ?) DESC, ABS(weekly_rate - ?) ASC
        LIMIT 3`
@@ -146,9 +149,11 @@ router.get('/vehicule/:id', (req, res) => {
 // RECEPTION DU FORMULAIRE DE DEMANDE
 router.post('/vehicule/:id/demande', (req, res) => {
   const vehicle = db
-    .prepare('SELECT id, make, model, weekly_rate FROM vehicles WHERE id = ?')
+    .prepare('SELECT id, make, model, weekly_rate, coming_soon FROM vehicles WHERE id = ?')
     .get(req.params.id);
   if (!vehicle) return res.status(404).render('404');
+  // Voiture « Bientot disponible » : pas de reservation possible (la fiche n'a pas de formulaire).
+  if (vehicle.coming_soon) return res.redirect(`/vehicule/${vehicle.id}`);
 
   const { name, phone, email, depart, retour, message } = req.body;
 
