@@ -182,6 +182,8 @@ h1, h2, h3, h4 { line-height: 1.2; margin: 0 0 .5em; }
 .featured-price { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
 .featured-price small { font-size: .9rem; font-weight: 600; color: var(--muted); }
 .featured-deposit { font-size: .92rem; color: var(--muted); font-weight: 600; }
+.featured-soon { font-size: 1.4rem; font-weight: 800; color: #8a5a00; display: flex; flex-direction: column; line-height: 1.2; }
+.featured-soon small { font-size: .88rem; font-weight: 600; color: var(--muted); }
 .featured-btn { align-self: flex-start; }
 @media (max-width: 720px) {
   .featured-card { flex-direction: column; }
