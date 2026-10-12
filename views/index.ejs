@@ -91,16 +91,20 @@ const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
       <a class="featured-card" href="/vehicule/<%= v.id %>">
         <div class="featured-photo">
           <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
-          <span class="featured-flag">✨ Nouvel arrivé</span>
+          <span class="featured-flag"><%= v.coming_soon ? '🕒 Bientôt disponible' : '✨ Nouvel arrivé' %></span>
         </div>
         <div class="featured-info">
-          <span class="featured-eyebrow">Dernière arrivée dans notre inventaire</span>
+          <span class="featured-eyebrow"><%= v.coming_soon ? 'Prochainement dans notre inventaire' : 'Dernière arrivée dans notre inventaire' %></span>
           <h2 class="featured-title"><%= v.make %> <%= v.model %></h2>
           <p class="featured-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= v.transmission %> &middot; <%= v.doors %> portes</p>
           <% if (v.description) { %><p class="featured-desc"><%= v.description.length > 180 ? v.description.slice(0, 180) + '…' : v.description %></p><% } %>
           <div class="featured-meta">
-            <span class="featured-price"><%= money(v.weekly_rate) %> <small>/ semaine + taxes</small></span>
-            <span class="featured-deposit">Dépôt <%= money(v.security_deposit) %></span>
+            <% if (v.coming_soon) { %>
+              <span class="featured-soon">Bientôt disponible <small>Tarif annoncé prochainement</small></span>
+            <% } else { %>
+              <span class="featured-price"><%= money(v.weekly_rate) %> <small>/ semaine + taxes</small></span>
+              <span class="featured-deposit">Dépôt <%= money(v.security_deposit) %></span>
+            <% } %>
           </div>
           <span class="btn btn-primary featured-btn">Voir ce véhicule &rarr;</span>
         </div>
