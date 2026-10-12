@@ -17,10 +17,12 @@
         <tr>
           <td><strong><%= v.make %> <%= v.model %></strong></td>
           <td><%= v.year %></td>
-          <td><%= money(v.weekly_rate) %></td>
+          <td><%= v.coming_soon ? '—' : money(v.weekly_rate) %></td>
           <td><%= v.photoCount %></td>
           <td>
-            <% if (v.is_published) { %>
+            <% if (v.coming_soon) { %>
+              <span class="pill pill-new">Bientôt disponible</span>
+            <% } else if (v.is_published) { %>
               <span class="pill pill-done">Publié</span>
             <% } else { %>
               <span class="pill pill-muted">Masqué</span>

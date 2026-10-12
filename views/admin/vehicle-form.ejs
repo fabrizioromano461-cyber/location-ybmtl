@@ -53,6 +53,11 @@
         <textarea name="description" rows="4" placeholder="Détails, options, état..."><%= vehicle ? (vehicle.description || '') : '' %></textarea>
       </label>
       <label class="checkbox full">
+        <input type="checkbox" name="coming_soon" value="1"
+               <%= (vehicle && vehicle.coming_soon) ? 'checked' : '' %>>
+        Bientôt disponible (la voiture s'affiche sans prix ni réservation ; le tarif peut rester à 0)
+      </label>
+      <label class="checkbox full">
         <input type="checkbox" name="is_published" value="1"
                <%= (!vehicle || vehicle.is_published) ? 'checked' : '' %>>
         Publié sur le site (visible par les clients)
