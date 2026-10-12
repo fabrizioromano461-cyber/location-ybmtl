@@ -68,7 +68,7 @@ app.use((req, res, next) => {
   res.locals.priceBounds = db
     .prepare(
       `SELECT MIN(weekly_rate) AS min, MAX(weekly_rate) AS max FROM vehicles
-       WHERE is_published = 1`
+       WHERE is_published = 1 AND coming_soon = 0`
     )
     .get() || { min: 0, max: 1000 };
   // Valeurs de recherche courantes (pour pre-remplir le menu de recherche).

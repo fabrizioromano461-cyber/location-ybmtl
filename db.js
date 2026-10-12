@@ -81,6 +81,10 @@ if (!vehicleCols.includes('security_deposit')) {
 if (!vehicleCols.includes('is_new')) {
   db.exec('ALTER TABLE vehicles ADD COLUMN is_new INTEGER NOT NULL DEFAULT 0');
 }
+// 1 = « Bientot disponible » : la voiture s'affiche sans prix ni reservation.
+if (!vehicleCols.includes('coming_soon')) {
+  db.exec('ALTER TABLE vehicles ADD COLUMN coming_soon INTEGER NOT NULL DEFAULT 0');
+}
 
 // Estimation du prix (en cents) enregistree avec chaque demande : sous-total, TPS, TVQ, total.
 const requestCols = db.prepare('PRAGMA table_info(requests)').all().map((c) => c.name);
