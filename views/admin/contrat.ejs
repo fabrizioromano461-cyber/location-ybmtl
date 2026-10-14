@@ -1,0 +1,187 @@
+<%- include('partials/head', { title: 'Nouveau contrat' }) %>
+<link rel="stylesheet" href="/css/contrat.css">
+
+<div class="contrat-page" id="contratPage" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>">
+
+  <% if (!gabaritOk) { %>
+    <div class="c-alert">Le PDF du contrat a changé depuis la mise au point de cette page : vérifiez bien le PDF créé (placement des textes) avant de l'envoyer.</div>
+  <% } %>
+
+  <!-- ÉTAPE 1 : les informations -->
+  <form id="contratForm" autocomplete="off">
+    <div class="c-head">
+      <h1>Nouveau contrat</h1>
+      <p class="muted">Remplissez les infos, puis passez le téléphone au client pour qu'il lise et signe. Le contrat est envoyé par courriel : rien n'est gardé sur le site.</p>
+    </div>
+
+    <section class="c-card">
+      <h2><span class="c-num">1</span> Locataire</h2>
+      <label><span class="c-lab">Nom complet <em>*</em></span>
+        <input type="text" name="nom" id="nom" required maxlength="120" autocapitalize="words" value="<%= pre.nom || '' %>">
+      </label>
+      <label><span class="c-lab">Adresse <em>*</em></span>
+        <input type="text" name="adresse" id="adresse" required maxlength="200" autocapitalize="words" placeholder="No, rue, app., ville, code postal">
+      </label>
+      <label><span class="c-lab">Téléphone <em>*</em></span>
+        <input type="tel" name="telephone" id="telephone" required maxlength="40" inputmode="tel" value="<%= pre.telephone || '' %>">
+      </label>
+      <label><span class="c-lab">Courriel <span class="c-opt">(pour lui envoyer sa copie)</span></span>
+        <input type="email" name="courriel" id="courriel" maxlength="120" inputmode="email" autocapitalize="none" value="<%= pre.courriel || '' %>">
+      </label>
+      <label><span class="c-lab">Date de naissance <em>*</em></span>
+        <input type="date" name="naissance" id="naissance" required>
+      </label>
+      <p class="c-warn" id="ageHint" hidden></p>
+      <label><span class="c-lab">N° de permis de conduire <em>*</em></span>
+        <input type="text" name="permis" id="permis" required maxlength="40" autocapitalize="characters">
+      </label>
+    </section>
+
+    <section class="c-card">
+      <h2><span class="c-num">2</span> Véhicule</h2>
+      <label><span class="c-lab">Choisir dans l'inventaire</span>
+        <select name="vehiculeId" id="vehiculeSel">
+          <option value="">— Autre véhicule (je le tape) —</option>
+          <% vehicles.forEach(function(v) { %>
+            <option value="<%= v.id %>"
+                    data-nom="<%= v.make %> <%= v.model %>" data-annee="<%= v.year %>"
+                    data-tarif="<%= v.weekly_rate %>" data-depot="<%= v.security_deposit %>"
+                    <%= String(pre.vehiculeId) === String(v.id) ? 'selected' : '' %>>
+              <%= v.make %> <%= v.model %> (<%= v.year %>)<%= v.is_published ? '' : ' — masqué du site' %>
+            </option>
+          <% }); %>
+        </select>
+      </label>
+      <label><span class="c-lab">Marque / modèle <em>*</em></span>
+        <input type="text" name="vehicule" id="vehiculeNom" required maxlength="120">
+      </label>
+      <div class="c-row">
+        <label><span class="c-lab">Année <em>*</em></span>
+          <input type="text" name="annee" id="annee" required maxlength="10" inputmode="numeric">
+        </label>
+        <label><span class="c-lab">Plaque <em>*</em></span>
+          <input type="text" name="plaque" id="plaque" required maxlength="20" autocapitalize="characters">
+        </label>
+      </div>
+      <label><span class="c-lab">Kilométrage au départ <span class="c-opt">(facultatif)</span></span>
+        <input type="text" name="km" id="km" maxlength="12" inputmode="numeric">
+      </label>
+      <label><span class="c-lab">État du véhicule <span class="c-opt">(facultatif : rayures, notes…)</span></span>
+        <input type="text" name="etat" id="etat" maxlength="200">
+      </label>
+    </section>
+
+    <section class="c-card">
+      <h2><span class="c-num">3</span> Durée</h2>
+      <div class="c-row c-row-date">
+        <label><span class="c-lab">Départ <em>*</em></span>
+          <input type="date" name="departDate" id="departDate" required value="<%= pre.departDate || '' %>">
+        </label>
+        <label><span class="c-lab">Heure</span>
+          <input type="time" name="departHeure" id="departHeure" required value="12:00">
+        </label>
+      </div>
+      <div class="c-row c-row-date">
+        <label><span class="c-lab">Retour <em>*</em></span>
+          <input type="date" name="retourDate" id="retourDate" required value="<%= pre.retourDate || '' %>">
+        </label>
+        <label><span class="c-lab">Heure</span>
+          <input type="time" name="retourHeure" id="retourHeure" required value="12:00">
+        </label>
+      </div>
+    </section>
+
+    <section class="c-card">
+      <h2><span class="c-num">4</span> Prix</h2>
+      <div class="c-row">
+        <label><span class="c-lab">Tarif / sem. ($) <em>*</em></span>
+          <input type="text" name="tarifHebdo" id="tarifHebdo" required inputmode="decimal">
+        </label>
+        <label><span class="c-lab">Dépôt ($) <em>*</em></span>
+          <input type="text" name="depot" id="depot" required inputmode="decimal">
+        </label>
+      </div>
+      <div class="c-recap" id="recapPrix">Choisissez les dates pour voir le total.</div>
+      <label class="c-check">
+        <input type="checkbox" name="recap" value="1" checked>
+        <span>Inscrire le récapitulatif des taxes au bas de la page 1 du contrat</span>
+      </label>
+    </section>
+
+    <p class="c-erreur" id="erreurForm" role="alert" hidden></p>
+    <button type="button" class="btn btn-primary btn-block c-big" id="btnContinuer">Continuer vers la signature &rarr;</button>
+  </form>
+
+  <!-- ÉTAPE 2 : lecture et signature -->
+  <div id="etapeSignature" hidden>
+    <div class="c-head">
+      <button type="button" class="c-back" id="btnRetour">&larr; Modifier les infos</button>
+      <h1>Lecture et signature</h1>
+      <p class="muted">Passez le téléphone au locataire.</p>
+    </div>
+
+    <section class="c-card">
+      <h2>Résumé</h2>
+      <dl class="c-resume" id="resume"></dl>
+      <a class="btn btn-outline btn-block" href="/docs/Contrat-Location-YBMTL-FR.pdf" target="_blank" rel="noopener">Lire le contrat complet (20 articles)</a>
+    </section>
+
+    <section class="c-card">
+      <label class="c-check">
+        <input type="checkbox" id="accepte">
+        <span>Le locataire a lu le contrat de location et en accepte toutes les conditions.</span>
+      </label>
+      <label><span class="c-lab">Fait à</span>
+        <input type="text" id="lieu" value="Montréal" maxlength="60">
+      </label>
+    </section>
+
+    <section class="c-card">
+      <h2>Signature du locataire</h2>
+      <div class="c-pad" id="boiteLoc"><canvas id="padLoc"></canvas><span class="c-pad-hint">Signez ici avec le doigt</span></div>
+      <button type="button" class="btn btn-sm btn-outline" id="effLoc">Effacer</button>
+    </section>
+
+    <section class="c-card">
+      <h2>Signature du représentant</h2>
+      <div id="repSauvee" hidden>
+        <img id="repImg" class="c-sig-img" alt="Signature enregistrée">
+        <p class="muted small">Votre signature enregistrée sur ce téléphone sera utilisée.</p>
+        <button type="button" class="btn btn-sm btn-outline" id="repRefaire">Refaire ma signature</button>
+      </div>
+      <div id="repZone">
+        <div class="c-pad" id="boiteRep"><canvas id="padRep"></canvas><span class="c-pad-hint">Signature de Location YBMTL</span></div>
+        <button type="button" class="btn btn-sm btn-outline" id="effRep">Effacer</button>
+        <label class="c-check">
+          <input type="checkbox" id="garderSig" checked>
+          <span>Garder ma signature sur ce téléphone (pour ne plus la refaire)</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="c-card">
+      <label class="c-check" id="blocCopieClient">
+        <input type="checkbox" id="envoyerClient" checked>
+        <span>Envoyer une copie au client par courriel (<strong id="courrielClient"></strong>)</span>
+      </label>
+      <p class="muted small" id="notePartage">Vous recevez toujours votre copie. Après la création, vous pourrez aussi partager le PDF par texto.</p>
+    </section>
+
+    <p class="c-erreur" id="erreurSig" role="alert" hidden></p>
+    <button type="button" class="btn btn-primary btn-block c-big" id="btnTerminer">Terminer et envoyer le contrat</button>
+  </div>
+
+  <!-- ÉTAPE 3 : terminé -->
+  <div id="etapeFin" class="c-fin" hidden>
+    <div class="c-ok">&#10003;</div>
+    <h1>Contrat créé</h1>
+    <p class="muted" id="finRef"></p>
+    <ul class="c-mails" id="finMails"></ul>
+    <a class="btn btn-primary btn-block c-big" id="btnTelecharger" href="#" download>Ouvrir / télécharger le PDF</a>
+    <button type="button" class="btn btn-outline btn-block c-big" id="btnPartager" hidden>Partager le PDF (texto, WhatsApp…)</button>
+    <button type="button" class="btn btn-outline btn-block" id="btnNouveau">Nouveau contrat</button>
+  </div>
+</div>
+
+<script src="/js/contrat.js" defer></script>
+<%- include('partials/foot') %>
