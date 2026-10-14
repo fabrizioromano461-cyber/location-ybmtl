@@ -56,6 +56,9 @@ router.post('/deconnexion', (req, res) => {
 // Toutes les routes ci-dessous exigent d'etre connecte.
 router.use(requireLogin);
 
+// Page « Nouveau contrat » (contrat PDF a signer au doigt, envoye par courriel).
+router.use('/contrat', require('./admin-contrat'));
+
 // ============== TABLEAU DE BORD ==============
 router.get('/', (req, res) => {
   const stats = {
