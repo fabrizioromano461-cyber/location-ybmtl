@@ -1,0 +1,113 @@
+/* ============================================================
+   Page admin « Nouveau contrat » : pensée pour le cellulaire.
+   ============================================================ */
+.contrat-page { max-width: 640px; margin: 0 auto; }
+/* Les regles « display » ci-dessous ne doivent jamais reafficher un element cache par l'attribut hidden. */
+.contrat-page [hidden] { display: none !important; }
+.contrat-page h1 { font-size: 1.5rem; margin: 0 0 .3rem; }
+.c-head { margin-bottom: 1rem; }
+.c-head p { margin: 0; }
+
+.c-card {
+  display: flex; flex-direction: column; gap: .9rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.1rem 1rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm);
+}
+.c-card h2 { font-size: 1.05rem; margin: 0; display: flex; align-items: center; gap: .6rem; }
+.c-num {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 26px; height: 26px; border-radius: 50%; background: #e8f0ff; color: var(--primary);
+  font-size: .85rem; font-weight: 700;
+}
+
+.c-card label {
+  display: flex; flex-direction: column; gap: .35rem; margin: 0;
+  font-size: .88rem; font-weight: 600; color: var(--text);
+}
+.contrat-page em { color: var(--danger); font-style: normal; }
+.c-opt { font-weight: 400; color: var(--muted); }
+
+.c-card input:not([type=checkbox]), .c-card select {
+  width: 100%; min-width: 0; min-height: 48px;
+  border: 1px solid #cfd6e4; border-radius: 10px; background: #fff;
+  padding: .6rem .75rem; font-size: 16px; font-family: inherit; font-weight: 400; color: var(--text);
+}
+.c-card input:focus, .c-card select:focus {
+  outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(29, 78, 216, .14);
+}
+
+.c-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.c-row-date { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+/* Comme sur le site public : un champ date ne tient pas a moitie de largeur sur un petit telephone. */
+@media (max-width: 419px) {
+  .c-row-date { grid-template-columns: 1fr; }
+}
+
+.c-check { flex-direction: row !important; align-items: flex-start; gap: .65rem !important; font-weight: 500 !important; line-height: 1.4; }
+.c-check input[type=checkbox] { width: 24px; height: 24px; flex: none; margin: 0; accent-color: var(--primary); }
+
+.c-recap {
+  background: #f3f6fd; border: 1px solid #dbe4f7; border-radius: 10px;
+  padding: .75rem .85rem; font-size: .9rem; line-height: 1.55;
+}
+.c-warn {
+  margin: 0; color: #92400e; background: #fff7e0; border: 1px solid #fde4a3;
+  border-radius: 8px; padding: .5rem .7rem; font-size: .85rem;
+}
+.c-alert {
+  color: #92400e; background: #fff7e0; border: 1px solid #fde4a3;
+  border-radius: 10px; padding: .75rem .9rem; font-size: .9rem; margin-bottom: 1rem;
+}
+.c-erreur {
+  color: var(--danger); background: var(--danger-bg); border-radius: 10px;
+  padding: .7rem .9rem; font-size: .92rem; margin: 0 0 1rem;
+}
+
+.c-big { padding: 1rem 1.2rem; font-size: 1.05rem; margin-bottom: .75rem; }
+.c-back {
+  background: none; border: 0; padding: .3rem 0; margin-bottom: .4rem; cursor: pointer;
+  color: var(--primary); font-size: .95rem; font-weight: 600; font-family: inherit;
+}
+
+/* Résumé avant la signature */
+.c-resume { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .4rem .9rem; margin: 0; font-size: .92rem; }
+.c-resume dt { color: var(--muted); }
+.c-resume dd { margin: 0; font-weight: 600; word-break: break-word; }
+
+#repZone, #repSauvee { display: flex; flex-direction: column; gap: .9rem; }
+.c-card .btn-sm { align-self: flex-start; }
+
+/* Zones de signature au doigt */
+.c-pad {
+  position: relative; height: 170px; overflow: hidden;
+  border: 2px dashed #b8c4dc; border-radius: 12px; background-color: #fff;
+  background-image: linear-gradient(to bottom, transparent calc(100% - 42px), #cfd8e8 calc(100% - 42px), #cfd8e8 calc(100% - 41px), transparent calc(100% - 41px));
+}
+.c-pad canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  touch-action: none; cursor: crosshair; -webkit-user-select: none; user-select: none;
+}
+.c-pad-hint {
+  position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  text-align: center; color: #a3afc6; font-size: .95rem; pointer-events: none;
+}
+.c-pad.has-ink .c-pad-hint { display: none; }
+.c-sig-img { max-height: 80px; width: auto; border: 1px solid var(--border); border-radius: 8px; background: #fff; padding: 6px; }
+
+/* Écran final */
+.c-fin { text-align: center; padding-top: 1rem; }
+.c-ok {
+  width: 72px; height: 72px; margin: 0 auto 1rem; border-radius: 50%;
+  background: var(--green-bg); color: var(--green); font-size: 2.4rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.c-mails { list-style: none; padding: 0; margin: 1rem 0 1.5rem; text-align: left; }
+.c-mails li {
+  padding: .6rem .8rem; margin-bottom: .5rem; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border); font-size: .92rem;
+}
+.c-mails li.ok::before { content: "\2713\00a0"; color: var(--green); font-weight: 700; }
+.c-mails li.bad { background: var(--danger-bg); border-color: #f0c9c9; color: #9b1c1c; }
+.c-mails li.bad::before { content: "\26A0\00a0"; }
+.c-mails li.info { color: var(--muted); }
+

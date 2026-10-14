@@ -780,3 +780,23 @@ body.menu-open { overflow: hidden; }
 .fit-contain::before { content: ""; position: absolute; inset: -30px; z-index: -1;
   background: var(--photo) center / cover no-repeat; filter: blur(18px) saturate(1.15) brightness(.72); }
 .fit-contain > img { object-fit: contain; }
+
+/* ---------- Admin sur cellulaire : menu sur 2 lignes (logo + deconnexion, puis les liens) ---------- */
+.admin-head-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+.nav-short { display: none; }
+@media (max-width: 640px) {
+  .admin-header { position: static; } /* pas colle en haut : on garde toute la hauteur de l'ecran pour les formulaires */
+  .admin-header-inner { height: auto; flex-wrap: wrap; padding: 8px 14px; gap: .4rem .75rem; }
+  .admin-brand { order: 1; flex: none; }
+  .admin-brand img { flex: none; }
+  .admin-user { order: 2; margin-left: auto; gap: .5rem; }
+  .admin-nav { order: 3; flex: 1 1 100%; overflow-x: auto; gap: .2rem; padding-bottom: 2px; }
+  .admin-nav a { white-space: nowrap; flex: none; padding: .45rem .5rem; }
+  .nav-full { display: none; }
+  .nav-short { display: inline; }
+  .admin-container { padding: 0 14px; }
+  /* Demandes : les 3 boutons passent a la ligne au lieu de deborder de l'ecran */
+  .request-item { padding: 1rem; }
+  .request-main { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+  .request-actions { flex-wrap: wrap; min-width: 0; }
+}
