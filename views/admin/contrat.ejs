@@ -1,7 +1,15 @@
+<% var publicMode = (typeof mode !== 'undefined' && mode === 'public'); -%>
+<% if (publicMode) { -%>
+<%- include('../contrat/partials/head', { connecte: true }) %>
+<% } else { -%>
 <%- include('partials/head', { title: 'Nouveau contrat' }) %>
+<% } -%>
 <link rel="stylesheet" href="/css/contrat.css">
 
-<div class="contrat-page" id="contratPage" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>">
+<div class="contrat-page" id="contratPage" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>"
+     data-generer="<%= typeof actionGenerer !== 'undefined' ? actionGenerer : '/admin/contrat/generer' %>"
+     data-accueil="<%= typeof urlAccueil !== 'undefined' ? urlAccueil : '/admin/contrat' %>"
+     data-connexion="<%= typeof urlConnexion !== 'undefined' ? urlConnexion : '/admin/connexion' %>">
 
   <% if (!gabaritOk) { %>
     <div class="c-alert">Le PDF du contrat a changé depuis la mise au point de cette page : vérifiez bien le PDF créé (placement des textes) avant de l'envoyer.</div>
@@ -123,14 +131,22 @@
     <section class="c-card">
       <h2>Résumé</h2>
       <dl class="c-resume" id="resume"></dl>
-      <a class="btn btn-outline btn-block" href="/docs/Contrat-Location-YBMTL-FR.pdf" target="_blank" rel="noopener">Lire le contrat complet (20 articles)</a>
+    </section>
+
+    <section class="c-card c-conditions">
+      <h2>Conditions du contrat de location</h2>
+      <p class="muted small">Lisez tous les articles en faisant défiler, jusqu'en bas.</p>
+      <%- include('partials/contrat-texte', { texte: texte }) %>
+      <div id="finConditions" aria-hidden="true"></div>
+      <a class="c-lien-pdf" href="/docs/Contrat-Location-YBMTL-FR.pdf" target="_blank" rel="noopener">Ouvrir la version PDF du contrat</a>
     </section>
 
     <section class="c-card">
-      <label class="c-check">
-        <input type="checkbox" id="accepte">
-        <span>Le locataire a lu le contrat de location et en accepte toutes les conditions.</span>
+      <label class="c-check c-check-off" id="blocAccepte">
+        <input type="checkbox" id="accepte" disabled>
+        <span>J'ai lu et j'accepte les conditions du contrat de location.</span>
       </label>
+      <p class="muted small" id="aideAccepte">Faites défiler le contrat ci-dessus jusqu'en bas pour pouvoir cocher cette case.</p>
       <label><span class="c-lab">Fait à</span>
         <input type="text" id="lieu" value="Montréal" maxlength="60">
       </label>
@@ -138,8 +154,20 @@
 
     <section class="c-card">
       <h2>Signature du locataire</h2>
-      <div class="c-pad" id="boiteLoc"><canvas id="padLoc"></canvas><span class="c-pad-hint">Signez ici avec le doigt</span></div>
-      <button type="button" class="btn btn-sm btn-outline" id="effLoc">Effacer</button>
+      <div class="c-modes" role="group" aria-label="Façon de signer">
+        <button type="button" class="c-mode actif" data-cible="Loc" data-mode="dessin" aria-pressed="true">Dessiner au doigt</button>
+        <button type="button" class="c-mode" data-cible="Loc" data-mode="clavier" aria-pressed="false">Taper au clavier</button>
+      </div>
+      <div class="c-zone" id="zoneDessinLoc">
+        <div class="c-pad" id="boiteLoc"><canvas id="padLoc"></canvas><span class="c-pad-hint">Signez ici avec le doigt</span></div>
+        <button type="button" class="btn btn-sm btn-outline" id="effLoc">Effacer</button>
+      </div>
+      <div class="c-zone" id="zoneClavierLoc" hidden>
+        <label><span class="c-lab">Tapez votre nom pour signer</span>
+          <input type="text" id="texteLoc" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Prénom Nom">
+        </label>
+        <div class="c-apercu" id="apercuLoc"><span class="c-pad-hint">Votre signature apparaîtra ici</span><div class="c-apercu-cible"></div></div>
+      </div>
     </section>
 
     <section class="c-card">
@@ -149,9 +177,21 @@
         <p class="muted small">Votre signature enregistrée sur ce téléphone sera utilisée.</p>
         <button type="button" class="btn btn-sm btn-outline" id="repRefaire">Refaire ma signature</button>
       </div>
-      <div id="repZone">
-        <div class="c-pad" id="boiteRep"><canvas id="padRep"></canvas><span class="c-pad-hint">Signature de Location YBMTL</span></div>
-        <button type="button" class="btn btn-sm btn-outline" id="effRep">Effacer</button>
+      <div id="repZone" class="c-zone">
+        <div class="c-modes" role="group" aria-label="Façon de signer">
+          <button type="button" class="c-mode actif" data-cible="Rep" data-mode="dessin" aria-pressed="true">Dessiner au doigt</button>
+          <button type="button" class="c-mode" data-cible="Rep" data-mode="clavier" aria-pressed="false">Taper au clavier</button>
+        </div>
+        <div class="c-zone" id="zoneDessinRep">
+          <div class="c-pad" id="boiteRep"><canvas id="padRep"></canvas><span class="c-pad-hint">Signature de Location YBMTL</span></div>
+          <button type="button" class="btn btn-sm btn-outline" id="effRep">Effacer</button>
+        </div>
+        <div class="c-zone" id="zoneClavierRep" hidden>
+          <label><span class="c-lab">Tapez votre nom pour signer</span>
+            <input type="text" id="texteRep" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Prénom Nom">
+          </label>
+          <div class="c-apercu" id="apercuRep"><span class="c-pad-hint">Votre signature apparaîtra ici</span><div class="c-apercu-cible"></div></div>
+        </div>
         <label class="c-check">
           <input type="checkbox" id="garderSig" checked>
           <span>Garder ma signature sur ce téléphone (pour ne plus la refaire)</span>
@@ -184,4 +224,8 @@
 </div>
 
 <script src="/js/contrat.js" defer></script>
+<% if (publicMode) { -%>
+<%- include('../contrat/partials/foot') %>
+<% } else { -%>
 <%- include('partials/foot') %>
+<% } -%>
