@@ -11,6 +11,10 @@
 
   const $ = (id) => document.getElementById(id);
   const form = $('contratForm');
+  // Adresses fournies par la page : /admin/contrat (admin) ou /contrat (accès par code courriel).
+  const URL_GENERER = page.dataset.generer || '/admin/contrat/generer';
+  const URL_ACCUEIL = page.dataset.accueil || '/admin/contrat';
+  const URL_CONNEXION = page.dataset.connexion || '/admin/connexion';
 
   const num = (v) => {
     const n = parseFloat(String(v == null ? '' : v).replace(',', '.').replace(/[^\d.]/g, ''));
@@ -142,7 +146,71 @@
       dd.textContent = v;
       dl.append(dt, dd);
     });
+    // Le dépôt saisi remplace le blanc de l'article 2.1 dans le texte du contrat affiché plus bas.
+    const depot = num(form.depot.value);
+    const texteDepot = depot == null
+      ? '______'
+      : depot.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.querySelectorAll('.js-depot').forEach((e) => { e.textContent = texteDepot; });
   }
+
+  // ---------- Lecture des conditions : la case « J'ai lu et j'accepte » s'ouvre au bas du contrat ----------
+  let conditionsLues = false;
+  let ecouteurFin = null;
+  function debloquerAccepte() {
+    conditionsLues = true;
+    const acc = $('accepte');
+    const bloc = $('blocAccepte');
+    const aide = $('aideAccepte');
+    if (acc) acc.disabled = false;
+    if (bloc) bloc.classList.remove('c-check-off');
+    if (aide) aide.hidden = true;
+    if (ecouteurFin) { window.removeEventListener('scroll', ecouteurFin); ecouteurFin = null; }
+  }
+  // La case s'ouvre dès que le bas du contrat est apparu à l'écran (ou a été dépassé, si on a défilé très vite).
+  function verifierFinConditions() {
+    const fin = $('finConditions');
+    if (!fin) { debloquerAccepte(); return; } // page sans texte du contrat : on ne bloque pas
+    if (etapes.sig.hidden || fin.offsetParent === null) return; // étape pas affichée : rien à mesurer
+    if (fin.getBoundingClientRect().top <= window.innerHeight) debloquerAccepte();
+  }
+  function surveillerConditions() {
+    if (conditionsLues || ecouteurFin) return;
+    ecouteurFin = verifierFinConditions;
+    window.addEventListener('scroll', ecouteurFin, { passive: true });
+    verifierFinConditions();
+  }
+
+  // Découpe une signature autour du trait (fond transparent) pour que le PDF l'agrandisse au maximum.
+  // Renvoie un nouveau canevas, ou null s'il n'y a rien d'écrit.
+  function recadrerCanevas(source, marge) {
+    const w = source.width;
+    const h = source.height;
+    const data = source.getContext('2d').getImageData(0, 0, w, h).data;
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (data[(y * w + x) * 4 + 3] > 12) {
+          if (x < x0) x0 = x;
+          if (x > x1) x1 = x;
+          if (y < y0) y0 = y;
+          if (y > y1) y1 = y;
+        }
+      }
+    }
+    if (x1 < 0) return null;
+    const pad = marge == null ? Math.round(6 * (window.devicePixelRatio || 1)) : marge;
+    x0 = Math.max(0, x0 - pad);
+    y0 = Math.max(0, y0 - pad);
+    x1 = Math.min(w - 1, x1 + pad);
+    y1 = Math.min(h - 1, y1 + pad);
+    const out = document.createElement('canvas');
+    out.width = x1 - x0 + 1;
+    out.height = y1 - y0 + 1;
+    out.getContext('2d').drawImage(source, x0, y0, out.width, out.height, 0, 0, out.width, out.height);
+    return out;
+  }
+  const blobDe = (canevas) => new Promise((resolve) => canevas.toBlob(resolve, 'image/png'));
 
   // ---------- Signature au doigt ----------
   class Pad {
@@ -239,37 +307,10 @@
 
     vide() { return !this.encre; }
 
-    // Découpe la signature autour du trait (fond transparent) pour que le PDF l'agrandisse au maximum.
-    recadre() {
-      const w = this.c.width;
-      const h = this.c.height;
-      const data = this.ctx.getImageData(0, 0, w, h).data;
-      let x0 = w, y0 = h, x1 = -1, y1 = -1;
-      for (let y = 0; y < h; y++) {
-        for (let x = 0; x < w; x++) {
-          if (data[(y * w + x) * 4 + 3] > 12) {
-            if (x < x0) x0 = x;
-            if (x > x1) x1 = x;
-            if (y < y0) y0 = y;
-            if (y > y1) y1 = y;
-          }
-        }
-      }
-      if (x1 < 0) return null;
-      const pad = Math.round(6 * (window.devicePixelRatio || 1));
-      x0 = Math.max(0, x0 - pad);
-      y0 = Math.max(0, y0 - pad);
-      x1 = Math.min(w - 1, x1 + pad);
-      y1 = Math.min(h - 1, y1 + pad);
-      const out = document.createElement('canvas');
-      out.width = x1 - x0 + 1;
-      out.height = y1 - y0 + 1;
-      out.getContext('2d').drawImage(this.c, x0, y0, out.width, out.height, 0, 0, out.width, out.height);
-      return out;
-    }
+    recadre() { return recadrerCanevas(this.c); }
     blob() {
       const out = this.recadre();
-      return new Promise((resolve) => (out ? out.toBlob(resolve, 'image/png') : resolve(null)));
+      return out ? blobDe(out) : Promise.resolve(null);
     }
     dataURL() {
       const out = this.recadre();
@@ -283,6 +324,70 @@
 
   const lireSauvee = () => { try { return localStorage.getItem(CLE_SIG); } catch (_) { return null; } };
   const ecrireSauvee = (v) => { try { localStorage.setItem(CLE_SIG, v); } catch (_) { /* ignoré */ } };
+  // On retient aussi si la signature enregistrée a été dessinée ou tapée (le PDF le mentionne).
+  const CLE_MODE = 'ybmtl_signature_representant_mode';
+  const lireModeSauvee = () => { try { return localStorage.getItem(CLE_MODE) === 'clavier' ? 'clavier' : 'dessin'; } catch (_) { return 'dessin'; } };
+  const ecrireModeSauvee = (m) => { try { localStorage.setItem(CLE_MODE, m); } catch (_) { /* ignoré */ } };
+
+  // ---------- Signature au clavier : le nom tapé est dessiné en écriture « manuscrite » puis envoyé comme image ----------
+  // (Même mécanique que le dessin au doigt : le serveur reçoit une image et la pose sur la ligne de signature.)
+  const POLICE_SIGNATURE = '"Snell Roundhand", "Apple Chancery", "Dancing Script", "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive';
+  function canevasTexte(texte) {
+    const t = String(texte || '').replace(/\s+/g, ' ').trim();
+    if (t.length < 2) return null;
+    const taille = 84;
+    const marge = 24;
+    const police = taille + 'px ' + POLICE_SIGNATURE;
+    const mesure = document.createElement('canvas').getContext('2d');
+    mesure.font = police;
+    const largeur = Math.min(2400, Math.ceil(mesure.measureText(t).width) + marge * 2);
+    const c = document.createElement('canvas');
+    c.width = largeur;
+    c.height = Math.ceil(taille * 1.7);
+    const ctx = c.getContext('2d');
+    ctx.font = police;
+    ctx.fillStyle = '#0b1b4a';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(t, marge, Math.round(taille * 1.15), largeur - marge * 2);
+    return recadrerCanevas(c, 8);
+  }
+
+  // « Dessiner au doigt » ou « Taper au clavier » : l'un OU l'autre, pour chaque signature (Loc = locataire, Rep = représentant).
+  const modes = { Loc: 'dessin', Rep: 'dessin' };
+  function majApercu(cible) {
+    const zone = $('apercu' + cible);
+    const cadre = zone.querySelector('.c-apercu-cible');
+    const c = canevasTexte($('texte' + cible).value);
+    cadre.textContent = '';
+    if (c) {
+      c.className = 'c-apercu-img';
+      cadre.appendChild(c);
+    }
+    zone.classList.toggle('has-ink', !!c);
+  }
+  function choisirMode(cible, mode) {
+    modes[cible] = mode;
+    $('zoneDessin' + cible).hidden = mode !== 'dessin';
+    $('zoneClavier' + cible).hidden = mode !== 'clavier';
+    document.querySelectorAll('.c-mode[data-cible="' + cible + '"]').forEach((b) => {
+      const actif = b.dataset.mode === mode;
+      b.classList.toggle('actif', actif);
+      b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+    });
+    if (mode === 'dessin') {
+      const pad = cible === 'Loc' ? padLoc : padRep;
+      if (pad) pad.init(); // le cadre était caché : on le redimensionne
+    } else {
+      $('texte' + cible).focus({ preventScroll: true });
+    }
+  }
+  document.querySelectorAll('.c-mode').forEach((b) => {
+    b.addEventListener('click', () => choisirMode(b.dataset.cible, b.dataset.mode));
+  });
+  ['Loc', 'Rep'].forEach((cible) => {
+    const champ = $('texte' + cible);
+    if (champ) champ.addEventListener('input', () => majApercu(cible)); // (la page peut ne pas avoir la saisie au clavier)
+  });
 
   function initSignatures() {
     if (!padLoc) {
@@ -333,25 +438,53 @@
       : 'Pas de courriel pour le client : après la création, partagez-lui le PDF par texto avec le bouton « Partager ».';
     montrer('sig');
     initSignatures();
+    surveillerConditions();
   });
   $('btnRetour').addEventListener('click', () => montrer('form'));
-  $('btnNouveau').addEventListener('click', () => { window.location.href = '/admin/contrat'; });
+  $('btnNouveau').addEventListener('click', () => { window.location.href = URL_ACCUEIL; });
 
   // ---------- Création du contrat ----------
   async function terminer() {
     const err = $('erreurSig');
     afficherErreur(err, '');
+    if (!conditionsLues) {
+      afficherErreur(err, "Faites défiler le contrat jusqu'en bas, puis cochez « J'ai lu et j'accepte les conditions ».");
+      return;
+    }
     if (!$('accepte').checked) {
-      afficherErreur(err, 'Cochez la case : le locataire a lu le contrat et en accepte les conditions.');
+      afficherErreur(err, "Cochez la case « J'ai lu et j'accepte les conditions du contrat de location ».");
       return;
     }
-    if (padLoc.vide()) {
-      afficherErreur(err, 'Le locataire doit signer dans le cadre.');
-      return;
+    // Signature du locataire : dessinée au doigt OU tapée au clavier.
+    let sigLoc;
+    if (modes.Loc === 'clavier') {
+      const c = canevasTexte($('texteLoc').value);
+      if (!c) {
+        afficherErreur(err, 'Le locataire doit taper son nom pour signer.');
+        return;
+      }
+      sigLoc = await blobDe(c);
+    } else {
+      if (padLoc.vide()) {
+        afficherErreur(err, 'Le locataire doit signer dans le cadre.');
+        return;
+      }
+      sigLoc = await padLoc.blob();
     }
+    // Signature du représentant : enregistrée, dessinée OU tapée.
     let sigRep;
+    let modeRep = 'dessin';
     if (utiliserSauvee) {
       sigRep = await (await fetch(lireSauvee())).blob();
+      modeRep = lireModeSauvee();
+    } else if (modes.Rep === 'clavier') {
+      const c = canevasTexte($('texteRep').value);
+      if (!c) {
+        afficherErreur(err, 'La signature du représentant est manquante : tapez votre nom.');
+        return;
+      }
+      sigRep = await blobDe(c);
+      modeRep = 'clavier';
     } else {
       if (padRep.vide()) {
         afficherErreur(err, 'La signature du représentant est manquante.');
@@ -365,29 +498,41 @@
     fd.set('lieu', $('lieu').value || 'Montréal');
     fd.set('accepte', '1');
     fd.set('envoyerClient', courriel && $('envoyerClient').checked ? '1' : '');
-    fd.set('sigLocataire', await padLoc.blob(), 'signature-locataire.png');
+    fd.set('sigLocataire', sigLoc, 'signature-locataire.png');
+    fd.set('sigModeLocataire', modes.Loc);
     fd.set('sigRepresentant', sigRep, 'signature-representant.png');
+    fd.set('sigModeRepresentant', modeRep);
 
     const btn = $('btnTerminer');
     const texte = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Création du contrat…';
     try {
-      const res = await fetch('/admin/contrat/generer', { method: 'POST', body: fd, credentials: 'same-origin' });
+      const res = await fetch(URL_GENERER, { method: 'POST', body: fd, credentials: 'same-origin' });
       const type = res.headers.get('content-type') || '';
       if (!res.ok || type.indexOf('application/pdf') === -1) {
         let msg = 'Une erreur est survenue. Réessayez.';
         if (type.indexOf('application/json') !== -1) {
           try { msg = (await res.json()).erreur || msg; } catch (_) { /* ignoré */ }
-        } else if (res.redirected || type.indexOf('text/html') !== -1) {
-          msg = "Votre connexion a expiré. Reconnectez-vous à /admin dans un autre onglet, puis réessayez ici : rien n'est perdu.";
+        }
+        if (res.status === 401 || res.redirected || type.indexOf('text/html') !== -1) {
+          msg = 'Votre connexion a expiré. Ouvrez ' + URL_CONNEXION + " dans un autre onglet, reconnectez-vous, puis réessayez ici : rien n'est perdu.";
         }
         throw new Error(msg);
       }
       const blob = await res.blob();
       if (!utiliserSauvee && $('garderSig').checked) {
-        const d = padRep.dataURL();
-        if (d) ecrireSauvee(d);
+        let d = null;
+        if (modes.Rep === 'clavier') {
+          const c = canevasTexte($('texteRep').value);
+          d = c ? c.toDataURL('image/png') : null;
+        } else {
+          d = padRep.dataURL();
+        }
+        if (d) {
+          ecrireSauvee(d);
+          ecrireModeSauvee(modes.Rep);
+        }
       }
       afficherFin(blob, {
         nom: res.headers.get('X-Nom-Fichier'),
