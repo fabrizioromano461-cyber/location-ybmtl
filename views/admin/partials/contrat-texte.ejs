@@ -1,0 +1,28 @@
+<%
+// Texte intégral du contrat (articles 1 à 20) : vient de lib/contrat-texte.js, identique au PDF.
+// **gras** devient du gras ; {{depot}} est remplacé à l'écran par le dépôt saisi dans le formulaire.
+function fmt(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\{\{depot\}\}/g, '<span class="js-depot">______</span>');
+}
+%>
+<div class="c-texte" id="texteContrat" tabindex="0" aria-label="Texte du contrat de location">
+  <p class="c-texte-titre"><%= texte.titre %><br><small><%= texte.societe %></small></p>
+  <% texte.sections.forEach(function (sec) { %>
+    <h3 class="c-sec"><%= sec.titre %></h3>
+    <% sec.articles.forEach(function (art) { %>
+      <h4 class="c-art"><%= art.titre %></h4>
+      <% art.blocs.forEach(function (b) { %>
+        <% if (b.ul) { %>
+          <ul>
+            <% b.ul.forEach(function (li) { %><li><%- fmt(li) %></li><% }); %>
+          </ul>
+        <% } else { %>
+          <p><% if (b.lead) { %><strong><%= b.lead %></strong> <% } %><%- fmt(b.p) %></p>
+        <% } %>
+      <% }); %>
+    <% }); %>
+  <% }); %>
+</div>
