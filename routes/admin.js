@@ -9,6 +9,7 @@ const router = express.Router();
 const db = require('../db');
 const { requireLogin } = require('../middleware/auth');
 const availability = require('../lib/availability');
+const limiteConnexion = require('../lib/limite-connexion');
 
 // --- Configuration de l'envoi de photos (multer) ---
 const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -34,17 +35,24 @@ const upload = multer({
 // ============== CONNEXION / DECONNEXION ==============
 router.get('/connexion', (req, res) => {
   if (req.session.user) return res.redirect('/admin');
-  res.render('admin/login', { error: req.query.erreur === '1' });
+  res.render('admin/login', {
+    error: req.query.erreur === '1',
+    // Trop d'essais ratés : on affiche combien de minutes attendre.
+    bloque: req.query.erreur === 'trop' ? limiteConnexion.minutesRestantes() || 1 : 0,
+  });
 });
 
 router.post('/connexion', (req, res) => {
+  if (limiteConnexion.estBloque()) return res.redirect('/admin/connexion?erreur=trop');
   const { username, password } = req.body;
   const user = db
     .prepare('SELECT * FROM users WHERE username = ?')
     .get((username || '').trim());
   if (!user || !bcrypt.compareSync(password || '', user.password_hash)) {
+    limiteConnexion.noterEchec();
     return res.redirect('/admin/connexion?erreur=1');
   }
+  limiteConnexion.noterReussite();
   req.session.user = { id: user.id, username: user.username };
   res.redirect('/admin');
 });
