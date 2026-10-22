@@ -11,7 +11,9 @@
   <div class="login-card">
     <img src="/img/logo-rogne.png" alt="Location YBMTL" class="login-logo">
     <h1>Panneau d'administration</h1>
-    <% if (error) { %>
+    <% if (typeof bloque !== 'undefined' && bloque) { %>
+      <div class="alert alert-error">Trop d'essais de connexion ratés. Réessayez dans <%= bloque %> minute<%= bloque > 1 ? 's' : '' %>.</div>
+    <% } else if (error) { %>
       <div class="alert alert-error">Identifiant ou mot de passe incorrect.</div>
     <% } %>
     <form method="post" action="/admin/connexion" class="login-form">
