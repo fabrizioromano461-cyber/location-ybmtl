@@ -4,17 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google tag (gtag.js) — Google Analytics (mesure des visites) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-38HEMEDK8E"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-38HEMEDK8E');
-  </script>
+<%
+  // Textes de referencement et de partage : chaque page peut passer un objet « seo »
+  // { description, ogDescription, image, imageSize } (voir routes/public.js). Sinon : valeurs par defaut.
+  var _seo = locals.seo || {};
+  var _titre = typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal';
+  var _desc = _seo.description || 'Location de voiture à Montréal au meilleur prix. Louez une auto pour une semaine ou plus : Audi, BMW, Honda, Mazda et plus. Tarifs clairs, réservation en ligne simple, kilométrage illimité.';
+  var _ogDesc = _seo.ogDescription || _seo.description || 'Location de voiture à Montréal au meilleur prix. Réservez votre auto en ligne en quelques clics.';
+  var _img = _seo.image || 'https://locationybmtl.ca/img/og-accueil.jpg';
+  var _imgTaille = _seo.image ? _seo.imageSize : [1200, 630];
+%>
+  <!-- Mesure des visites (Google Analytics) : chargee SEULEMENT si le visiteur accepte (voir /js/consent.js) -->
+  <meta name="ga-measurement-id" content="<%= typeof analyticsId !== 'undefined' ? analyticsId : '' %>">
+  <script src="/js/consent.js" defer></script>
 
-  <title><%= typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal' %></title>
-  <meta name="description" content="Location de voiture à Montréal au meilleur prix. Louez une auto pour une semaine ou plus : Audi, BMW, Honda, Mazda et plus. Tarifs clairs, réservation en ligne simple, kilométrage illimité.">
+  <title><%= _titre %></title>
+  <meta name="description" content="<%= _desc %>">
 
   <!-- Mots-cles / referencement local -->
   <meta name="keywords" content="location voiture Montréal, louer auto Montréal, location auto pas cher, location véhicule Montréal, location de char Montréal, location auto hebdomadaire, Location YBMTL">
@@ -29,17 +34,23 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Location YBMTL">
   <meta property="og:locale" content="fr_CA">
-  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal' %>">
-  <meta property="og:description" content="Location de voiture à Montréal au meilleur prix. Réservez votre auto en ligne en quelques clics.">
+  <meta property="og:title" content="<%= _titre %>">
+  <meta property="og:description" content="<%= _ogDesc %>">
   <meta property="og:url" content="https://locationybmtl.ca<%= typeof path !== 'undefined' ? path : '' %>">
-  <meta property="og:image" content="https://locationybmtl.ca/img/logo-rogne.png">
+  <meta property="og:image" content="<%= _img %>">
+  <% if (_imgTaille) { %>
+  <meta property="og:image:width" content="<%= _imgTaille[0] %>">
+  <meta property="og:image:height" content="<%= _imgTaille[1] %>">
+  <% } %>
+  <meta property="og:image:alt" content="<%= _titre %>">
   <!-- Apercu de partage (X / Twitter) -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Location YBMTL - Location de voiture à Montréal' %>">
-  <meta name="twitter:description" content="Location de voiture à Montréal au meilleur prix. Réservez en ligne.">
-  <meta name="twitter:image" content="https://locationybmtl.ca/img/logo-rogne.png">
+  <meta name="twitter:title" content="<%= _titre %>">
+  <meta name="twitter:description" content="<%= _ogDesc %>">
+  <meta name="twitter:image" content="<%= _img %>">
 
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/pages.css">
   <link rel="icon" href="/img/logo.png">
 </head>
 <body>
@@ -55,6 +66,7 @@
       <nav class="main-nav">
         <a href="/">Véhicules</a>
         <a href="/comment-ca-marche">Comment ça marche</a>
+        <a href="/faq">FAQ</a>
         <a href="/conditions">Contrat & Conditions</a>
         <% if (currentUser) { %>
           <a href="/admin" class="btn btn-sm">Panneau admin</a>
