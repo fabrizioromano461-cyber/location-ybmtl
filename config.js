@@ -32,6 +32,10 @@ module.exports = {
     tvq: 0.09975,
   },
 
+  // Mesure des visites (Google Analytics). Elle n'est chargee qu'apres l'accord du visiteur
+  // (bandeau des temoins). Mettre GA_ID vide (variable d'environnement) = aucune mesure.
+  analyticsId: process.env.GA_ID !== undefined ? process.env.GA_ID : 'G-38HEMEDK8E',
+
   // URL de l'API du CRM. Les demandes de reservation y sont transferees
   // automatiquement (creation d'un prospect + notification courriel).
   crmApiUrl: process.env.CRM_API_URL || 'http://127.0.0.1:8000',
@@ -53,5 +57,8 @@ module.exports = {
     brevoApiKey: process.env.BREVO_API_KEY || '',
     // Expediteur affiche (doit etre un expediteur verifie dans Brevo).
     sender: process.env.SENDER_EMAIL || process.env.NOTIFY_EMAIL || process.env.SMTP_USER || '',
+    // Courriel de confirmation envoye au CLIENT apres sa demande. Mettre CONFIRMATION_CLIENT=off
+    // (variable d'environnement) pour le couper sans toucher au code.
+    confirmationClient: process.env.CONFIRMATION_CLIENT !== 'off',
   },
 };

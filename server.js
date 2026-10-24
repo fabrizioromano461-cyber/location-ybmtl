@@ -59,6 +59,7 @@ app.use((req, res, next) => {
   res.locals.frDate = frDate;
   res.locals.moneyCents = moneyCents;
   res.locals.tax = config.tax;
+  res.locals.analyticsId = config.analyticsId;
   res.locals.minDepart = minDepartDate(); // depart au plus tot le lendemain (heure de Montreal)
   res.locals.path = req.path;
   // Liste des marques (pour le menu « table des matieres » de recherche).
