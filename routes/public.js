@@ -2,12 +2,50 @@
 // - Page d'accueil avec la grille de vehicules et la barre de recherche par dates
 // - Page de detail d'un vehicule
 // - Reception du formulaire "Demander cette voiture"
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const availability = require('../lib/availability');
 const pricing = require('../lib/pricing');
+const faqItems = require('../lib/faq');
 const { minDepartDate } = require('../lib/format');
+
+const SITE = 'https://locationybmtl.ca';
+const IMG_DIR = path.join(__dirname, '..', 'public', 'img');
+
+// "Audi S5 Coupé" -> "audi-s5-coupe" (le fichier d'apercu de partage est public/img/og-audi-s5-coupe.jpg, voir tools/generer-og.py)
+function slug(texte) {
+  return String(texte)
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Textes et image affiches quand on partage le lien d'une voiture (Facebook, WhatsApp, Google...).
+function seoVehicule(vehicle, photos) {
+  const nom = `${vehicle.make} ${vehicle.model}`;
+  const nomAn = nom + (vehicle.show_year ? ` ${vehicle.year}` : '');
+  let description;
+  let ogDescription;
+  if (vehicle.coming_soon) {
+    description = `${nomAn} : bientôt disponible à la location à Montréal. Contactez Location YBMTL pour être informé de son arrivée.`;
+    ogDescription = `${nomAn} : bientôt disponible chez Location YBMTL, à Montréal.`;
+  } else {
+    const km = vehicle.mileage_policy || 'Kilométrage illimité';
+    description = `Location ${nomAn} à Montréal : ${vehicle.weekly_rate} $ par semaine + taxes. ${km}, ${String(vehicle.transmission || '').toLowerCase()}, ${vehicle.doors} portes. Demande en ligne, confirmation rapide.`;
+    ogDescription = `${nomAn} à louer à Montréal : ${vehicle.weekly_rate} $/semaine + taxes. ${km}. Faites votre demande en ligne.`;
+  }
+  const seo = { description, ogDescription };
+  const fichier = `og-${slug(nom)}.jpg`;
+  if (fs.existsSync(path.join(IMG_DIR, fichier))) {
+    seo.image = `${SITE}/img/${fichier}`;
+    seo.imageSize = [1200, 630];
+  } else if (photos.length > 0) {
+    seo.image = `${SITE}/uploads/${photos[0].filename}`;
+  }
+  return seo;
+}
 
 // Recupere la photo principale d'un vehicule (ou la premiere, ou null).
 function primaryPhoto(vehicleId) {
@@ -98,6 +136,28 @@ router.get('/comment-ca-marche', (req, res) => {
   res.render('comment-ca-marche');
 });
 
+// PAGE QUESTIONS FREQUENTES
+router.get('/faq', (req, res) => {
+  const config = require('../config');
+  res.render('faq', {
+    faq: faqItems(config.company),
+    seo: {
+      description:
+        "Réponses à vos questions sur la location de voiture chez Location YBMTL : âge et permis, paiement, dépôt, assurance, kilométrage illimité, taxes et remise du véhicule.",
+    },
+  });
+});
+
+// PAGE POLITIQUE DE CONFIDENTIALITE (Loi 25)
+router.get('/confidentialite', (req, res) => {
+  res.render('confidentialite', {
+    seo: {
+      description:
+        "Politique de confidentialité de Location YBMTL : renseignements recueillis, utilisation, partage, témoins (cookies) et vos droits.",
+    },
+  });
+});
+
 // PAGE CONDITIONS & CONTRAT
 router.get('/conditions', (req, res) => {
   const config = require('../config');
@@ -138,6 +198,8 @@ router.get('/vehicule/:id', (req, res) => {
     photos,
     blocked,
     similaires,
+    seo: seoVehicule(vehicle, photos),
+    confirmationClient: require('../config').mail.confirmationClient,
     rentedToday: availability.isRentedToday(vehicle.id),
     sent: req.query.envoye === '1',
     error: req.query.erreur === '1',
@@ -148,13 +210,17 @@ router.get('/vehicule/:id', (req, res) => {
 // RECEPTION DU FORMULAIRE DE DEMANDE
 router.post('/vehicule/:id/demande', (req, res) => {
   const vehicle = db
-    .prepare('SELECT id, make, model, weekly_rate, coming_soon FROM vehicles WHERE id = ?')
+    .prepare('SELECT id, make, model, weekly_rate, security_deposit, coming_soon FROM vehicles WHERE id = ?')
     .get(req.params.id);
   if (!vehicle) return res.status(404).render('404');
   // Voiture « Bientot disponible » : pas de reservation possible (la fiche n'a pas de formulaire).
   if (vehicle.coming_soon) return res.redirect(`/vehicule/${vehicle.id}`);
 
-  const { name, phone, email, depart, retour, message } = req.body;
+  const { name, phone, email, depart, retour, message, website } = req.body;
+
+  // Champ-piege anti-robots (invisible pour les humains) : s'il est rempli, on fait comme si tout
+  // allait bien, sans rien enregistrer ni envoyer.
+  if (website) return res.redirect(`/vehicule/${vehicle.id}?envoye=1#demande`);
 
   // Validation minimale : nom, telephone et courriel sont obligatoires.
   if (!name || !phone || !email) {
@@ -203,6 +269,17 @@ router.post('/vehicule/:id/demande', (req, res) => {
     estimate,
   });
 
+  // 2 bis. Courriel « Demande bien recue » envoye au CLIENT (resume + prochaines etapes).
+  mailer.sendClientConfirmation({
+    name: name.trim(),
+    email: email.trim(),
+    vehicle: `${vehicle.make} ${vehicle.model}`,
+    depart: depart || null,
+    retour: retour || null,
+    estimate,
+    deposit: vehicle.security_deposit,
+  });
+
   // 3. Transferer la demande au CRM (creation prospect). En "fire-and-forget" :
   //    ne marche que si le CRM local tourne ; sans effet en ligne.
   forwardToCrm({
@@ -245,7 +322,10 @@ router.get('/sitemap.xml', (req, res) => {
 
   const urls = [
     `<url><loc>${BASE}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
+    `<url><loc>${BASE}/comment-ca-marche</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`,
+    `<url><loc>${BASE}/faq</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`,
     `<url><loc>${BASE}/conditions</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`,
+    `<url><loc>${BASE}/confidentialite</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>`,
     ...vehicles.map(
       (v) =>
         `<url><loc>${BASE}/vehicule/${v.id}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`
