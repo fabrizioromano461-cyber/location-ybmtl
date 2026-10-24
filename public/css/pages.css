@@ -1,0 +1,54 @@
+/* ============================================================
+   Ajouts du 2026-10-23 : FAQ, politique de confidentialite, bandeau des temoins (cookies).
+   Charge apres styles.css (voir views/partials/header.ejs).
+   ============================================================ */
+
+/* ---------- Menu : le lien FAQ est le 3e (deja masque sur mobile par styles.css) ;
+   on masque aussi « Contrat & Conditions », devenu le 4e, pour garder l'en-tete mobile propre. ---------- */
+@media (max-width: 640px) {
+  .main-nav a:nth-child(4) { display: none; }
+}
+
+/* ---------- FAQ ---------- */
+.faq-list { display: flex; flex-direction: column; gap: .7rem; margin: 1.4rem 0 2rem; }
+.faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); }
+.faq-item[open] { border-color: #c7d4f5; }
+.faq-item summary { cursor: pointer; list-style: none; position: relative;
+  padding: 1rem 3rem 1rem 1.1rem; font-weight: 600; line-height: 1.35; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; position: absolute; right: 1.1rem; top: 50%;
+  transform: translateY(-50%); font-size: 1.5rem; font-weight: 400; color: var(--primary); line-height: 1; }
+.faq-item[open] summary::after { content: "\2212"; }
+.faq-item summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: var(--radius); }
+.faq-answer { padding: 0 1.1rem 1.1rem; }
+.faq-answer p { margin: 0 0 .7rem; line-height: 1.6; }
+.faq-answer p:last-child { margin-bottom: 0; }
+
+/* ---------- Politique de confidentialite ---------- */
+.privacy-content h2 { margin-top: 1.8rem; font-size: 1.2rem; }
+.privacy-content ul { padding-left: .2rem; }
+.muted.small { color: var(--muted); font-size: .85rem; }
+
+/* ---------- Bandeau des temoins (cookies) ---------- */
+.cookie-banner { position: fixed; left: 0; right: 0; bottom: 0; z-index: 80; padding: 12px; }
+.cookie-banner-inner { max-width: 900px; margin: 0 auto; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.15rem;
+  box-shadow: 0 10px 40px rgba(20, 35, 70, .28); display: flex; gap: 1rem; align-items: center; }
+.cookie-banner-text { flex: 1; font-size: .92rem; line-height: 1.5; }
+.cookie-banner-text strong { display: block; margin-bottom: .15rem; font-size: 1rem; }
+.cookie-banner-text p { margin: 0; color: var(--muted); }
+.cookie-banner-actions { display: flex; gap: .6rem; flex: none; }
+.cookie-banner-actions .btn { min-width: 112px; }
+@media (max-width: 640px) {
+  .cookie-banner { padding: 8px; }
+  .cookie-banner-inner { flex-direction: column; align-items: stretch; gap: .8rem; padding: .9rem 1rem; }
+  .cookie-banner-actions .btn { flex: 1; min-width: 0; }
+}
+
+/* Bouton « Temoins (cookies) » du pied de page : meme allure qu'un lien du pied de page */
+.footer-link-btn { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.footer-link-btn[hidden] { display: none; }
+
+/* Champ-piege anti-robots du formulaire : invisible pour les humains */
+.hp-field { position: absolute !important; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
