@@ -1,0 +1,71 @@
+<%- include('partials/header', { title: 'Politique de confidentialité - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/">&larr; Retour à l'accueil</a>
+
+  <div class="conditions-content privacy-content">
+    <h1>Politique de confidentialité</h1>
+    <p class="muted small">Dernière mise à jour : 23 octobre 2026</p>
+
+    <p>Chez Location YBMTL, nous prenons la protection de vos renseignements personnels au sérieux. Cette page explique ce que nous recueillons, pourquoi, avec qui nous le partageons et comment exercer vos droits, conformément à la <em>Loi sur la protection des renseignements personnels dans le secteur privé</em> (Québec).</p>
+
+    <h2>1. Qui est responsable</h2>
+    <p><strong>Location YBMTL inc.</strong> (NEQ 1180641152), <%= company.city %>.</p>
+    <p><strong>Responsable de la protection des renseignements personnels :</strong> le propriétaire de l'entreprise. Pour toute question ou demande, écrivez-nous à <a href="mailto:<%= company.email %>"><%= company.email %></a> ou appelez-nous au <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a>.</p>
+
+    <h2>2. Les renseignements que nous recueillons</h2>
+    <ul>
+      <li><strong>Demande de réservation (formulaire du site) :</strong> votre nom, votre numéro de téléphone, votre courriel, le véhicule et les dates souhaités, ainsi que le message que vous choisissez d'écrire.</li>
+      <li><strong>Location et contrat :</strong> au moment de la location, les renseignements nécessaires au contrat, soit votre identité, votre adresse, votre date de naissance, votre numéro de permis de conduire et votre signature.</li>
+      <li><strong>Communications :</strong> vos courriels, textos et appels avec nous.</li>
+      <li><strong>Statistiques de visite (seulement si vous acceptez les témoins) :</strong> pages consultées, type d'appareil, région approximative et provenance de la visite, mesurés par Google Analytics.</li>
+    </ul>
+
+    <h2>3. Pourquoi nous les utilisons</h2>
+    <ul>
+      <li>Répondre à votre demande et confirmer votre réservation.</li>
+      <li>Préparer, signer et gérer le contrat de location, la facturation et le suivi du véhicule.</li>
+      <li>Respecter nos obligations légales.</li>
+      <li>Si vous l'acceptez, comprendre comment le site est utilisé afin de l'améliorer.</li>
+    </ul>
+    <p>Nous ne vendons ni ne louons vos renseignements personnels.</p>
+
+    <h2>4. Avec qui nous les partageons</h2>
+    <p>Nous faisons appel à des fournisseurs de services pour faire fonctionner le site et nos communications : l'hébergement du site (Render), la protection et la diffusion du site (Cloudflare), l'envoi de courriels automatiques (Brevo), la messagerie de l'entreprise (Microsoft Outlook) et, si vous acceptez les témoins, la mesure d'audience (Google Analytics). Ces fournisseurs n'ont accès aux renseignements que pour nous rendre ces services.</p>
+    <p>Certains de ces fournisseurs sont situés à l'extérieur du Québec, notamment aux États-Unis et en Europe : vos renseignements peuvent donc être traités hors Québec. Nous ne communiquons pas vos renseignements à d'autres tiers, sauf si la loi l'exige.</p>
+
+    <h2>5. Témoins (cookies) et Google Analytics</h2>
+    <p>Notre site n'installe aucun témoin de mesure sans votre accord. À votre première visite, un bandeau vous demande d'accepter ou de refuser Google Analytics. Vous pouvez changer d'avis en tout temps avec le bouton « Témoins (cookies) » au bas de chaque page.</p>
+    <p>Le seul autre témoin du site sert à la connexion de notre équipe à l'administration ; il n'est pas installé pour les visiteurs.</p>
+
+    <h2>6. Combien de temps nous les conservons</h2>
+    <p>Nous conservons vos renseignements seulement le temps nécessaire aux fins décrites ci-dessus et pour respecter nos obligations légales (par exemple, la conservation des contrats et des factures), puis nous les détruisons ou les rendons anonymes.</p>
+
+    <h2>7. Vos droits</h2>
+    <p>Vous pouvez en tout temps :</p>
+    <ul>
+      <li>demander l'accès aux renseignements que nous détenons sur vous ;</li>
+      <li>en demander la rectification ;</li>
+      <li>retirer votre consentement ;</li>
+      <li>demander leur suppression, lorsque la loi le permet ;</li>
+      <li>demander à les recevoir dans un format technologique structuré et couramment utilisé.</li>
+    </ul>
+    <p>Écrivez-nous à <a href="mailto:<%= company.email %>"><%= company.email %></a> : nous répondons dans un délai de 30 jours. Si vous n'êtes pas satisfait de notre réponse, vous pouvez porter plainte auprès de la <a href="https://www.cai.gouv.qc.ca" target="_blank" rel="noopener">Commission d'accès à l'information du Québec</a>.</p>
+
+    <h2>8. Sécurité</h2>
+    <p>Nous prenons des mesures raisonnables pour protéger vos renseignements : connexion sécurisée (HTTPS) sur tout le site, accès à l'administration protégé par mot de passe et réservé à notre équipe. En cas d'incident de confidentialité présentant un risque de préjudice sérieux, nous aviserons la Commission d'accès à l'information et les personnes concernées.</p>
+
+    <h2>9. Modifications</h2>
+    <p>Nous pouvons mettre cette politique à jour. La date de la dernière mise à jour est indiquée en haut de cette page.</p>
+
+    <div class="conditions-contact">
+      <h2>Une question sur vos renseignements ?</h2>
+      <p>
+        <strong>Courriel :</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a><br>
+        <strong>Téléphone :</strong> <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

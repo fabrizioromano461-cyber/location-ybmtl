@@ -1,4 +1,4 @@
-<%- include('partials/header', { title: vehicle.make + ' ' + vehicle.model + (vehicle.coming_soon ? ' - Bientôt disponible' : '') + ' - Location YBMTL' }) %>
+<%- include('partials/header', { title: vehicle.make + ' ' + vehicle.model + (vehicle.coming_soon ? ' - Bientôt disponible' : ' - Location à Montréal') + ' - Location YBMTL' }) %>
 
 <div class="container vehicle-detail">
   <a class="back-link" href="/">&larr; Retour à l'inventaire</a>
@@ -114,6 +114,7 @@
         <% if (sent) { %>
           <div class="alert alert-success">
             ✓ Votre réservation a bien été envoyée ! Nous vous contacterons rapidement pour confirmer les détails et la disponibilité.
+            <% if (typeof confirmationClient !== 'undefined' && confirmationClient) { %>Vous recevrez aussi un courriel de récapitulatif (pensez à vérifier vos pourriels).<% } %>
           </div>
         <% } %>
         <div class="alert alert-error" id="formError"<%- (error || dateError) ? '' : ' style="display:none;"' %>>
@@ -124,6 +125,9 @@
           <% } %>
         </div>
         <form method="post" action="/vehicule/<%= vehicle.id %>/demande" class="request-form" id="reservationForm">
+          <div class="hp-field" aria-hidden="true">
+            <label>Laissez ce champ vide <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
           <div class="form-section">
             <h3>Vos coordonnées</h3>
             <label>Nom complet *

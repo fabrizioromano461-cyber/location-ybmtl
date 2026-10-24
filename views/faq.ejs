@@ -1,0 +1,40 @@
+<%- include('partials/header', { title: 'Questions fréquentes - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/">&larr; Retour à l'accueil</a>
+
+  <div class="conditions-content faq-content">
+    <h1>Questions fréquentes</h1>
+    <p>Les réponses aux questions que l'on nous pose le plus souvent. Vous ne trouvez pas la vôtre ? Contactez-nous, ce sera avec plaisir.</p>
+
+    <div class="faq-list">
+      <% faq.forEach(function (item, i) { %>
+        <details class="faq-item"<%= i === 0 ? ' open' : '' %>>
+          <summary><%= item.q %></summary>
+          <div class="faq-answer"><%- item.r %></div>
+        </details>
+      <% }); %>
+    </div>
+
+    <div class="conditions-contact">
+      <h2>Une autre question ?</h2>
+      <p>
+        <strong>Téléphone :</strong> <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a><br>
+        <strong>Courriel :</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a>
+      </p>
+      <a href="/#vehicules" class="btn btn-primary" style="margin-top: 1rem;">Voir l'inventaire</a>
+    </div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map(function (item) {
+    return { '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.r.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&') } };
+  })
+}).replace(/</g, '\\u003c') %>
+</script>
+
+<%- include('partials/footer') %>
