@@ -418,6 +418,53 @@
     });
   });
 
+  // ---------- Contrat déjà signé sur papier : on crée seulement la copie (aucune signature à l'écran) ----------
+  const DATE_TAXES = '2026-10-01'; // la TPS et la TVQ s'ajoutent aux locations à partir de cette date
+  function majTaxesPapier() {
+    const hint = $('papierTaxes');
+    hint.hidden = true;
+    const d = $('signeLe').value;
+    if (!$('papier').checked || !d) return;
+    const avant = d < DATE_TAXES;
+    form.recap.checked = !avant; // pas de récapitulatif des taxes sur la copie d'un contrat signé avant leur arrivée
+    if (avant) {
+      hint.textContent = 'Contrat signé avant le 1er octobre 2026 : pas de taxes à inscrire sur la copie (récapitulatif décoché).';
+      hint.hidden = false;
+    }
+  }
+  function majPapier() {
+    const on = $('papier').checked;
+    $('papierBloc').hidden = !on;
+    $('btnContinuer').textContent = on ? 'Créer la copie du contrat' : 'Continuer vers la signature →';
+    if (on && !$('signeLe').value && form.departDate.value) $('signeLe').value = form.departDate.value;
+    majTaxesPapier();
+  }
+  $('papier').addEventListener('change', majPapier);
+  $('signeLe').addEventListener('change', majTaxesPapier);
+  $('signeLe').addEventListener('input', majTaxesPapier);
+  form.departDate.addEventListener('change', () => {
+    if ($('papier').checked && !$('signeLe').value && form.departDate.value) {
+      $('signeLe').value = form.departDate.value;
+      majTaxesPapier();
+    }
+  });
+
+  async function creerCopiePapier() {
+    const err = $('erreurForm');
+    const signeLe = $('signeLe').value;
+    if (!signeLe) {
+      afficherErreur(err, 'Indiquez la date à laquelle le contrat a été signé sur papier.');
+      return;
+    }
+    const courriel = form.courriel.value.trim();
+    const fd = new FormData(form);
+    fd.set('sigPapier', '1');
+    fd.set('signeLe', signeLe);
+    fd.set('envoyerClient', courriel && $('papierEnvoyerClient').checked ? '1' : '');
+    const r = await poster(fd, $('btnContinuer'), err, courriel);
+    if (r) afficherFin(r.blob, r.info);
+  }
+
   // ---------- Navigation ----------
   $('btnContinuer').addEventListener('click', () => {
     const err = $('erreurForm');
@@ -428,6 +475,7 @@
       afficherErreur(err, 'Vérifiez les dates (le retour doit être après le départ) et le tarif par semaine.');
       return;
     }
+    if ($('papier').checked) { creerCopiePapier(); return; }
     remplirResume(c);
     const courriel = form.courriel.value.trim();
     $('courrielClient').textContent = courriel;
@@ -503,7 +551,27 @@
     fd.set('sigRepresentant', sigRep, 'signature-representant.png');
     fd.set('sigModeRepresentant', modeRep);
 
-    const btn = $('btnTerminer');
+    const r = await poster(fd, $('btnTerminer'), err, courriel);
+    if (!r) return;
+    if (!utiliserSauvee && $('garderSig').checked) {
+      let d = null;
+      if (modes.Rep === 'clavier') {
+        const c = canevasTexte($('texteRep').value);
+        d = c ? c.toDataURL('image/png') : null;
+      } else {
+        d = padRep.dataURL();
+      }
+      if (d) {
+        ecrireSauvee(d);
+        ecrireModeSauvee(modes.Rep);
+      }
+    }
+    afficherFin(r.blob, r.info);
+  }
+  $('btnTerminer').addEventListener('click', terminer);
+
+  // Envoie le formulaire au serveur et renvoie { blob, info } (le PDF créé), ou null après avoir affiché l'erreur.
+  async function poster(fd, btn, err, courriel) {
     const texte = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Création du contrat…';
@@ -521,33 +589,23 @@
         throw new Error(msg);
       }
       const blob = await res.blob();
-      if (!utiliserSauvee && $('garderSig').checked) {
-        let d = null;
-        if (modes.Rep === 'clavier') {
-          const c = canevasTexte($('texteRep').value);
-          d = c ? c.toDataURL('image/png') : null;
-        } else {
-          d = padRep.dataURL();
-        }
-        if (d) {
-          ecrireSauvee(d);
-          ecrireModeSauvee(modes.Rep);
-        }
-      }
-      afficherFin(blob, {
-        nom: res.headers.get('X-Nom-Fichier'),
-        ref: res.headers.get('X-Reference'),
-        yb: res.headers.get('X-Courriel-YB'),
-        client: res.headers.get('X-Courriel-Client'),
-        courriel,
-      });
+      return {
+        blob,
+        info: {
+          nom: res.headers.get('X-Nom-Fichier'),
+          ref: res.headers.get('X-Reference'),
+          yb: res.headers.get('X-Courriel-YB'),
+          client: res.headers.get('X-Courriel-Client'),
+          courriel,
+        },
+      };
     } catch (e) {
       afficherErreur(err, e && e.message ? e.message : 'Erreur de réseau. Réessayez.');
       btn.disabled = false;
       btn.textContent = texte;
+      return null;
     }
   }
-  $('btnTerminer').addEventListener('click', terminer);
 
   function afficherFin(blob, info) {
     const nom = info.nom || 'Contrat-Location-YBMTL.pdf';
