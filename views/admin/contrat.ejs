@@ -22,6 +22,24 @@
       <p class="muted">Remplissez les infos, puis passez le téléphone au client pour qu'il lise et signe. Le contrat est envoyé par courriel : rien n'est gardé sur le site.</p>
     </div>
 
+    <section class="c-card c-papier">
+      <label class="c-check">
+        <input type="checkbox" id="papier" name="sigPapier" value="1">
+        <span>Ce contrat est <strong>déjà signé sur papier</strong> : créer seulement la copie (aucune signature à l'écran)</span>
+      </label>
+      <div id="papierBloc" hidden>
+        <label><span class="c-lab">Signé sur papier le <em>*</em></span>
+          <input type="date" name="signeLe" id="signeLe">
+        </label>
+        <p class="c-warn" id="papierTaxes" hidden></p>
+        <label class="c-check">
+          <input type="checkbox" id="papierEnvoyerClient" checked>
+          <span>Envoyer la copie au client par courriel (si son courriel est rempli)</span>
+        </label>
+        <p class="muted small">La copie reprend les infos remplies ci-dessous et porte la mention « Signé sur papier le … ». L'original signé à la main fait foi.</p>
+      </div>
+    </section>
+
     <section class="c-card">
       <h2><span class="c-num">1</span> Locataire</h2>
       <label><span class="c-lab">Nom complet <em>*</em></span>
