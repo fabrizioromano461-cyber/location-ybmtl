@@ -1,0 +1,56 @@
+/* ============================================================
+   Theme HIVER : charge seulement du 1er novembre au 31 mars (voir lib/saison.js).
+   Pour l'enlever sans toucher au code : variable Render WINTER_THEME=off.
+   ============================================================ */
+body.hiver {
+  --bg: #f1f6fd;
+  --border: #d9e6f6;
+}
+
+/* Barre du telephone : bleu glace */
+body.hiver .phone-topbar { background: linear-gradient(135deg, #0a3a8f 0%, #1d4ed8 50%, #38bdf8 100%); }
+
+/* En-tete : fin liseré givre */
+body.hiver .site-header { border-bottom-color: #cbdff4; box-shadow: 0 2px 16px rgba(60, 130, 210, .10); }
+
+/* Hero : ciel d'hiver + flocons discrets en arriere-plan */
+body.hiver .hero {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(900px 300px at 50% -40px, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #d7e9fd 0%, #e8f2fe 55%, #f1f6fd 100%);
+}
+body.hiver .hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .65;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260' fill='none' stroke='%23a9c9ee' stroke-width='1.6' stroke-linecap='round'%3E%3Cg transform='translate(44 54)'%3E%3Cpath d='M0-13V13M-11.3-6.5 11.3 6.5M-11.3 6.5 11.3-6.5'/%3E%3C/g%3E%3Cg transform='translate(186 40) scale(.7)'%3E%3Cpath d='M0-13V13M-11.3-6.5 11.3 6.5M-11.3 6.5 11.3-6.5'/%3E%3C/g%3E%3Cg transform='translate(128 160) scale(1.2)'%3E%3Cpath d='M0-13V13M-11.3-6.5 11.3 6.5M-11.3 6.5 11.3-6.5'/%3E%3C/g%3E%3Cg transform='translate(40 205) scale(.8)'%3E%3Cpath d='M0-13V13M-11.3-6.5 11.3 6.5M-11.3 6.5 11.3-6.5'/%3E%3C/g%3E%3Cg transform='translate(222 218) scale(.6)'%3E%3Cpath d='M0-13V13M-11.3-6.5 11.3 6.5M-11.3 6.5 11.3-6.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 260px 260px;
+}
+body.hiver .hero > .container { position: relative; }
+
+/* Pastille de saison au-dessus du titre */
+.hiver-pill {
+  display: inline-flex; align-items: center; gap: .45rem; margin: 0 0 1rem; padding: .38rem 1rem;
+  background: #fff; border: 1px solid #c7dcf4; border-radius: 999px;
+  color: #1b4aa8; font-weight: 700; font-size: .95rem; box-shadow: 0 3px 12px rgba(60, 130, 210, .14);
+}
+
+/* Cartes : lueur bleutee au survol */
+body.hiver .vehicle-card:hover,
+body.hiver .featured-card:hover { box-shadow: 0 12px 34px rgba(60, 130, 210, .22); }
+body.hiver .trust-badge { border-color: #cfe1f6; }
+
+/* Pied de page : bleu nuit avec un bord enneige */
+body.hiver .site-footer {
+  position: relative; margin-top: 64px;
+  background: linear-gradient(180deg, #0f2a55 0%, #0a1830 100%);
+}
+body.hiver .site-footer::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -19px; height: 20px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20' viewBox='0 0 120 20'%3E%3Cpath d='M0 20C8 6 22 3 34 9 42 13 50 17 58 12 70 4 86 4 96 11 104 16 112 18 120 20Z' fill='%23f6faff' stroke='%23c9ddf3' stroke-width='1'/%3E%3C/svg%3E") repeat-x left bottom / 120px 20px;
+}
+body.hiver .footer-bottom { border-top-color: #1f3a66; }
+
+/* Neige (canvas cree par /js/neige.js) : au-dessus du contenu, sous l'en-tete et les boutons flottants */
+#neige { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 40; }
+@media print { #neige { display: none; } }
+@media (prefers-reduced-motion: reduce) { #neige { display: none; } }

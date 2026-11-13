@@ -1,0 +1,15 @@
+/* ============================================================
+   Decor de NOEL : Pere Noel, sapins et bonhommes de neige au bas de l'accueil.
+   Charge du 1er novembre au 1er janvier (retire automatiquement le 2 janvier, voir lib/saison.js).
+   Pour l'enlever plus tot sans toucher au code : variable Render NOEL_THEME=off.
+   ============================================================ */
+body.noel .hero { padding-bottom: 214px; }
+body.noel .hero > .container { z-index: 2; }
+body.noel .hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 200px; z-index: 1; pointer-events: none;
+  background: url("/img/noel/scene.svg") center bottom / auto 200px no-repeat;
+}
+@media (max-width: 640px) {
+  body.noel .hero { padding-bottom: 156px; }
+  body.noel .hero::after { height: 150px; background-size: auto 150px; }
+}
