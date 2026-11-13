@@ -23,12 +23,22 @@ function slug(texte) {
 }
 
 // Textes et image affiches quand on partage le lien d'une voiture (Facebook, WhatsApp, Google...).
-function seoVehicule(vehicle, photos) {
+function seoVehicule(vehicle, photos, lang) {
   const nom = `${vehicle.make} ${vehicle.model}`;
   const nomAn = nom + (vehicle.show_year ? ` ${vehicle.year}` : '');
   let description;
   let ogDescription;
-  if (vehicle.coming_soon) {
+  if (lang === 'en') {
+    const en = require('../lib/en');
+    if (vehicle.coming_soon) {
+      description = `${nomAn}: coming soon for rent in Montréal. Contact Location YBMTL to be notified when it arrives.`;
+      ogDescription = `${nomAn}: coming soon at Location YBMTL, in Montréal.`;
+    } else {
+      const km = en.mileage(vehicle.mileage_policy || 'Kilométrage illimité');
+      description = `Rent a ${nomAn} in Montréal: $${vehicle.weekly_rate} per week + taxes. ${km}, ${en.trans(vehicle.transmission).toLowerCase()}, ${vehicle.doors} doors. Online request, quick confirmation.`;
+      ogDescription = `${nomAn} for rent in Montréal: $${vehicle.weekly_rate}/week + taxes. ${km}. Make your request online.`;
+    }
+  } else if (vehicle.coming_soon) {
     description = `${nomAn} : bientôt disponible à la location à Montréal. Contactez Location YBMTL pour être informé de son arrivée.`;
     ogDescription = `${nomAn} : bientôt disponible chez Location YBMTL, à Montréal.`;
   } else {
@@ -59,8 +69,9 @@ function primaryPhoto(vehicleId) {
     .get(vehicleId);
 }
 
-// PAGE D'ACCUEIL
-router.get('/', (req, res) => {
+// PAGE D'ACCUEIL (francais : « / », anglais : « /en »)
+const accueil = (lang) => (req, res) => {
+  res.locals.altPath = lang === 'en' ? '/' : '/en';
   const start = (req.query.depart || '').trim();
   const end = (req.query.retour || '').trim();
   const hasSearch = !!(start && end);
@@ -123,23 +134,31 @@ router.get('/', (req, res) => {
     ? []
     : vehicles.filter((v) => v.is_new).sort((a, b) => rangVedette(a) - rangVedette(b));
 
-  res.render('index', {
+  res.render(lang === 'en' ? 'en/index' : 'index', {
     vehicles: list,
     featured,
     totalCount: vehicles.length,
     search: { start, end, hasSearch },
     filtre: { marque, prixMax, hasFilter },
   });
-});
+};
+router.get('/', accueil('fr'));
+router.get('/en', accueil('en'));
 
 // PAGE COMMENT CA MARCHE
 router.get('/comment-ca-marche', (req, res) => {
+  res.locals.altPath = '/en/how-it-works';
   res.render('comment-ca-marche');
+});
+router.get('/en/how-it-works', (req, res) => {
+  res.locals.altPath = '/comment-ca-marche';
+  res.render('en/how-it-works');
 });
 
 // PAGE QUESTIONS FREQUENTES
 router.get('/faq', (req, res) => {
   const config = require('../config');
+  res.locals.altPath = '/en/faq';
   res.render('faq', {
     faq: faqItems(config.company),
     seo: {
@@ -148,9 +167,21 @@ router.get('/faq', (req, res) => {
     },
   });
 });
+router.get('/en/faq', (req, res) => {
+  const config = require('../config');
+  res.locals.altPath = '/faq';
+  res.render('en/faq', {
+    faq: require('../lib/en').faq(config.company),
+    seo: {
+      description:
+        'Answers to your questions about renting a car with Location YBMTL: age and licence, payment, deposit, insurance, unlimited mileage, taxes and vehicle pick-up.',
+    },
+  });
+});
 
 // PAGE POLITIQUE DE CONFIDENTIALITE (Loi 25)
 router.get('/confidentialite', (req, res) => {
+  res.locals.altPath = '/en/privacy';
   res.render('confidentialite', {
     seo: {
       description:
@@ -158,19 +189,35 @@ router.get('/confidentialite', (req, res) => {
     },
   });
 });
+router.get('/en/privacy', (req, res) => {
+  res.locals.altPath = '/confidentialite';
+  res.render('en/privacy', {
+    seo: {
+      description:
+        'Location YBMTL privacy policy: information collected, use, sharing, cookies and your rights.',
+    },
+  });
+});
 
 // PAGE CONDITIONS & CONTRAT
 router.get('/conditions', (req, res) => {
   const config = require('../config');
+  res.locals.altPath = '/en/terms';
   res.render('conditions', { company: config.company });
 });
+router.get('/en/terms', (req, res) => {
+  const config = require('../config');
+  res.locals.altPath = '/conditions';
+  res.render('en/terms', { company: config.company });
+});
 
-// PAGE DETAIL D'UN VEHICULE
-router.get('/vehicule/:id', (req, res) => {
+// PAGE DETAIL D'UN VEHICULE (francais : « /vehicule/12 », anglais : « /en/vehicle/12 »)
+const ficheVehicule = (lang) => (req, res) => {
   const vehicle = db
     .prepare('SELECT * FROM vehicles WHERE id = ? AND is_published = 1')
     .get(req.params.id);
-  if (!vehicle) return res.status(404).render('404');
+  if (!vehicle) return res.status(404).render(lang === 'en' ? 'en/404' : '404');
+  res.locals.altPath = (lang === 'en' ? '/vehicule/' : '/en/vehicle/') + vehicle.id;
 
   const photos = db
     .prepare(
@@ -194,19 +241,21 @@ router.get('/vehicule/:id', (req, res) => {
     .all(vehicle.id, vehicle.make, vehicle.weekly_rate, vehicle.make, vehicle.weekly_rate)
     .map((v) => ({ ...v, photo: primaryPhoto(v.id) ? primaryPhoto(v.id).filename : null }));
 
-  res.render('vehicle', {
+  res.render(lang === 'en' ? 'en/vehicle' : 'vehicle', {
     vehicle,
     photos,
     blocked,
     similaires,
-    seo: seoVehicule(vehicle, photos),
+    seo: seoVehicule(vehicle, photos, lang),
     confirmationClient: require('../config').mail.confirmationClient,
     rentedToday: availability.isRentedToday(vehicle.id),
     sent: req.query.envoye === '1',
     error: req.query.erreur === '1',
     dateError: req.query.erreur === 'date',
   });
-});
+};
+router.get('/vehicule/:id', ficheVehicule('fr'));
+router.get('/en/vehicle/:id', ficheVehicule('en'));
 
 // RECEPTION DU FORMULAIRE DE DEMANDE
 router.post('/vehicule/:id/demande', (req, res) => {
@@ -215,22 +264,25 @@ router.post('/vehicule/:id/demande', (req, res) => {
     .get(req.params.id);
   if (!vehicle) return res.status(404).render('404');
   // Voiture « Bientot disponible » : pas de reservation possible (la fiche n'a pas de formulaire).
-  if (vehicle.coming_soon) return res.redirect(`/vehicule/${vehicle.id}`);
+  if (vehicle.coming_soon) return res.redirect(req.body.lang === 'en' ? `/en/vehicle/${vehicle.id}` : `/vehicule/${vehicle.id}`);
 
   const { name, phone, email, depart, retour, message, website } = req.body;
+  // Langue de la page d'ou vient la demande : sert a rediriger vers la bonne page et a ecrire le courriel au client.
+  const lang = req.body.lang === 'en' ? 'en' : 'fr';
+  const fiche = (lang === 'en' ? '/en/vehicle/' : '/vehicule/') + vehicle.id;
 
   // Champ-piege anti-robots (invisible pour les humains) : s'il est rempli, on fait comme si tout
   // allait bien, sans rien enregistrer ni envoyer.
-  if (website) return res.redirect(`/vehicule/${vehicle.id}?envoye=1#demande`);
+  if (website) return res.redirect(`${fiche}?envoye=1#demande`);
 
   // Validation minimale : nom, telephone et courriel sont obligatoires.
   if (!name || !phone || !email) {
-    return res.redirect(`/vehicule/${vehicle.id}?erreur=1#demande`);
+    return res.redirect(`${fiche}?erreur=1#demande`);
   }
 
   // Pas de location qui commence le jour meme : depart au plus tot le lendemain (heure de Montreal).
   if (depart && !(/^\d{4}-\d{2}-\d{2}$/.test(depart) && depart >= minDepartDate())) {
-    return res.redirect(`/vehicule/${vehicle.id}?erreur=date#demande`);
+    return res.redirect(`${fiche}?erreur=date#demande`);
   }
 
   // Estimation du prix avec TPS et TVQ (calculee ici, pas fiee au navigateur).
@@ -279,6 +331,7 @@ router.post('/vehicule/:id/demande', (req, res) => {
     retour: retour || null,
     estimate,
     deposit: vehicle.security_deposit,
+    lang,
   });
 
   // 3. Transferer la demande au CRM (creation prospect). En "fire-and-forget" :
@@ -293,7 +346,14 @@ router.post('/vehicule/:id/demande', (req, res) => {
     message: (message || '').trim() || null,
   });
 
-  res.redirect(`/vehicule/${vehicle.id}?envoye=1#demande`);
+  // 4. Alerte instantanee sur le cellulaire du proprio (si NTFY_TOPIC est configure ; jamais de donnees du client).
+  require('../lib/alerte').alerteDemande({
+    vehicule: `${vehicle.make} ${vehicle.model}`,
+    depart: depart || null,
+    retour: retour || null,
+  });
+
+  res.redirect(`${fiche}?envoye=1#demande`);
 });
 
 // Envoie la demande au CRM sans bloquer la reponse au client.
@@ -321,21 +381,28 @@ router.get('/sitemap.xml', (req, res) => {
   const vehicles = db.prepare('SELECT id FROM vehicles WHERE is_published = 1').all();
   const today = new Date().toISOString().split('T')[0];
 
+  // Chaque page existe en francais et en anglais : on declare les deux, avec les liens « hreflang ».
+  const paire = (fr, en, freq, prio, lastmod) => {
+    const alt =
+      `<xhtml:link rel="alternate" hreflang="fr-CA" href="${BASE}${fr}"/>` +
+      `<xhtml:link rel="alternate" hreflang="en-CA" href="${BASE}${en}"/>`;
+    const lm = lastmod ? `<lastmod>${lastmod}</lastmod>` : '';
+    return [fr, en].map(
+      (u) => `<url><loc>${BASE}${u}</loc>${lm}<changefreq>${freq}</changefreq><priority>${prio}</priority>${alt}</url>`
+    );
+  };
   const urls = [
-    `<url><loc>${BASE}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
-    `<url><loc>${BASE}/comment-ca-marche</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`,
-    `<url><loc>${BASE}/faq</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`,
-    `<url><loc>${BASE}/conditions</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>`,
-    `<url><loc>${BASE}/confidentialite</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>`,
-    ...vehicles.map(
-      (v) =>
-        `<url><loc>${BASE}/vehicule/${v.id}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`
-    ),
+    ...paire('/', '/en', 'weekly', '1.0'),
+    ...paire('/comment-ca-marche', '/en/how-it-works', 'monthly', '0.6'),
+    ...paire('/faq', '/en/faq', 'monthly', '0.6'),
+    ...paire('/conditions', '/en/terms', 'monthly', '0.5'),
+    ...paire('/confidentialite', '/en/privacy', 'yearly', '0.2'),
+    ...vehicles.flatMap((v) => paire(`/vehicule/${v.id}`, `/en/vehicle/${v.id}`, 'weekly', '0.8', today)),
   ];
 
   res.set('Content-Type', 'application/xml');
   res.send(
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>`
   );
 });
 
