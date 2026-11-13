@@ -111,8 +111,9 @@ db.prepare(
 // Garantit les bonnes valeurs en ligne meme si la base persiste entre les
 // deploiements. Pour changer un prix/depot de facon PERMANENTE : modifier ici
 // ET dans seed-catalog.json (les deux doivent rester coherents).
-const _majTarif = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ?');
-const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE make = ? AND model = ?');
+// year (facultatif) : a preciser quand plusieurs annees du meme modele ont des prix differents.
+const _majTarif = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ? AND (? IS NULL OR year = ?)');
+const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE make = ? AND model = ? AND (? IS NULL OR year = ?)');
 [
   { make: 'Audi',      model: 'S5 Coupé',    rate: 600, deposit: 1500 },
   { make: 'Infiniti',  model: 'QX70',        rate: 350, deposit: 700 },
@@ -122,7 +123,8 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   { make: 'Acura',     model: 'MDX',         rate: 300, deposit: 500 },
   { make: 'BMW',       model: '328i',        rate: 400, deposit: 800 },
   { make: 'Honda',     model: 'Pilot',       rate: 200, deposit: 300 },
-  { make: 'Acura',     model: 'RDX',         rate: 250, deposit: 500 },
+  { make: 'Acura',     model: 'RDX',         year: 2011, rate: 250, deposit: 500 },
+  { make: 'Acura',     model: 'RDX',         year: 2015, rate: 375, deposit: 800 },
   { make: 'Nissan',    model: 'Rogue',       rate: 275, deposit: 500 },
   { make: 'Ford',      model: 'Focus',       rate: 275, deposit: 500 },
   { make: 'BMW',       model: 'X1',          rate: 400, deposit: 800 },
@@ -132,8 +134,9 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   { make: 'Volkswagen',model: 'GTI',         rate: 400, deposit: 1000 },
   { make: 'Jeep',      model: 'Wrangler Unlimited', rate: 500, deposit: 1000 },
 ].forEach((t) => {
-  if (t.rate != null) _majTarif.run(t.rate, t.make, t.model);
-  if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model);
+  const an = t.year != null ? t.year : null;
+  if (t.rate != null) _majTarif.run(t.rate, t.make, t.model, an, an);
+  if (t.deposit != null) _majDepot.run(t.deposit, t.make, t.model, an, an);
 });
 
 // Photos converties de PNG vers JPG (idempotent) : les originaux PNG etaient

@@ -9,6 +9,7 @@ const db = require('./db');
 const { runSeed } = require('./seed');
 const { money, frDate, minDepartDate } = require('./lib/format');
 const { moneyCents } = require('./lib/pricing');
+const { hiverActif, noelActif } = require('./lib/saison');
 
 // Cree le compte admin + le vehicule de demo au premier lancement.
 runSeed();
@@ -62,6 +63,8 @@ app.use((req, res, next) => {
   res.locals.analyticsId = config.analyticsId;
   res.locals.minDepart = minDepartDate(); // depart au plus tot le lendemain (heure de Montreal)
   res.locals.path = req.path;
+  res.locals.winter = hiverActif(); // theme hiver : 1er nov. au 31 mars (voir lib/saison.js)
+  res.locals.noel = noelActif();   // decor de Noel : 1er nov. au 1er janvier (retire le 2 janvier)
   // Liste des marques (pour le menu « table des matieres » de recherche).
   res.locals.menuMakes = db
     .prepare(
