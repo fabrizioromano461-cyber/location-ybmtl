@@ -9,7 +9,7 @@
       <div class="gallery">
         <% if (photos.length > 0) { %>
           <button type="button" class="gallery-main" id="galleryMainBtn" aria-label="Agrandir la photo">
-            <img id="galleryMain" src="/uploads/<%= photos[0].filename %>"
+            <img id="galleryMain" src="<%= photoUrl(photos[0].filename, 1200) %>"
                  alt="<%= vehicle.make %> <%= vehicle.model %>">
             <span class="gallery-zoom">🔍 Agrandir</span>
           </button>
@@ -17,8 +17,8 @@
             <div class="gallery-thumbs">
               <% photos.forEach(function(p, i) { %>
                 <button type="button" class="thumb <%= i === 0 ? 'active' : '' %>"
-                        data-src="/uploads/<%= p.filename %>">
-                  <img src="/uploads/<%= p.filename %>" alt="Photo <%= i + 1 %>" loading="lazy">
+                        data-src="<%= photoUrl(p.filename, 1200) %>">
+                  <img src="<%= photoUrl(p.filename, 480) %>" alt="Photo <%= i + 1 %>" loading="lazy">
                 </button>
               <% }); %>
             </div>
@@ -189,7 +189,8 @@
         <a class="similar-card" href="/vehicule/<%= v.id %>">
           <div class="similar-photo">
             <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>"
-                 alt="<%= v.make %> <%= v.model %>" loading="lazy">
+                 <% if (v.photo && photoSrcset(v.photo)) { %>srcset="<%= photoSrcset(v.photo) %>" sizes="(max-width: 700px) 50vw, 280px"<% } %>
+                 alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
           </div>
           <div class="similar-info">
             <h3><%= v.make %> <%= v.model %></h3>
@@ -203,13 +204,13 @@
   <% } %>
 </div>
 
-<script src="/js/gallery.js"></script>
+<script src="/js/gallery.js?v=<%= locals.assetV %>"></script>
 <% if (!vehicle.coming_soon) { %>
-<script src="/js/booking-calendar.js"></script>
-<script src="/js/reservation.js"></script>
+<script src="/js/booking-calendar.js?v=<%= locals.assetV %>"></script>
+<script src="/js/reservation.js?v=<%= locals.assetV %>"></script>
 <script>
   // Initialiser le calendrier de réservation
-  const blockedDates = <%= JSON.stringify(blocked) %>;
+  const blockedDates = <%- JSON.stringify(blocked).replace(/</g, '\\u003c') %>;
   const departInput = document.getElementById('depart');
   const retourInput = document.getElementById('retour');
 
