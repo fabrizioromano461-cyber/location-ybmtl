@@ -10,6 +10,10 @@ const { runSeed } = require('./seed');
 const { money, frDate, minDepartDate } = require('./lib/format');
 const { moneyCents } = require('./lib/pricing');
 const { hiverActif, noelActif } = require('./lib/saison');
+const { photoUrl, photoSrcset } = require('./lib/images');
+
+// Change a chaque demarrage (donc a chaque deploiement) : sert a renouveler les fichiers CSS/JS en cache.
+const BOOT_ID = Date.now().toString(36);
 
 // Cree le compte admin + le vehicule de demo au premier lancement.
 runSeed();
@@ -37,6 +41,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Fichiers statiques (CSS, JS, images, photos televersees).
+// Cache : photos et images gardees 7 jours (noms de fichiers uniques), CSS/JS 1 an quand l'adresse porte
+// la version (?v=...), sinon 5 minutes. Cloudflare peut alors les garder aussi : site plus rapide, moins de bande passante.
+app.use((req, res, next) => {
+  if (/^\/(uploads|img)\//.test(req.path)) res.setHeader('Cache-Control', 'public, max-age=604800');
+  else if (/^\/(css|js)\//.test(req.path)) {
+    res.setHeader('Cache-Control', req.query.v ? 'public, max-age=31536000, immutable' : 'public, max-age=300');
+  }
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Sessions (pour garder la connexion admin). Stockees dans data/sessions.db
@@ -65,6 +78,11 @@ app.use((req, res, next) => {
   res.locals.path = req.path;
   res.locals.winter = hiverActif(); // theme hiver : 1er nov. au 31 mars (voir lib/saison.js)
   res.locals.noel = noelActif();   // decor de Noel : 1er nov. au 1er janvier (retire le 2 janvier)
+  res.locals.photoUrl = photoUrl;       // photos legeres (WebP) avec repli sur l'original
+  res.locals.photoSrcset = photoSrcset;
+  res.locals.assetV = BOOT_ID;          // version des fichiers CSS/JS
+  res.locals.avisData = require('./lib/avis'); // avis Google (accueil FR et EN)
+  res.locals.en = require('./lib/en');         // formats et textes de la version anglaise (/en)
   // Liste des marques (pour le menu « table des matieres » de recherche).
   res.locals.menuMakes = db
     .prepare(
@@ -89,7 +107,10 @@ app.use('/', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
 
 // Page 404.
-app.use((req, res) => res.status(404).render('404'));
+app.use((req, res) => {
+  const anglais = req.path === '/en' || req.path.startsWith('/en/');
+  res.status(404).render(anglais ? 'en/404' : '404');
+});
 
 app.listen(config.port, () => {
   console.log('');
