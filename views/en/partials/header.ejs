@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<%
+  // English pages (/en/...). Same structure as views/partials/header.ejs : each page may pass a « seo » object
+  // { description, ogDescription, image, imageSize } (see routes/public.js). Otherwise : the defaults below.
+  var _seo = locals.seo || {};
+  var _titre = typeof title !== 'undefined' ? title : 'Location YBMTL - Car rental in Montréal';
+  var _desc = _seo.description || 'Car rental in Montréal at the best price. Rent a car for a week or more: Audi, BMW, Honda, Mazda and more. Clear rates, simple online booking, unlimited mileage.';
+  var _ogDesc = _seo.ogDescription || _seo.description || 'Car rental in Montréal at the best price. Book your car online in a few clicks.';
+  var _img = _seo.image || 'https://locationybmtl.ca/img/og-accueil.jpg';
+  var _imgTaille = _seo.image ? _seo.imageSize : [1200, 630];
+%>
+  <!-- Visit statistics (Google Analytics): loaded ONLY if the visitor accepts (see /js/consent.js) -->
+  <meta name="ga-measurement-id" content="<%= typeof analyticsId !== 'undefined' ? analyticsId : '' %>">
+  <script src="/js/consent.js?v=<%= locals.assetV %>" defer></script>
+
+  <title><%= _titre %></title>
+  <meta name="description" content="<%= _desc %>">
+
+  <meta name="keywords" content="car rental Montréal, rent a car Montréal, cheap car rental, weekly car rental, vehicle rental Montréal, Location YBMTL">
+  <meta name="author" content="Location YBMTL">
+  <meta name="robots" content="index, follow">
+  <meta name="geo.region" content="CA-QC">
+  <meta name="geo.placename" content="Montréal">
+  <meta name="theme-color" content="#1d4ed8">
+  <link rel="canonical" href="https://locationybmtl.ca<%= typeof path !== 'undefined' ? path : '' %>">
+  <% if (locals.altPath) { %>
+  <link rel="alternate" hreflang="en-CA" href="https://locationybmtl.ca<%= path %>">
+  <link rel="alternate" hreflang="fr-CA" href="https://locationybmtl.ca<%= altPath %>">
+  <link rel="alternate" hreflang="x-default" href="https://locationybmtl.ca<%= altPath %>">
+  <% } %>
+
+  <!-- Share preview (Facebook, Instagram, Messenger, WhatsApp) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Location YBMTL">
+  <meta property="og:locale" content="en_CA">
+  <meta property="og:locale:alternate" content="fr_CA">
+  <meta property="og:title" content="<%= _titre %>">
+  <meta property="og:description" content="<%= _ogDesc %>">
+  <meta property="og:url" content="https://locationybmtl.ca<%= typeof path !== 'undefined' ? path : '' %>">
+  <meta property="og:image" content="<%= _img %>">
+  <% if (_imgTaille) { %>
+  <meta property="og:image:width" content="<%= _imgTaille[0] %>">
+  <meta property="og:image:height" content="<%= _imgTaille[1] %>">
+  <% } %>
+  <meta property="og:image:alt" content="<%= _titre %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= _titre %>">
+  <meta name="twitter:description" content="<%= _ogDesc %>">
+  <meta name="twitter:image" content="<%= _img %>">
+
+  <link rel="stylesheet" href="/css/styles.css?v=<%= locals.assetV %>">
+  <link rel="stylesheet" href="/css/pages.css?v=<%= locals.assetV %>">
+  <% if (locals.winter) { %><link rel="stylesheet" href="/css/hiver.css?v=<%= locals.assetV %>"><% } %>
+  <% if (locals.noel) { %><link rel="stylesheet" href="/css/noel.css?v=<%= locals.assetV %>"><% } %>
+  <link rel="icon" href="/img/logo.png">
+</head>
+<% var _cls = []; if (locals.winter) _cls.push('hiver'); if (locals.noel) _cls.push('noel'); %>
+<body<%- _cls.length ? ' class="' + _cls.join(' ') + '"' : '' %>>
+  <a class="phone-topbar" href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1L6.6 10.8z"/></svg>
+    Call us: <strong><%= company.phone %></strong>
+  </a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/en">
+        <img src="/img/logo-rogne.png" alt="Location YBMTL" class="brand-logo">
+      </a>
+      <nav class="main-nav">
+        <a href="/en">Vehicles</a>
+        <a href="/en/how-it-works">How it works</a>
+        <a href="/en/faq">FAQ</a>
+        <a href="/en/terms">Terms &amp; Contract</a>
+        <a href="<%= locals.altPath || '/' %>" class="lang-switch" hreflang="fr" lang="fr" title="Voir ce site en français">FR</a>
+        <% if (currentUser) { %>
+          <a href="/admin" class="btn btn-sm">Admin panel</a>
+        <% } else { %>
+          <a href="/admin/connexion" class="nav-admin">Login</a>
+        <% } %>
+      </nav>
+      <button type="button" class="menu-toggle" id="menuToggle"
+              aria-label="Open search" aria-controls="menuDrawer" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- « Table of contents » menu: search by brand and price -->
+  <div class="menu-overlay" id="menuOverlay" hidden></div>
+  <aside class="menu-drawer" id="menuDrawer" aria-hidden="true" aria-label="Search for a vehicle">
+    <div class="menu-drawer-head">
+      <span class="menu-drawer-title">Search for a vehicle</span>
+      <button type="button" class="menu-close" id="menuClose" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="menu-search">
+      <div class="menu-group">
+        <a class="menu-lang" href="<%= locals.altPath || '/' %>" hreflang="fr" lang="fr">🌐 Voir ce site en français</a>
+      </div>
+      <div class="menu-group">
+        <p class="menu-group-title">By brand</p>
+        <div class="menu-brands">
+          <a class="menu-brand<%= !query.marque ? ' is-active' : '' %>" href="/en#vehicles">
+            <span class="menu-brand-name">All brands</span>
+          </a>
+          <% menuMakes.forEach(function(m){ %>
+            <a class="menu-brand<%= query.marque === m.make ? ' is-active' : '' %>" href="/en?marque=<%= encodeURIComponent(m.make) %>#vehicles">
+              <span class="menu-brand-name"><%= m.make %></span>
+              <span class="menu-brand-count"><%= m.count %></span>
+            </a>
+          <% }); %>
+        </div>
+      </div>
+
+      <form class="menu-group" method="get" action="/en#vehicles" id="menuPriceForm">
+        <% if (query.marque) { %><input type="hidden" name="marque" value="<%= query.marque %>"><% } %>
+        <p class="menu-group-title">By price / week</p>
+        <div class="menu-price">
+          <input type="range" name="prixMax" id="prixMaxRange"
+                 min="<%= priceBounds.min %>" max="<%= priceBounds.max %>" step="25"
+                 value="<%= query.prixMax || priceBounds.max %>"
+                 data-max="<%= priceBounds.max %>">
+          <div class="menu-price-label">
+            Up to <strong id="prixMaxLabel"><%= en.money(query.prixMax || priceBounds.max) %></strong>
+            <span class="menu-price-hint" id="prixMaxHint"<%= query.prixMax ? ' hidden' : '' %>>all prices</span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary menu-submit">Apply price<%= query.marque ? ' (' + query.marque + ')' : '' %></button>
+      </form>
+
+      <div class="menu-actions">
+        <a href="/en#vehicles" class="menu-reset">Reset filters</a>
+      </div>
+    </div>
+  </aside>
+  <main>

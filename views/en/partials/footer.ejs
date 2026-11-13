@@ -1,0 +1,140 @@
+  </main>
+  <footer class="site-footer" id="contact">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/img/logo-rogne.png" alt="Location YBMTL" class="footer-logo">
+        <p>Vehicle rental in <%= company.city %>.</p>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact us</h4>
+        <p>Phone: <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a></p>
+        <p>Email: <a href="mailto:<%= company.email %>"><%= company.email %></a></p>
+        <a class="review-btn" href="https://g.page/r/CfYRExE5jSAFEAI/review" target="_blank" rel="noopener">⭐ Leave us a review</a>
+        <p class="footer-note">Bookings are confirmed manually by phone or email. No online payment.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="footer-bottom-inner">
+          <span>&copy; <%= new Date().getFullYear() %> <%= company.name %>. All rights reserved.</span>
+          <span class="footer-links">
+            <a href="/en/terms" class="footer-link">Terms &amp; Contract</a>
+            <a href="/en/faq" class="footer-link">FAQ</a>
+            <a href="/en/privacy" class="footer-link">Privacy</a>
+            <button type="button" class="footer-link footer-link-btn" id="cookiePrefs">Cookies</button>
+            <a href="<%= locals.altPath || '/' %>" class="footer-link" hreflang="fr" lang="fr">Français</a>
+            <% if (currentUser) { %>
+              <a href="/admin" class="footer-link">Admin panel</a>
+            <% } else { %>
+              <a href="/admin/connexion" class="footer-link">Login</a>
+            <% } %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Quick-contact buttons (visible on every page) -->
+  <div class="fab-contact" aria-label="Quick contact">
+    <a class="fab fab-mail" href="mailto:<%= company.email %>?cc=locationybmtl@outlook.com&subject=Rental%20request" aria-label="Email us">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.4l8 5 8-5V6H4zm16 2.9-7.5 4.7a1 1 0 0 1-1 0L4 8.9V18h16V8.9z"/></svg>
+      <span class="fab-label">Email</span>
+    </a>
+    <a class="fab fab-sms" href="sms:<%= company.phone.replace(/[^0-9+]/g,'') %>" aria-label="Send us a text message">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM7 9h10v2H7V9zm7 5H7v-2h7v2z"/></svg>
+      <span class="fab-label">Text</span>
+    </a>
+    <a class="fab fab-call" href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>" aria-label="Call us">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1L6.6 10.8z"/></svg>
+      <span class="fab-label">Call</span>
+    </a>
+  </div>
+
+  <!-- Structured data for Google (local SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoRental",
+    "name": "<%= company.name %>",
+    "description": "Car rental in Montréal: weekly car rental at affordable prices.",
+    "url": "https://locationybmtl.ca/en",
+    "inLanguage": "en-CA",
+    "telephone": "<%= company.phone %>",
+    "email": "<%= company.email %>",
+    "image": "https://locationybmtl.ca/img/logo-rogne.png",
+    "priceRange": "$$",
+    "areaServed": {
+      "@type": "City",
+      "name": "Montréal"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Montréal",
+      "addressRegion": "QC",
+      "addressCountry": "CA"
+    }
+  }
+  </script>
+
+  <!-- Whole photos in their frames, on any device -->
+  <script src="/js/photo-fit.js?v=<%= locals.assetV %>" defer></script>
+
+  <% if (locals.winter) { %>
+  <!-- Winter theme: light snow (turned off if the visitor reduces animations) -->
+  <script src="/js/neige.js?v=<%= locals.assetV %>" defer></script>
+  <% } %>
+
+  <!-- Search menu (opening + live price) -->
+  <script>
+    (function () {
+      var toggle = document.getElementById('menuToggle');
+      var drawer = document.getElementById('menuDrawer');
+      var overlay = document.getElementById('menuOverlay');
+      var closeBtn = document.getElementById('menuClose');
+      if (!toggle || !drawer || !overlay) return;
+
+      function openMenu() {
+        drawer.classList.add('is-open');
+        overlay.hidden = false;
+        document.body.classList.add('menu-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+      }
+      function closeMenu() {
+        drawer.classList.remove('is-open');
+        overlay.hidden = true;
+        document.body.classList.remove('menu-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+      toggle.addEventListener('click', openMenu);
+      overlay.addEventListener('click', closeMenu);
+      if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMenu();
+      });
+
+      // Price: updates the label live.
+      var range = document.getElementById('prixMaxRange');
+      var label = document.getElementById('prixMaxLabel');
+      var hint = document.getElementById('prixMaxHint');
+      function fmt(n) { return '$' + Number(n).toLocaleString('en-CA'); }
+      if (range && label) {
+        range.addEventListener('input', function () {
+          label.textContent = fmt(range.value);
+          if (hint) hint.hidden = Number(range.value) < Number(range.dataset.max);
+        });
+      }
+      // On submit: if the slider is at its maximum, no price is sent (= « all prices »).
+      var form = document.getElementById('menuPriceForm');
+      if (form && range) {
+        form.addEventListener('submit', function () {
+          if (Number(range.value) >= Number(range.dataset.max)) {
+            range.removeAttribute('name');
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
