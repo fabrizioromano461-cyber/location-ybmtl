@@ -1,0 +1,76 @@
+<%- include('partials/header', { title: 'Terms & Rental Agreement - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/en">&larr; Back to home</a>
+
+  <div class="conditions-content">
+    <h1>Terms &amp; Rental Agreement</h1>
+
+    <p>Before renting a vehicle from Location YBMTL, please read our general terms and our rental agreement carefully.</p>
+
+    <div class="contract-section">
+      <h2>Rental agreement</h2>
+      <p>View and download our complete rental agreement. It is available in <strong>three languages</strong>.</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="/docs/Vehicle-Rental-Agreement-YBMTL-EN.pdf" download>
+          <span class="doc-flag">🇬🇧</span>
+          <span class="doc-text"><strong>English</strong><small>Courtesy translation · PDF</small></span>
+          <span class="doc-dl">Download&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Contrat-Location-YBMTL-FR.pdf" download>
+          <span class="doc-flag">🇫🇷</span>
+          <span class="doc-text"><strong>Français</strong><small>Official version · PDF</small></span>
+          <span class="doc-dl">Télécharger&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Contrato-de-Alquiler-YBMTL-ES.pdf" download>
+          <span class="doc-flag">🇪🇸</span>
+          <span class="doc-text"><strong>Español</strong><small>Courtesy translation · PDF</small></span>
+          <span class="doc-dl">Descargar&nbsp;→</span>
+        </a>
+      </div>
+      <p class="muted small">4 pages · PDF · The French version is the official version of the agreement.</p>
+    </div>
+
+    <div class="contract-section">
+      <h2>Clear guide: insurance &amp; &ldquo;who pays what&rdquo;</h2>
+      <p>A simple, complete summary of the insurance coverage and your responsibilities, so there are no surprises.</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="/docs/Insurance-Guide-YBMTL-EN.pdf" download>
+          <span class="doc-flag">🇬🇧</span>
+          <span class="doc-text"><strong>English</strong><small>Renter's guide · PDF</small></span>
+          <span class="doc-dl">Download&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Guide-Assurances-YBMTL-FR.pdf" download>
+          <span class="doc-flag">🇫🇷</span>
+          <span class="doc-text"><strong>Français</strong><small>Guide du locataire · PDF</small></span>
+          <span class="doc-dl">Télécharger&nbsp;→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="conditions-summary">
+      <h2>Summary of the main terms</h2>
+      <ul>
+        <li><strong>Booking:</strong> Bookings are made by online request. We confirm by phone or email.</li>
+        <li><strong>Payment:</strong> No online payment. Payment is made directly to Location YBMTL at the time of the rental (cheque, bank transfer, cash, debit or credit card).</li>
+        <li><strong>Taxes:</strong> Starting October 1, 2026, GST (5%) and QST (9.975%) are added to the rental price, excluding the security deposit. The prices shown are before taxes.</li>
+        <li><strong>Insurance:</strong> Car insurance is mandatory. We accept your personal insurance, or you can take out our rental insurance.</li>
+        <li><strong>Security deposit:</strong> A security deposit may be requested, depending on the length of the rental and the options chosen.</li>
+        <li><strong>Mileage:</strong> The mileage terms (limited or unlimited) are specific to each vehicle and confirmed when we confirm your booking.</li>
+        <li><strong>Vehicle condition:</strong> A condition report is completed before and after the rental to protect everyone.</li>
+        <li><strong>Minimum age:</strong> The main driver must be at least 25 years old and hold a driver's licence that has been valid for at least 3 years.</li>
+      </ul>
+    </div>
+
+    <div class="conditions-contact">
+      <h2>Questions?</h2>
+      <p>For any question about our terms or our agreement, feel free to contact us:</p>
+      <p>
+        <strong>Phone:</strong> <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a><br>
+        <strong>Email:</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

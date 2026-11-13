@@ -1,0 +1,243 @@
+<%- include('partials/header', { title: vehicle.make + ' ' + vehicle.model + (vehicle.coming_soon ? ' - Coming soon' : ' - Rental in Montréal') + ' - Location YBMTL' }) %>
+
+<div class="container vehicle-detail">
+  <a class="back-link" href="/en">&larr; Back to inventory</a>
+
+  <div class="detail-grid">
+    <!-- Left column: gallery + details -->
+    <div class="detail-main">
+      <div class="gallery">
+        <% if (photos.length > 0) { %>
+          <button type="button" class="gallery-main" id="galleryMainBtn" aria-label="Enlarge the photo">
+            <img id="galleryMain" src="<%= photoUrl(photos[0].filename, 1200) %>"
+                 alt="<%= vehicle.make %> <%= vehicle.model %>">
+            <span class="gallery-zoom">🔍 Enlarge</span>
+          </button>
+          <% if (photos.length > 1) { %>
+            <div class="gallery-thumbs">
+              <% photos.forEach(function(p, i) { %>
+                <button type="button" class="thumb <%= i === 0 ? 'active' : '' %>"
+                        data-src="<%= photoUrl(p.filename, 1200) %>">
+                  <img src="<%= photoUrl(p.filename, 480) %>" alt="Photo <%= i + 1 %>" loading="lazy">
+                </button>
+              <% }); %>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="gallery-main">
+            <img src="/img/placeholder-car.svg" alt="<%= vehicle.make %> <%= vehicle.model %>">
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Lightbox: full-screen photo with navigation -->
+      <% if (photos.length > 0) { %>
+      <div class="lightbox" id="lightbox" hidden>
+        <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+        <% if (photos.length > 1) { %>
+          <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous photo">&#8249;</button>
+        <% } %>
+        <img id="lightboxImg" src="" alt="<%= vehicle.make %> <%= vehicle.model %>">
+        <% if (photos.length > 1) { %>
+          <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next photo">&#8250;</button>
+        <% } %>
+        <div class="lightbox-count" id="lightboxCount"></div>
+      </div>
+      <% } %>
+
+      <div class="detail-header">
+        <div>
+          <h1><%= vehicle.make %> <%= vehicle.model %></h1>
+          <% if (vehicle.show_year) { %><p class="detail-sub"><%= vehicle.year %></p><% } %>
+        </div>
+        <div class="detail-header-actions">
+          <% if (vehicle.coming_soon) { %>
+            <span class="badge badge-soon">🕒 Coming soon</span>
+          <% } else if (rentedToday) { %>
+            <span class="badge badge-rented">Currently rented</span>
+          <% } else { %>
+            <span class="badge badge-available">Available</span>
+          <% } %>
+          <button type="button" class="share-btn" id="shareBtn" title="Share this vehicle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+            Share
+          </button>
+        </div>
+      </div>
+
+      <ul class="spec-list">
+        <% if (vehicle.show_year) { %><li><span class="spec-label">Year</span><span class="spec-value"><%= vehicle.year %></span></li><% } %>
+        <li><span class="spec-label">Transmission</span><span class="spec-value"><%= en.trans(vehicle.transmission) %></span></li>
+        <li><span class="spec-label">Doors</span><span class="spec-value"><%= vehicle.doors %></span></li>
+        <% if (!vehicle.coming_soon) { %><li><span class="spec-label">Mileage</span><span class="spec-value"><%= en.mileage(vehicle.mileage_policy) %></span></li><% } %>
+      </ul>
+
+      <% var _descEn = en.desc(vehicle); if (_descEn) { %>
+        <div class="detail-description">
+          <h2>Description</h2>
+          <p><%= _descEn %></p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Right column: price + booking form -->
+    <aside class="detail-aside">
+      <% if (vehicle.coming_soon) { %>
+      <div class="soon-box">
+        <span class="soon-flag">🕒 Coming soon</span>
+        <h2>This car is arriving soon!</h2>
+        <p>The <%= vehicle.make %> <%= vehicle.model %><% if (vehicle.show_year) { %> <%= vehicle.year %><% } %> will join our fleet very soon. The rate and bookings will be announced shortly.</p>
+        <p>Interested in this car? Contact us: we will let you know as soon as it is available.</p>
+        <div class="soon-actions">
+          <a class="btn btn-primary btn-block" href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>">📞 Call <%= company.phone %></a>
+          <a class="btn btn-outline btn-block" href="sms:<%= company.phone.replace(/[^0-9+]/g,'') %>">💬 Send a text</a>
+          <a class="btn btn-outline btn-block" href="mailto:<%= company.email %>?subject=<%= encodeURIComponent('Interest in the ' + vehicle.make + ' ' + vehicle.model + (vehicle.show_year ? ' ' + vehicle.year : '')) %>">✉️ Write to us</a>
+        </div>
+        <a class="soon-link" href="/en#vehicles">See vehicles available now &rarr;</a>
+      </div>
+      <% } else { %>
+      <div class="price-box">
+        <div class="price-header">Starting from</div>
+        <div class="price-big"><span id="weeklyRate" style="display:none;"><%= vehicle.weekly_rate %></span><span id="blockedDates" style="display:none;"><%= JSON.stringify(blocked) %></span><span id="taxRates" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>" style="display:none;"></span><%= en.money(vehicle.weekly_rate) %><span>/ week</span><span class="tax-note">+ taxes</span></div>
+        <p class="muted"><%= en.mileage(vehicle.mileage_policy) %></p>
+        <% if (vehicle.security_deposit > 0) { %>
+          <div class="deposit-info">
+            💳 Security deposit: <strong><%= en.money(vehicle.security_deposit) %></strong>
+          </div>
+        <% } %>
+        <p class="muted small" style="margin-top: 0.8rem;">Minimum 1-week rental</p>
+        <%- include('partials/tax-notice') %>
+      </div>
+
+      <div class="request-box" id="demande">
+        <h2>Book this car</h2>
+        <% if (sent) { %>
+          <div class="alert alert-success">
+            ✓ Your booking request has been sent! We will contact you shortly to confirm the details and availability.
+            <% if (typeof confirmationClient !== 'undefined' && confirmationClient) { %>You will also receive a summary email (remember to check your spam folder).<% } %>
+          </div>
+        <% } %>
+        <div class="alert alert-error" id="formError"<%- (error || dateError) ? '' : ' style="display:none;"' %>>
+          <% if (dateError) { %>
+            Departure must be no earlier than tomorrow: a rental cannot start on the same day. Please choose another departure date.
+          <% } else if (error) { %>
+            Please fill in all required fields.
+          <% } %>
+        </div>
+        <form method="post" action="/vehicule/<%= vehicle.id %>/demande" class="request-form" id="reservationForm">
+          <input type="hidden" name="lang" value="en">
+          <div class="hp-field" aria-hidden="true">
+            <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <div class="form-section">
+            <h3>Your details</h3>
+            <label>Full name *
+              <input type="text" name="name" id="name" required placeholder="John Smith">
+            </label>
+            <label>Phone *
+              <input type="tel" name="phone" id="phone" required placeholder="(514) 000-0000">
+            </label>
+            <label>Email *
+              <input type="email" name="email" id="email" required placeholder="you@example.com">
+            </label>
+          </div>
+
+          <div class="form-section">
+            <h3>Rental dates</h3>
+            <p class="muted small">Click on the dates in the calendar or use the fields below. Earliest departure is tomorrow, <%= en.date(minDepart) %>: a rental cannot start on the same day.</p>
+            <div id="bookingCalendar" class="booking-calendar" data-min-depart="<%= minDepart %>"></div>
+            <div class="form-row">
+              <label>Departure *
+                <input type="date" name="depart" id="depart" min="<%= minDepart %>" required readonly style="background: #f5f7fb; cursor: pointer;">
+              </label>
+              <label>Return *
+                <input type="date" name="retour" id="retour" min="<%= minDepart %>" required readonly style="background: #f5f7fb; cursor: pointer;">
+              </label>
+            </div>
+            <div id="priceError" class="alert alert-error" style="display:none; margin-top:0.5rem;">
+              The return date must be after the departure date.
+            </div>
+          </div>
+
+          <div class="price-summary">
+            <div class="price-line">
+              <span>Estimated price:</span>
+              <span id="totalPrice">—</span>
+            </div>
+            <div class="price-breakdown" id="priceBreakdown" hidden></div>
+          </div>
+
+          <div class="form-section">
+            <label>Message (optional)
+              <textarea name="message" rows="3" placeholder="Questions, special options, specific conditions..."></textarea>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-large">Book this car</button>
+          <p class="muted small">✓ No online payment. We confirm your booking by phone or email.</p>
+        </form>
+      </div>
+      <% } %>
+    </aside>
+  </div>
+
+  <!-- Similar vehicles -->
+  <% if (typeof similaires !== 'undefined' && similaires.length > 0) { %>
+  <section class="similar-section">
+    <h2>Similar vehicles</h2>
+    <div class="similar-grid">
+      <% similaires.forEach(function(v) { %>
+        <a class="similar-card" href="/en/vehicle/<%= v.id %>">
+          <div class="similar-photo">
+            <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>"
+                 <% if (v.photo && photoSrcset(v.photo)) { %>srcset="<%= photoSrcset(v.photo) %>" sizes="(max-width: 700px) 50vw, 280px"<% } %>
+                 alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
+          </div>
+          <div class="similar-info">
+            <h3><%= v.make %> <%= v.model %></h3>
+            <p><%= en.trans(v.transmission) %> &middot; <%= v.doors %> doors</p>
+            <div class="similar-price"><%= en.money(v.weekly_rate) %> <small>/ week + taxes</small></div>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </section>
+  <% } %>
+</div>
+
+<!-- English texts for the scripts below (the scripts stay in French when this variable is absent) -->
+<script>window.YBMTL_I18N = { lang: 'en' };</script>
+<script src="/js/gallery.js?v=<%= locals.assetV %>"></script>
+<% if (!vehicle.coming_soon) { %>
+<script src="/js/booking-calendar.js?v=<%= locals.assetV %>"></script>
+<script src="/js/reservation.js?v=<%= locals.assetV %>"></script>
+<script>
+  // Initialize the booking calendar
+  const blockedDates = <%- JSON.stringify(blocked).replace(/</g, '\\u003c') %>;
+  const departInput = document.getElementById('depart');
+  const retourInput = document.getElementById('retour');
+
+  const bookingCal = new BookingCalendar('bookingCalendar', blockedDates, function(depart, retour) {
+    if (departInput) departInput.value = depart || '';
+    if (retourInput) retourInput.value = retour || '';
+
+    // Trigger the price calculation
+    if (departInput) departInput.dispatchEvent(new Event('change'));
+    if (retourInput) retourInput.dispatchEvent(new Event('change'));
+  });
+
+  // Update the calendar when the dates change
+  if (departInput) {
+    departInput.addEventListener('change', function() {
+      bookingCal.setSelectedDates(this.value, retourInput ? retourInput.value : null);
+    });
+  }
+  if (retourInput) {
+    retourInput.addEventListener('change', function() {
+      bookingCal.setSelectedDates(departInput ? departInput.value : null, this.value);
+    });
+  }
+</script>
+<% } %>
+
+<%- include('partials/footer') %>

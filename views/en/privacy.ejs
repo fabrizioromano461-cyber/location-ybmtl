@@ -1,0 +1,71 @@
+<%- include('partials/header', { title: 'Privacy policy - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/en">&larr; Back to home</a>
+
+  <div class="conditions-content privacy-content">
+    <h1>Privacy policy</h1>
+    <p class="muted small">Last updated: October 23, 2026 (courtesy English translation of the French policy; the French version prevails)</p>
+
+    <p>At Location YBMTL, we take the protection of your personal information seriously. This page explains what we collect, why, who we share it with and how to exercise your rights, in accordance with Québec's <em>Act respecting the protection of personal information in the private sector</em>.</p>
+
+    <h2>1. Who is responsible</h2>
+    <p><strong>Location YBMTL inc.</strong> (NEQ 1180641152), <%= company.city %>.</p>
+    <p><strong>Person in charge of the protection of personal information:</strong> the owner of the business. For any question or request, write to us at <a href="mailto:<%= company.email %>"><%= company.email %></a> or call us at <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a>.</p>
+
+    <h2>2. The information we collect</h2>
+    <ul>
+      <li><strong>Booking request (website form):</strong> your name, phone number, email, the vehicle and dates you want, and the message you choose to write.</li>
+      <li><strong>Rental and agreement:</strong> at the time of the rental, the information needed for the agreement: your identity, address, date of birth, driver's licence number and signature.</li>
+      <li><strong>Communications:</strong> your emails, text messages and calls with us.</li>
+      <li><strong>Visit statistics (only if you accept cookies):</strong> pages viewed, device type, approximate region and where the visit came from, measured by Google Analytics.</li>
+    </ul>
+
+    <h2>3. Why we use it</h2>
+    <ul>
+      <li>To answer your request and confirm your booking.</li>
+      <li>To prepare, sign and manage the rental agreement, invoicing and vehicle follow-up.</li>
+      <li>To meet our legal obligations.</li>
+      <li>If you accept, to understand how the site is used so that we can improve it.</li>
+    </ul>
+    <p>We do not sell or rent your personal information.</p>
+
+    <h2>4. Who we share it with</h2>
+    <p>We use service providers to run the site and our communications: website hosting (Render), site protection and delivery (Cloudflare), automatic emails (Brevo), the company's email (Microsoft Outlook) and, if you accept cookies, audience measurement (Google Analytics). These providers only have access to the information in order to provide these services to us.</p>
+    <p>Some of these providers are located outside Québec, notably in the United States and Europe: your information may therefore be processed outside Québec. We do not disclose your information to other third parties, unless the law requires it.</p>
+
+    <h2>5. Cookies and Google Analytics</h2>
+    <p>Our site does not install any measurement cookie without your consent. On your first visit, a banner asks you to accept or refuse Google Analytics. You can change your mind at any time with the &ldquo;Cookies&rdquo; button at the bottom of every page.</p>
+    <p>The only other cookie on the site is used for our team to log in to the administration area; it is not installed for visitors.</p>
+
+    <h2>6. How long we keep it</h2>
+    <p>We keep your information only for as long as necessary for the purposes described above and to meet our legal obligations (for example, keeping agreements and invoices), then we destroy it or make it anonymous.</p>
+
+    <h2>7. Your rights</h2>
+    <p>You may at any time:</p>
+    <ul>
+      <li>ask for access to the information we hold about you;</li>
+      <li>ask for it to be corrected;</li>
+      <li>withdraw your consent;</li>
+      <li>ask for it to be deleted, where the law allows;</li>
+      <li>ask to receive it in a structured, commonly used technological format.</li>
+    </ul>
+    <p>Write to us at <a href="mailto:<%= company.email %>"><%= company.email %></a>: we reply within 30 days. If you are not satisfied with our answer, you may file a complaint with the <a href="https://www.cai.gouv.qc.ca" target="_blank" rel="noopener">Commission d'accès à l'information du Québec</a> (Québec's privacy regulator).</p>
+
+    <h2>8. Security</h2>
+    <p>We take reasonable measures to protect your information: secure connection (HTTPS) across the whole site, and an administration area protected by password and reserved for our team. In the event of a privacy incident presenting a risk of serious injury, we will notify the Commission d'accès à l'information and the people concerned.</p>
+
+    <h2>9. Changes</h2>
+    <p>We may update this policy. The date of the last update is shown at the top of this page.</p>
+
+    <div class="conditions-contact">
+      <h2>A question about your information?</h2>
+      <p>
+        <strong>Email:</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a><br>
+        <strong>Phone:</strong> <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

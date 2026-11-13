@@ -1,0 +1,191 @@
+<%- include('partials/header', { title: 'Location YBMTL - Car rental in Montréal' }) %>
+
+<section class="hero">
+  <div class="container">
+    <% if (locals.winter) { %><p class="hiver-pill">❄️ Drive through winter with confidence</p><% } %>
+    <h1 class="hero-title">Rent your next car in Montréal</h1>
+    <p class="hero-subtitle">Browse our inventory, rates and availability. One request, and we take care of the rest.</p>
+
+    <div class="trust-badges">
+      <span class="trust-badge">⭐ 5.0 on Google</span>
+      <span class="trust-badge">💳 Debit/credit card accepted</span>
+      <span class="trust-badge">🔒 Insurance included</span>
+    </div>
+
+    <%- include('partials/tax-notice') %>
+
+    <form class="search-bar" method="get" action="/en#vehicles">
+      <div class="search-field">
+        <label for="depart">Departure date</label>
+        <input type="date" id="depart" name="depart" min="<%= minDepart %>" value="<%= search.start %>">
+      </div>
+      <div class="search-field">
+        <label for="retour">Return date</label>
+        <input type="date" id="retour" name="retour" min="<%= minDepart %>" value="<%= search.end %>">
+      </div>
+      <button type="submit" class="btn btn-primary search-btn">Search</button>
+    </form>
+    <% if (search.hasSearch) { %>
+      <p class="search-info">
+        Vehicles available from <strong><%= en.date(search.start) %></strong>
+        to <strong><%= en.date(search.end) %></strong>.
+        <a href="/en#vehicles">Clear filter</a>
+      </p>
+    <% } %>
+  </div>
+</section>
+
+<section class="why-us">
+  <div class="container why-grid">
+    <div class="why-item">
+      <span class="why-icon">💳</span>
+      <div>
+        <strong>No credit card required</strong>
+        <p>Easy payment by Interac, cash or debit/credit card — no credit check.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">🛣️</span>
+      <div>
+        <strong>Unlimited mileage</strong>
+        <p>Drive without counting, wherever you go.</p>
+      </div>
+    </div>
+    <div class="why-item">
+      <span class="why-icon">⚡</span>
+      <div>
+        <strong>Fast booking</strong>
+        <p>One online request, and we take care of the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%
+// ===== PROMO BANNER (home page, English) =====
+// Same promotion as the French home page (views/index.ejs): change both together.
+const promoActive = true;
+const promo = { make: 'Volkswagen', model: 'GTI', ancien: 800, nouveau: 400 };
+const promoVeh = vehicles.find(function (v) { return v.make === promo.make && v.model === promo.model; });
+const promoLien = promoVeh ? '/en/vehicle/' + promoVeh.id : '/en#vehicles';
+%>
+<% if (promoActive && !search.hasSearch) { %>
+<section class="promo-band">
+  <a class="container promo-inner" href="<%= promoLien %>">
+    <span class="promo-flag">★ New price</span>
+    <span class="promo-car"><%= promo.make %> <%= promo.model %></span>
+    <span class="promo-prices">
+      <span class="promo-old"><%= en.money(promo.ancien) %></span>
+      <span class="promo-new"><%= en.money(promo.nouveau) %><small>/ week + taxes</small></span>
+    </span>
+    <span class="promo-save">Save <%= en.money(promo.ancien - promo.nouveau) %></span>
+    <span class="promo-cta">View this vehicle &rarr;</span>
+  </a>
+</section>
+<% } %>
+
+<% if (typeof featured !== 'undefined' && featured.length > 0) { %>
+<section class="featured-section">
+  <div class="container">
+    <% featured.forEach(function(v) { %>
+      <a class="featured-card" href="/en/vehicle/<%= v.id %>">
+        <div class="featured-photo">
+          <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" <% if (v.photo && photoSrcset(v.photo)) { %>srcset="<%= photoSrcset(v.photo) %>" sizes="(max-width: 800px) 100vw, 42vw"<% } %> alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
+          <span class="featured-flag"><%= v.coming_soon ? '🕒 Coming soon' : '✨ New arrival' %></span>
+        </div>
+        <div class="featured-info">
+          <span class="featured-eyebrow"><%= v.coming_soon ? 'Coming soon to our inventory' : 'Latest arrival in our inventory' %></span>
+          <h2 class="featured-title"><%= v.make %> <%= v.model %></h2>
+          <p class="featured-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= en.trans(v.transmission) %> &middot; <%= v.doors %> doors</p>
+          <% var _d = en.desc(v); if (_d) { %><p class="featured-desc"><%= _d.length > 180 ? _d.slice(0, 180) + '…' : _d %></p><% } %>
+          <div class="featured-meta">
+            <% if (v.coming_soon) { %>
+              <span class="featured-soon">Coming soon <small>Rate announced soon</small></span>
+            <% } else { %>
+              <span class="featured-price"><%= en.money(v.weekly_rate) %> <small>/ week + taxes</small></span>
+              <span class="featured-deposit">Deposit <%= en.money(v.security_deposit) %></span>
+            <% } %>
+          </div>
+          <span class="btn btn-primary featured-btn">View this vehicle &rarr;</span>
+        </div>
+      </a>
+    <% }); %>
+  </div>
+</section>
+<% } %>
+
+<section class="vehicles-section" id="vehicles">
+  <div class="container">
+    <div class="section-head">
+      <h2>Our inventory</h2>
+      <p><%= vehicles.length %> vehicle<%= vehicles.length > 1 ? 's' : '' %>
+        <%= search.hasSearch ? 'available for these dates' : (typeof filtre !== 'undefined' && filtre.hasFilter ? 'found' : 'in total') %></p>
+      <% if (typeof filtre !== 'undefined' && filtre.hasFilter) { %>
+        <p class="filter-info">
+          Filter:
+          <% if (filtre.marque) { %><span class="filter-tag"><%= filtre.marque %></span><% } %>
+          <% if (filtre.prixMax) { %><span class="filter-tag">≤ <%= en.money(filtre.prixMax) %>/wk</span><% } %>
+          <a href="/en#vehicles">Clear</a>
+        </p>
+      <% } %>
+    </div>
+
+    <% if (vehicles.length === 0) { %>
+      <div class="empty-state">
+        <% if (search.hasSearch) { %>
+          <p>No vehicle available for these dates. Try other dates or <a href="/en#vehicles">see the whole inventory</a>.</p>
+        <% } else { %>
+          <p>No vehicles at the moment. Please check back soon!</p>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="vehicle-grid">
+        <% vehicles.forEach(function(v) { %>
+          <%- include('partials/vehicle-card', { v: v }) %>
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%
+// ===== CUSTOMER REVIEWS (Google): data in lib/avis.js, shown in the language they were written in =====
+const avisNote = avisData.note.replace(',', '.');
+const avisTotal = avisData.total;
+const avis = avisData.avis;
+%>
+<section class="reviews-section" id="reviews">
+  <div class="container">
+    <div class="reviews-head">
+      <h2>What our customers say</h2>
+      <div class="reviews-score">
+        <span class="reviews-stars">★★★★★</span>
+        <span class="reviews-note"><%= avisNote %></span>
+        <span class="reviews-count"><%= avisTotal %> Google reviews</span>
+      </div>
+    </div>
+    <p class="muted small" style="margin: -.4rem 0 1rem;">Reviews are shown in the language in which they were written.</p>
+
+    <div class="reviews-grid">
+      <% avis.forEach(function(a) { %>
+        <article class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text"><%= a.texte %></p>
+          <div class="review-author">
+            <span class="review-avatar"><%= a.nom.charAt(0) %></span>
+            <div>
+              <strong><%= a.nom %></strong>
+              <small>Google review</small>
+            </div>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+
+    <div class="reviews-actions">
+      <a class="btn btn-outline" href="https://g.page/r/CfYRExE5jSAFEAI/review" target="_blank" rel="noopener">⭐ Leave us a review</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

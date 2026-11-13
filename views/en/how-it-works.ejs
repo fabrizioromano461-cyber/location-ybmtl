@@ -1,0 +1,65 @@
+<%- include('partials/header', { title: 'How it works - Location YBMTL' }) %>
+
+<div class="container conditions-page">
+  <a class="back-link" href="/en">&larr; Back to home</a>
+
+  <div class="conditions-content">
+    <h1>How it works</h1>
+    <p>Booking a car with Location YBMTL is simple and quick. Here is how it works, in 4 steps.</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Choose your vehicle</h3>
+          <p>Browse our <a href="/en#vehicles">inventory</a> and find the car that suits you, according to your needs and your budget.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Select your dates</h3>
+          <p>Choose your departure and return dates on the vehicle page. The estimated price is displayed automatically.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Fill in the request</h3>
+          <p>Give us your name, phone number and email — that's all we need. No online payment is required.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>We confirm</h3>
+          <p>We contact you quickly by phone or email to confirm your booking and the pick-up details.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="conditions-summary">
+      <h2>Good to know</h2>
+      <ul>
+        <li><strong>No credit card required:</strong> easy payment by Interac, cash or debit/credit card, with no credit check.</li>
+        <li><strong>Taxes:</strong> starting October 1, 2026, GST (5%) and QST (9.975%) are added to the rental price, excluding the security deposit. The prices shown are before taxes, and the calculation is displayed in your booking.</li>
+        <li><strong>Unlimited mileage:</strong> drive without counting, wherever you go.</li>
+        <li><strong>Insurance included:</strong> every rental includes basic insurance (third-party liability).</li>
+        <li><strong>Security deposit:</strong> required when you pick up the vehicle, returned at the end of the rental (subject to the contract).</li>
+        <li><strong>Short or long term:</strong> rental by the week, by the month or longer, depending on your needs.</li>
+      </ul>
+    </div>
+
+    <div class="conditions-contact">
+      <h2>Any questions?</h2>
+      <p>Feel free to contact us before booking, or see our <a href="/en/faq">frequently asked questions</a>:</p>
+      <p>
+        <strong>Phone:</strong> <a href="tel:<%= company.phone.replace(/[^0-9+]/g,'') %>"><%= company.phone %></a><br>
+        <strong>Email:</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a>
+      </p>
+      <a href="/en#vehicles" class="btn btn-primary" style="margin-top: 1rem;">See the inventory</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
