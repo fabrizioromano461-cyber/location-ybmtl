@@ -8,6 +8,15 @@
   var GA_ID = meta ? (meta.getAttribute('content') || '').trim() : '';
   var CLE = 'ybmtl_temoins';
   var bandeau = null;
+  // Textes du bandeau : anglais sur les pages anglaises (<html lang="en-CA">), francais sinon.
+  var EN = (document.documentElement.lang || '').toLowerCase().indexOf('en') === 0;
+  var TXT = EN
+    ? { titre: 'Cookies', entete: 'Cookies and privacy',
+        corps: 'We use Google Analytics to measure visits to this site (pages viewed, device, approximate region). No measurement cookie is installed without your consent. ',
+        lien: 'Learn more', href: '/en/privacy', choix: ' Your current choice: ', oui: 'accepted', non: 'refused', refuser: 'Refuse', accepter: 'Accept' }
+    : { titre: 'Témoins (cookies)', entete: 'Témoins (cookies) et vie privée',
+        corps: 'Nous utilisons Google Analytics pour mesurer les visites de ce site (pages vues, appareil, région approximative). Aucun témoin de mesure n’est installé sans votre accord. ',
+        lien: 'En savoir plus', href: '/confidentialite', choix: ' Votre choix actuel : ', oui: 'accepté', non: 'refusé', refuser: 'Refuser', accepter: 'Accepter' };
 
   var bouton = document.getElementById('cookiePrefs');
   // Pas de mesure configuree : rien a accepter, on cache le bouton.
@@ -69,22 +78,19 @@
   function afficher() {
     if (bandeau) return;
     var actuel = lire();
-    bandeau = el('div', { 'class': 'cookie-banner', role: 'region', 'aria-label': 'Témoins (cookies)' });
+    bandeau = el('div', { 'class': 'cookie-banner', role: 'region', 'aria-label': TXT.titre });
     var interieur = el('div', { 'class': 'cookie-banner-inner' });
     var texte = el('div', { 'class': 'cookie-banner-text' });
-    texte.appendChild(el('strong', {}, 'Témoins (cookies) et vie privée'));
+    texte.appendChild(el('strong', {}, TXT.entete));
     var p = el('p');
-    p.appendChild(document.createTextNode(
-      'Nous utilisons Google Analytics pour mesurer les visites de ce site (pages vues, appareil, région approximative). ' +
-      'Aucun témoin de mesure n’est installé sans votre accord. '
-    ));
-    p.appendChild(el('a', { href: '/confidentialite' }, 'En savoir plus'));
+    p.appendChild(document.createTextNode(TXT.corps));
+    p.appendChild(el('a', { href: TXT.href }, TXT.lien));
     p.appendChild(document.createTextNode('.'));
-    if (actuel) p.appendChild(document.createTextNode(' Votre choix actuel : ' + (actuel === 'oui' ? 'accepté' : 'refusé') + '.'));
+    if (actuel) p.appendChild(document.createTextNode(TXT.choix + (actuel === 'oui' ? TXT.oui : TXT.non) + '.'));
     texte.appendChild(p);
     var actions = el('div', { 'class': 'cookie-banner-actions' });
-    var non = el('button', { type: 'button', 'class': 'btn btn-outline', 'data-choix': 'non' }, 'Refuser');
-    var oui = el('button', { type: 'button', 'class': 'btn btn-primary', 'data-choix': 'oui' }, 'Accepter');
+    var non = el('button', { type: 'button', 'class': 'btn btn-outline', 'data-choix': 'non' }, TXT.refuser);
+    var oui = el('button', { type: 'button', 'class': 'btn btn-primary', 'data-choix': 'oui' }, TXT.accepter);
     non.addEventListener('click', function () { choisir('non'); });
     oui.addEventListener('click', function () { choisir('oui'); });
     actions.appendChild(non);

@@ -86,7 +86,7 @@
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(function () {
-        flash('✓ Lien copié');
+        flash(window.YBMTL_I18N && window.YBMTL_I18N.lang === 'en' ? '✓ Link copied' : '✓ Lien copié');
       }).catch(function () {
         window.prompt('Copiez ce lien pour le partager :', url);
       });

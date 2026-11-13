@@ -14,14 +14,48 @@ document.addEventListener('DOMContentLoaded', function() {
   const tvqRate = taxEl ? parseFloat(taxEl.dataset.tvq) : 0;
   const breakdownEl = document.getElementById('priceBreakdown');
 
+  // Page anglaise (/en/...) : la page definit window.YBMTL_I18N = { lang: 'en' } ; sinon tout reste en francais.
+  const EN = !!(window.YBMTL_I18N && window.YBMTL_I18N.lang === 'en');
+  const LOCALE = EN ? 'en-CA' : 'fr-CA';
   // \u00a0 = espace insecable : « 275,00 $ » ne se coupe jamais en fin de ligne sur mobile
-  const fmt = (cents) => (cents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0$';
-  const pct = (rate) => (rate * 100).toLocaleString('fr-CA', { maximumFractionDigits: 3 });
-  const frDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' });
+  const fmt = EN
+    ? (cents) => '$' + (cents / 100).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : (cents) => (cents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0$';
+  const pct = (rate) => (rate * 100).toLocaleString(LOCALE, { maximumFractionDigits: 3 });
+  const frDate = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString(LOCALE, { day: 'numeric', month: 'long', year: 'numeric' });
+
+  // Textes affiches par le formulaire (francais / anglais)
+  const T = EN
+    ? {
+        minDepart: (d) => `Departure must be no earlier than ${d}: a rental cannot start on the same day.`,
+        retourApres: 'The return date must be after the departure date.',
+        minSemaine: '⚠️ Minimum 1-week rental required (7 days minimum).',
+        detail: (days, weeks) => `${days}\u00a0day${days > 1 ? 's' : ''} (${weeks}\u00a0week${weeks > 1 ? 's' : ''}) ·\u00a0taxes\u00a0included`,
+        sousTotal: (weeks, tarif) => `Subtotal (${weeks}\u00a0wk\u00a0×\u00a0${tarif})`,
+        tps: (rate) => `GST (${rate}%)`,
+        tvq: (rate) => `QST (${rate}%)`,
+        total: 'Total (taxes included)',
+        depotNote: 'The security deposit is not taxed.',
+        champs: 'Please fill in all required fields (name, phone, email).',
+        dates: 'Please select the departure and return dates.',
+      }
+    : {
+        minDepart: (d) => `Le départ doit être au plus tôt le ${d} : une location ne peut pas commencer le jour même.`,
+        retourApres: 'La date de retour doit être après la date de départ.',
+        minSemaine: '⚠️ Minimum 1 semaine de location requise (7 jours minimum).',
+        detail: (days, weeks) => `${days}\u00a0jour${days > 1 ? 's' : ''} (${weeks}\u00a0semaine${weeks > 1 ? 's' : ''}) ·\u00a0taxes\u00a0incluses`,
+        sousTotal: (weeks, tarif) => `Sous-total (${weeks}\u00a0sem.\u00a0×\u00a0${tarif})`,
+        tps: (rate) => `TPS (${rate}\u00a0%)`,
+        tvq: (rate) => `TVQ (${rate}\u00a0%)`,
+        total: 'Total (taxes incluses)',
+        depotNote: "Le dépôt de garantie n'est pas taxé.",
+        champs: 'Veuillez remplir tous les champs obligatoires (nom, téléphone, courriel).',
+        dates: 'Veuillez sélectionner les dates de départ et de retour.',
+      };
 
   // Premier jour de départ possible : le lendemain (attribut min fourni par le serveur, heure de Montréal)
   const minDepart = departInput ? departInput.getAttribute('min') || '' : '';
-  const minDepartMsg = minDepart ? `Le départ doit être au plus tôt le ${frDate(minDepart)} : une location ne peut pas commencer le jour même.` : '';
+  const minDepartMsg = minDepart ? T.minDepart(frDate(minDepart)) : '';
 
   function resetPrice() {
     if (priceDisplay) priceDisplay.innerHTML = '—';
@@ -56,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (retour <= depart) {
       if (priceError) {
         priceError.style.display = 'block';
-        priceError.textContent = 'La date de retour doit être après la date de départ.';
+        priceError.textContent = T.retourApres;
       }
       resetPrice();
       return;
@@ -69,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (days < 7) {
       if (priceError) {
         priceError.style.display = 'block';
-        priceError.textContent = '⚠️ Minimum 1 semaine de location requise (7 jours minimum).';
+        priceError.textContent = T.minSemaine;
       }
       resetPrice();
       return;
@@ -85,15 +119,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (priceDisplay) {
       priceDisplay.innerHTML = `<strong class="price-total">${fmt(total)}</strong>
-        <span class="price-detail">${days}\u00a0jour${days > 1 ? 's' : ''} (${weeks}\u00a0semaine${weeks > 1 ? 's' : ''}) ·\u00a0taxes\u00a0incluses</span>`;
+        <span class="price-detail">${T.detail(days, weeks)}</span>`;
     }
     if (breakdownEl) {
       breakdownEl.innerHTML = `
-        <div class="breakdown-line"><span>Sous-total (${weeks}\u00a0sem.\u00a0×\u00a0${fmt(weeklyRate * 100)})</span><span>${fmt(subtotal)}</span></div>
-        <div class="breakdown-line"><span>TPS (${pct(tpsRate)}\u00a0%)</span><span>${fmt(tps)}</span></div>
-        <div class="breakdown-line"><span>TVQ (${pct(tvqRate)}\u00a0%)</span><span>${fmt(tvq)}</span></div>
-        <div class="breakdown-line breakdown-total"><span>Total (taxes incluses)</span><span>${fmt(total)}</span></div>
-        <div class="breakdown-note">Le dépôt de garantie n'est pas taxé.</div>`;
+        <div class="breakdown-line"><span>${T.sousTotal(weeks, fmt(weeklyRate * 100))}</span><span>${fmt(subtotal)}</span></div>
+        <div class="breakdown-line"><span>${T.tps(pct(tpsRate))}</span><span>${fmt(tps)}</span></div>
+        <div class="breakdown-line"><span>${T.tvq(pct(tvqRate))}</span><span>${fmt(tvq)}</span></div>
+        <div class="breakdown-line breakdown-total"><span>${T.total}</span><span>${fmt(total)}</span></div>
+        <div class="breakdown-note">${T.depotNote}</div>`;
       breakdownEl.hidden = false;
     }
   }
@@ -149,11 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const retour = retourInput ? retourInput.value : '';
 
       if (!name || !phone || !email) {
-        return showError('Veuillez remplir tous les champs obligatoires (nom, téléphone, courriel).');
+        return showError(T.champs);
       }
 
       if (!depart || !retour) {
-        return showError('Veuillez sélectionner les dates de départ et de retour.');
+        return showError(T.dates);
       }
 
       if (minDepart && depart < minDepart) {
@@ -164,12 +198,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const retourDate = new Date(retour + 'T00:00:00');
 
       if (retourDate <= departDate) {
-        return showError('La date de retour doit être après la date de départ.');
+        return showError(T.retourApres);
       }
 
       const days = Math.round((retourDate - departDate) / (1000 * 60 * 60 * 24));
       if (days < 7) {
-        return showError('⚠️ Minimum 1 semaine de location requise (7 jours minimum).');
+        return showError(T.minSemaine);
       }
 
       if (formError) formError.style.display = 'none';

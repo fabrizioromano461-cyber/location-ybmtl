@@ -3,6 +3,8 @@ class BookingCalendar {
   constructor(containerId, blockedDates, onDatesSelected) {
     this.container = document.getElementById(containerId);
     if (!this.container) return;
+    // Page anglaise : window.YBMTL_I18N = { lang: 'en' } (sinon : francais)
+    this.en = !!(window.YBMTL_I18N && window.YBMTL_I18N.lang === 'en');
 
     this.blockedDates = blockedDates || [];
     this.onDatesSelected = onDatesSelected;
@@ -31,7 +33,7 @@ class BookingCalendar {
 
     const title = document.createElement('div');
     title.className = 'booking-cal-title';
-    title.textContent = new Date(year, month, 1).toLocaleString('fr-CA', {
+    title.textContent = new Date(year, month, 1).toLocaleString(this.en ? 'en-CA' : 'fr-CA', {
       month: 'long',
       year: 'numeric'
     });
@@ -49,7 +51,7 @@ class BookingCalendar {
     // Jours de la semaine
     const dowContainer = document.createElement('div');
     dowContainer.className = 'booking-cal-dow';
-    const daysOfWeek = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+    const daysOfWeek = this.en ? ['S', 'M', 'T', 'W', 'T', 'F', 'S'] : ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
     daysOfWeek.forEach(day => {
       const dow = document.createElement('div');
       dow.textContent = day;
@@ -91,7 +93,7 @@ class BookingCalendar {
       } else if (isPast) {
         cell.classList.add('past');
         cell.disabled = true;
-        if (date >= today) cell.title = 'Départ possible au plus tôt demain';
+        if (date >= today) cell.title = this.en ? 'Earliest departure is tomorrow' : 'Départ possible au plus tôt demain';
       } else if (isBlocked) {
         cell.classList.add('blocked');
         cell.disabled = true;
