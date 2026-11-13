@@ -210,6 +210,17 @@ if (_nbVeh > 0) {
         { filename: 'jeep-wrangler-interieur.jpg', sort_order: 30, is_primary: 0 },
       ],
     },
+    {
+      make: 'Acura', model: 'RDX', year: 2015, transmission: 'Automatique', doors: 4,
+      weekly_rate: 375, security_deposit: 800, mileage_policy: 'Kilométrage illimité',
+      description: "VUS compact de luxe, l'Acura RDX allie confort, sécurité et conduite agréable. Sa traction intégrale rassure en toute saison et son intérieur en cuir soigné rend chaque trajet plus confortable. Un excellent choix pour les déplacements de tous les jours, les voyages et les escapades de fin de semaine.",
+      photos: [
+        { filename: 'acura-rdx-2015-face.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'acura-rdx-2015-profil.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'acura-rdx-2015-arriere.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'acura-rdx-2015-interieur.jpg', sort_order: 30, is_primary: 0 },
+      ],
+    },
   ];
   const _findVeh = db.prepare('SELECT id FROM vehicles WHERE make = ? AND model = ? AND year = ?');
   const _insVeh = db.prepare(
@@ -327,6 +338,6 @@ if (_nbVeh > 0) {
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'BMW' AND model = '750'").run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015)").run();
 
 module.exports = db;

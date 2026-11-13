@@ -97,7 +97,7 @@ function runSeed() {
   // base est recréée à neuf. Pour changer la vedette : modifier le WHERE.
   // Pour n'en mettre AUCUNE : commenter la 2e ligne.
   db.prepare('UPDATE vehicles SET is_new = 0').run();
-  db.prepare("UPDATE vehicles SET is_new = 1 WHERE make = 'BMW' AND model = '750'").run();
+  db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015)").run();
 }
 
 // Si lance directement (`node seed.js`), on execute tout de suite.

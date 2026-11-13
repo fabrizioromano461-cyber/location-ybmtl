@@ -698,5 +698,40 @@
         "sort_order": 30
       }
     ]
+  },
+  {
+    "make": "Acura",
+    "model": "RDX",
+    "year": 2015,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 375,
+    "security_deposit": 800,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "VUS compact de luxe, l'Acura RDX allie confort, sécurité et conduite agréable. Sa traction intégrale rassure en toute saison et son intérieur en cuir soigné rend chaque trajet plus confortable. Un excellent choix pour les déplacements de tous les jours, les voyages et les escapades de fin de semaine.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "acura-rdx-2015-face.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "acura-rdx-2015-profil.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "acura-rdx-2015-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "acura-rdx-2015-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      }
+    ]
   }
 ]
