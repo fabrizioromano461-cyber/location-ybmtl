@@ -16,7 +16,7 @@
 %>
   <!-- Mesure des visites (Google Analytics) : chargee SEULEMENT si le visiteur accepte (voir /js/consent.js) -->
   <meta name="ga-measurement-id" content="<%= typeof analyticsId !== 'undefined' ? analyticsId : '' %>">
-  <script src="/js/consent.js" defer></script>
+  <script src="/js/consent.js?v=<%= locals.assetV %>" defer></script>
 
   <title><%= _titre %></title>
   <meta name="description" content="<%= _desc %>">
@@ -29,6 +29,11 @@
   <meta name="geo.placename" content="Montréal">
   <meta name="theme-color" content="#1d4ed8">
   <link rel="canonical" href="https://locationybmtl.ca<%= typeof path !== 'undefined' ? path : '' %>">
+  <% if (locals.altPath) { %>
+  <link rel="alternate" hreflang="fr-CA" href="https://locationybmtl.ca<%= path %>">
+  <link rel="alternate" hreflang="en-CA" href="https://locationybmtl.ca<%= altPath %>">
+  <link rel="alternate" hreflang="x-default" href="https://locationybmtl.ca<%= path %>">
+  <% } %>
 
   <!-- Apercu de partage (Facebook, Instagram, Messenger, WhatsApp) -->
   <meta property="og:type" content="website">
@@ -49,10 +54,10 @@
   <meta name="twitter:description" content="<%= _ogDesc %>">
   <meta name="twitter:image" content="<%= _img %>">
 
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/pages.css">
-  <% if (locals.winter) { %><link rel="stylesheet" href="/css/hiver.css"><% } %>
-  <% if (locals.noel) { %><link rel="stylesheet" href="/css/noel.css"><% } %>
+  <link rel="stylesheet" href="/css/styles.css?v=<%= locals.assetV %>">
+  <link rel="stylesheet" href="/css/pages.css?v=<%= locals.assetV %>">
+  <% if (locals.winter) { %><link rel="stylesheet" href="/css/hiver.css?v=<%= locals.assetV %>"><% } %>
+  <% if (locals.noel) { %><link rel="stylesheet" href="/css/noel.css?v=<%= locals.assetV %>"><% } %>
   <link rel="icon" href="/img/logo.png">
 </head>
 <% var _cls = []; if (locals.winter) _cls.push('hiver'); if (locals.noel) _cls.push('noel'); %>
@@ -71,6 +76,7 @@
         <a href="/comment-ca-marche">Comment ça marche</a>
         <a href="/faq">FAQ</a>
         <a href="/conditions">Contrat & Conditions</a>
+        <a href="<%= locals.altPath || '/en' %>" class="lang-switch" hreflang="en" lang="en" title="View this site in English">EN</a>
         <% if (currentUser) { %>
           <a href="/admin" class="btn btn-sm">Panneau admin</a>
         <% } else { %>
@@ -93,6 +99,9 @@
     </div>
 
     <div class="menu-search">
+      <div class="menu-group">
+        <a class="menu-lang" href="<%= locals.altPath || '/en' %>" hreflang="en" lang="en">🌐 View this site in English</a>
+      </div>
       <div class="menu-group">
         <p class="menu-group-title">Par marque</p>
         <div class="menu-brands">

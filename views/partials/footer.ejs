@@ -21,6 +21,7 @@
             <a href="/conditions" class="footer-link">Conditions & Contrat</a>
             <a href="/faq" class="footer-link">FAQ</a>
             <a href="/confidentialite" class="footer-link">Confidentialité</a>
+            <a href="<%= locals.altPath || '/en' %>" class="footer-link" hreflang="en" lang="en">English</a>
             <button type="button" class="footer-link footer-link-btn" id="cookiePrefs">Témoins (cookies)</button>
             <% if (currentUser) { %>
               <a href="/admin" class="footer-link">Panneau admin</a>
@@ -74,12 +75,37 @@
   }
   </script>
 
+  <% if (locals.altPath) { %>
+  <!-- Visiteur dont le navigateur est en anglais : on propose la version anglaise (une seule fois, jamais de redirection automatique) -->
+  <script>
+    (function () {
+      try {
+        var lang = (navigator.language || '').toLowerCase();
+        if (lang.indexOf('en') !== 0 || localStorage.getItem('ybmtl_lang_hint')) return;
+        var bar = document.createElement('div');
+        bar.className = 'lang-hint';
+        bar.setAttribute('lang', 'en');
+        bar.innerHTML = '<span>This page is also available in English.</span> <a href="<%= altPath %>" hreflang="en">View in English &rarr;</a> <button type="button" aria-label="Close">&times;</button>';
+        bar.querySelector('button').addEventListener('click', function () {
+          try { localStorage.setItem('ybmtl_lang_hint', '1'); } catch (e) {}
+          bar.remove();
+        });
+        bar.querySelector('a').addEventListener('click', function () {
+          try { localStorage.setItem('ybmtl_lang_hint', '1'); } catch (e) {}
+        });
+        var top = document.querySelector('.phone-topbar');
+        if (top && top.parentNode) top.parentNode.insertBefore(bar, top.nextSibling);
+      } catch (e) { /* sans importance */ }
+    })();
+  </script>
+  <% } %>
+
   <!-- Photos entieres dans leurs cadres, quel que soit l'appareil -->
-  <script src="/js/photo-fit.js" defer></script>
+  <script src="/js/photo-fit.js?v=<%= locals.assetV %>" defer></script>
 
   <% if (locals.winter) { %>
   <!-- Theme hiver : neige legere (coupee si le visiteur reduit les animations) -->
-  <script src="/js/neige.js" defer></script>
+  <script src="/js/neige.js?v=<%= locals.assetV %>" defer></script>
   <% } %>
 
   <!-- Menu de recherche (ouverture + prix en direct) -->

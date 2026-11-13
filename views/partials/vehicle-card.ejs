@@ -1,7 +1,8 @@
 <article class="vehicle-card">
   <a class="card-photo" href="/vehicule/<%= v.id %>">
     <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>"
-         alt="<%= v.make %> <%= v.model %>" loading="lazy">
+         <% if (v.photo && photoSrcset(v.photo)) { %>srcset="<%= photoSrcset(v.photo) %>" sizes="(max-width: 700px) 100vw, 400px"<% } %>
+         alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
     <% if (v.coming_soon) { %>
       <span class="badge badge-soon">🕒 Bientôt disponible</span>
     <% } else if (v.rentedToday) { %>
