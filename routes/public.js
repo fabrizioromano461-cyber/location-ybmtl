@@ -35,7 +35,8 @@ function seoVehicule(vehicle, photos, lang) {
       ogDescription = `${nomAn}: coming soon at Location YBMTL, in Montréal.`;
     } else {
       const km = en.mileage(vehicle.mileage_policy || 'Kilométrage illimité');
-      description = `Rent a ${nomAn} in Montréal: $${vehicle.weekly_rate} per week + taxes. ${km}, ${en.trans(vehicle.transmission).toLowerCase()}, ${vehicle.doors} doors. Online request, quick confirmation.`;
+      const article = /^[aeiou]/i.test(nomAn) ? 'an' : 'a'; // « an Acura », « a BMW »
+      description = `Rent ${article} ${nomAn} in Montréal: $${vehicle.weekly_rate} per week + taxes. ${km}, ${en.trans(vehicle.transmission).toLowerCase()}, ${vehicle.doors} doors. Online request, quick confirmation.`;
       ogDescription = `${nomAn} for rent in Montréal: $${vehicle.weekly_rate}/week + taxes. ${km}. Make your request online.`;
     }
   } else if (vehicle.coming_soon) {
