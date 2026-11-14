@@ -117,7 +117,6 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
 [
   { make: 'Audi',      model: 'S5 Coupé',    rate: 600, deposit: 1500 },
   { make: 'Infiniti',  model: 'QX70',        rate: 350, deposit: 700 },
-  { make: 'Cadillac',  model: 'Escalade XT', rate: 500, deposit: 900 },
   { make: 'Kia',       model: 'Sorento',     rate: 400, deposit: 700 },
   { make: 'Mazda',     model: '6',           rate: 400, deposit: 700 },
   { make: 'Acura',     model: 'MDX',         rate: 300, deposit: 500 },
@@ -365,12 +364,13 @@ if (_nbVeh > 0) {
 
 // Vehicules VENDUS / qui ne font plus partie du parc (idempotent) : retires de la base
 // (photos et dates bloquees partent avec, les demandes restent sans lien). Ils ne sont plus
-// dans seed-catalog.json, donc absents du site en ligne. 2026-11-14 : RDX 2011, Altima, Focus.
+// dans seed-catalog.json, donc absents du site en ligne. 2026-11-14 : RDX 2011, Altima, Focus, Escalade XT.
 {
   const _vendus = [
     ['Acura', 'RDX', 2011],
     ['Nissan', 'Altima', 2010],
     ['Ford', 'Focus', 2013],
+    ['Cadillac', 'Escalade XT', 2008],
   ];
   const _delVendu = db.prepare('DELETE FROM vehicles WHERE make = ? AND model = ? AND year = ?');
   for (const [make, model, year] of _vendus) _delVendu.run(make, model, year);

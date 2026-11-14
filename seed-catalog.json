@@ -77,47 +77,6 @@
     ]
   },
   {
-    "id": 3,
-    "make": "Cadillac",
-    "model": "Escalade XT",
-    "year": 2008,
-    "transmission": "Automatique",
-    "doors": 4,
-    "weekly_rate": 500,
-    "security_deposit": 900,
-    "mileage_policy": "Kilométrage illimité",
-    "description": "Pickup de luxe spacieux et puissant, parfait pour les voyages, les déménagements légers ou les déplacements en groupe. Alliant confort haut de gamme et grande capacité de chargement, il offre une expérience de conduite unique.",
-    "is_published": 1,
-    "show_year": 0,
-    "photos": [
-      {
-        "filename": "photo-1782237735187-58955.jpeg",
-        "is_primary": 1,
-        "sort_order": 3
-      },
-      {
-        "filename": "photo-1782237735098-694444.jpeg",
-        "is_primary": 0,
-        "sort_order": 0
-      },
-      {
-        "filename": "photo-1782237735127-815730.jpeg",
-        "is_primary": 0,
-        "sort_order": 1
-      },
-      {
-        "filename": "photo-1782237735137-981713.jpeg",
-        "is_primary": 0,
-        "sort_order": 2
-      },
-      {
-        "filename": "photo-1782237735202-505153.jpg",
-        "is_primary": 0,
-        "sort_order": 4
-      }
-    ]
-  },
-  {
     "id": 4,
     "make": "BMW",
     "model": "328i",
