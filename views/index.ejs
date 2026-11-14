@@ -65,7 +65,7 @@
 // ===== BANNIERE PROMO (page d'accueil) =====
 // Pour RETIRER la promo : mettre « promoActive = false » ci-dessous.
 // Pour la MODIFIER : changer les valeurs (voiture, ancien prix, nouveau prix).
-const promoActive = true;
+const promoActive = false; // 2026-11-14 : promo GTI retiree (demande de YB)
 const promo = { make: 'Volkswagen', model: 'GTI', ancien: 800, nouveau: 400 };
 const promoVeh = vehicles.find(function (v) { return v.make === promo.make && v.model === promo.model; });
 const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
@@ -86,16 +86,24 @@ const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
 <% } %>
 
 <% if (typeof featured !== 'undefined' && featured.length > 0) { %>
-<section class="featured-section">
+<% var _multi = featured.length > 2; %>
+<section class="featured-section<%= _multi ? ' multi' : '' %>">
   <div class="container">
+    <% if (_multi) { %>
+    <div class="featured-head">
+      <h2>✨ Nouveaux arrivages</h2>
+      <span class="featured-hint">Glissez pour voir les autres &rarr;</span>
+    </div>
+    <% } %>
+    <div class="featured-grid">
     <% featured.forEach(function(v) { %>
-      <a class="featured-card" href="/vehicule/<%= v.id %>">
+      <a class="featured-card<%= v.coming_soon ? ' is-soon' : '' %>" href="/vehicule/<%= v.id %>">
         <div class="featured-photo">
           <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" <% if (v.photo && photoSrcset(v.photo)) { %>srcset="<%= photoSrcset(v.photo) %>" sizes="(max-width: 800px) 100vw, 42vw"<% } %> alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
           <span class="featured-flag"><%= v.coming_soon ? '🕒 Bientôt disponible' : '✨ Nouvel arrivé' %></span>
         </div>
         <div class="featured-info">
-          <span class="featured-eyebrow"><%= v.coming_soon ? 'Prochainement dans notre inventaire' : 'Dernière arrivée dans notre inventaire' %></span>
+          <span class="featured-eyebrow"><%= v.coming_soon ? 'Prochainement dans notre inventaire' : 'Nouvelle arrivée dans notre inventaire' %></span>
           <h2 class="featured-title"><%= v.make %> <%= v.model %></h2>
           <p class="featured-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= v.transmission %> &middot; <%= v.doors %> portes</p>
           <% if (v.description) { %><p class="featured-desc"><%= v.description.length > 180 ? v.description.slice(0, 180) + '…' : v.description %></p><% } %>
@@ -111,6 +119,7 @@ const promoLien = promoVeh ? '/vehicule/' + promoVeh.id : '/#vehicules';
         </div>
       </a>
     <% }); %>
+    </div>
   </div>
 </section>
 <% } %>
