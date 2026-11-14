@@ -64,7 +64,7 @@
 <%
 // ===== PROMO BANNER (home page, English) =====
 // Same promotion as the French home page (views/index.ejs): change both together.
-const promoActive = true;
+const promoActive = false; // 2026-11-14 : promo GTI retiree (demande de YB)
 const promo = { make: 'Volkswagen', model: 'GTI', ancien: 800, nouveau: 400 };
 const promoVeh = vehicles.find(function (v) { return v.make === promo.make && v.model === promo.model; });
 const promoLien = promoVeh ? '/en/vehicle/' + promoVeh.id : '/en#vehicles';
@@ -85,16 +85,24 @@ const promoLien = promoVeh ? '/en/vehicle/' + promoVeh.id : '/en#vehicles';
 <% } %>
 
 <% if (typeof featured !== 'undefined' && featured.length > 0) { %>
-<section class="featured-section">
+<% var _multi = featured.length > 2; %>
+<section class="featured-section<%= _multi ? ' multi' : '' %>">
   <div class="container">
+    <% if (_multi) { %>
+    <div class="featured-head">
+      <h2>✨ New arrivals</h2>
+      <span class="featured-hint">Swipe to see more &rarr;</span>
+    </div>
+    <% } %>
+    <div class="featured-grid">
     <% featured.forEach(function(v) { %>
-      <a class="featured-card" href="/en/vehicle/<%= v.id %>">
+      <a class="featured-card<%= v.coming_soon ? ' is-soon' : '' %>" href="/en/vehicle/<%= v.id %>">
         <div class="featured-photo">
           <img src="<%= v.photo ? '/uploads/' + v.photo : '/img/placeholder-car.svg' %>" <% if (v.photo && photoSrcset(v.photo)) { %>srcset="<%= photoSrcset(v.photo) %>" sizes="(max-width: 800px) 100vw, 42vw"<% } %> alt="<%= v.make %> <%= v.model %>" loading="lazy" decoding="async">
           <span class="featured-flag"><%= v.coming_soon ? '🕒 Coming soon' : '✨ New arrival' %></span>
         </div>
         <div class="featured-info">
-          <span class="featured-eyebrow"><%= v.coming_soon ? 'Coming soon to our inventory' : 'Latest arrival in our inventory' %></span>
+          <span class="featured-eyebrow"><%= v.coming_soon ? 'Coming soon to our inventory' : 'New arrival in our inventory' %></span>
           <h2 class="featured-title"><%= v.make %> <%= v.model %></h2>
           <p class="featured-sub"><% if (v.show_year) { %><%= v.year %> &middot; <% } %><%= en.trans(v.transmission) %> &middot; <%= v.doors %> doors</p>
           <% var _d = en.desc(v); if (_d) { %><p class="featured-desc"><%= _d.length > 180 ? _d.slice(0, 180) + '…' : _d %></p><% } %>
@@ -110,6 +118,7 @@ const promoLien = promoVeh ? '/en/vehicle/' + promoVeh.id : '/en#vehicles';
         </div>
       </a>
     <% }); %>
+    </div>
   </div>
 </section>
 <% } %>
