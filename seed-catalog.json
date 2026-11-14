@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "make": "Audi",
     "model": "S5 Coupé",
     "year": 2012,
@@ -35,6 +36,7 @@
     ]
   },
   {
+    "id": 2,
     "make": "Infiniti",
     "model": "QX70",
     "year": 2014,
@@ -75,6 +77,7 @@
     ]
   },
   {
+    "id": 3,
     "make": "Cadillac",
     "model": "Escalade XT",
     "year": 2008,
@@ -115,6 +118,7 @@
     ]
   },
   {
+    "id": 4,
     "make": "BMW",
     "model": "328i",
     "year": 2013,
@@ -155,6 +159,7 @@
     ]
   },
   {
+    "id": 5,
     "make": "Kia",
     "model": "Sorento",
     "year": 2016,
@@ -185,6 +190,7 @@
     ]
   },
   {
+    "id": 6,
     "make": "Mazda",
     "model": "6",
     "year": 2016,
@@ -225,6 +231,7 @@
     ]
   },
   {
+    "id": 7,
     "make": "Acura",
     "model": "MDX",
     "year": 2012,
@@ -250,6 +257,7 @@
     ]
   },
   {
+    "id": 8,
     "make": "Honda",
     "model": "Pilot",
     "year": 2007,
@@ -280,6 +288,7 @@
     ]
   },
   {
+    "id": 9,
     "make": "Honda",
     "model": "Insight",
     "year": 2010,
@@ -305,6 +314,7 @@
     ]
   },
   {
+    "id": 10,
     "make": "Volkswagen",
     "model": "Jetta",
     "year": 2013,
@@ -340,76 +350,7 @@
     ]
   },
   {
-    "make": "Nissan",
-    "model": "Altima",
-    "year": 2010,
-    "transmission": "Automatique",
-    "doors": 4,
-    "weekly_rate": 300,
-    "security_deposit": 500,
-    "mileage_policy": "Kilométrage illimité",
-    "description": "Berline fiable, confortable et économique. Un excellent choix pour la ville comme pour les longues distances.",
-    "is_published": 1,
-    "show_year": 1,
-    "photos": [
-      {
-        "filename": "photo-1782321688281-142248.jpg",
-        "is_primary": 1,
-        "sort_order": 0
-      },
-      {
-        "filename": "photo-1782321688311-113120.jpg",
-        "is_primary": 0,
-        "sort_order": 1
-      },
-      {
-        "filename": "photo-1782321688327-245098.jpg",
-        "is_primary": 0,
-        "sort_order": 2
-      },
-      {
-        "filename": "photo-1782321688373-462754.jpeg",
-        "is_primary": 0,
-        "sort_order": 3
-      }
-    ]
-  },
-  {
-    "make": "Ford",
-    "model": "Focus",
-    "year": 2013,
-    "transmission": "Automatique",
-    "doors": 4,
-    "weekly_rate": 275,
-    "security_deposit": 500,
-    "mileage_policy": "Kilométrage illimité",
-    "description": "Voiture compacte, économique et facile à conduire. Idéale pour les déplacements quotidiens grâce à sa faible consommation d'essence et son intérieur confortable.",
-    "is_published": 1,
-    "show_year": 1,
-    "photos": [
-      {
-        "filename": "photo-1782335526219-472677.jpeg",
-        "is_primary": 1,
-        "sort_order": 0
-      },
-      {
-        "filename": "photo-1782335526233-971567.jpeg",
-        "is_primary": 0,
-        "sort_order": 1
-      },
-      {
-        "filename": "photo-1782335526244-907517.jpeg",
-        "is_primary": 0,
-        "sort_order": 2
-      },
-      {
-        "filename": "photo-1782335526250-920728.jpeg",
-        "is_primary": 0,
-        "sort_order": 3
-      }
-    ]
-  },
-  {
+    "id": 13,
     "make": "Hyundai",
     "model": "Santa Fe",
     "year": 2011,
@@ -445,6 +386,7 @@
     ]
   },
   {
+    "id": 14,
     "make": "Chevrolet",
     "model": "Orlando",
     "year": 2012,
@@ -480,6 +422,7 @@
     ]
   },
   {
+    "id": 15,
     "make": "Nissan",
     "model": "Rogue",
     "year": 2012,
@@ -510,26 +453,7 @@
     ]
   },
   {
-    "make": "Acura",
-    "model": "RDX",
-    "year": 2011,
-    "transmission": "Automatique",
-    "doors": 4,
-    "weekly_rate": 250,
-    "security_deposit": 500,
-    "mileage_policy": "Kilométrage illimité",
-    "description": "Sportif, confortable et polyvalent, l'Acura RDX offre une conduite agréable et un intérieur spacieux. Un excellent choix pour les déplacements quotidiens, les voyages et les escapades de fin de semaine.",
-    "is_published": 1,
-    "show_year": 1,
-    "photos": [
-      {
-        "filename": "acura-rdx-arriere.jpg",
-        "is_primary": 1,
-        "sort_order": 0
-      }
-    ]
-  },
-  {
+    "id": 17,
     "make": "Volkswagen",
     "model": "GTI",
     "year": 2018,
@@ -561,6 +485,7 @@
     ]
   },
   {
+    "id": 18,
     "make": "BMW",
     "model": "X1",
     "year": 2016,
@@ -592,6 +517,7 @@
     ]
   },
   {
+    "id": 19,
     "make": "Cadillac",
     "model": "ATS-V",
     "year": 2016,
@@ -628,6 +554,7 @@
     ]
   },
   {
+    "id": 20,
     "make": "Jeep",
     "model": "Wrangler Unlimited",
     "year": 2015,
@@ -664,6 +591,7 @@
     ]
   },
   {
+    "id": 21,
     "make": "BMW",
     "model": "750",
     "year": 2019,
@@ -700,6 +628,7 @@
     ]
   },
   {
+    "id": 22,
     "make": "Acura",
     "model": "RDX",
     "year": 2015,
@@ -731,6 +660,114 @@
         "filename": "acura-rdx-2015-interieur.jpg",
         "is_primary": 0,
         "sort_order": 30
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "make": "Toyota",
+    "model": "Prius",
+    "year": 2018,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 400,
+    "security_deposit": 750,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Hybride reconnue pour sa fiabilité, la Toyota Prius consomme très peu d'essence : vous économisez à chaque plein. Confortable, silencieuse et pratique grâce à son grand hayon, elle est idéale pour les déplacements quotidiens, le travail et les longs trajets.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "toyota-prius-2018-profil.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "toyota-prius-2018-face.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "toyota-prius-2018-avant.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "toyota-prius-2018-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      },
+      {
+        "filename": "toyota-prius-2018-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 40
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "make": "Infiniti",
+    "model": "M37",
+    "year": 2012,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 350,
+    "security_deposit": 750,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline de luxe à traction intégrale, l'Infiniti M37 offre un moteur V6 puissant, un intérieur raffiné et un confort haut de gamme. Parfaite pour les rendez-vous d'affaires, les sorties en ville et les longues routes, en toute saison.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "infiniti-m37-2012-profil.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "infiniti-m37-2012-face.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "infiniti-m37-2012-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "infiniti-m37-2012-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 30
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "make": "Lexus",
+    "model": "IS 250",
+    "year": 2013,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 375,
+    "security_deposit": 750,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline sport de luxe, la Lexus IS 250 allie élégance, fiabilité et plaisir de conduire. Sa traction intégrale assure une excellente adhérence en toute saison et son intérieur soigné rend chaque trajet agréable. Idéale en ville comme sur la route.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "lexus-is250-2013-profil.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "lexus-is250-2013-face.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "lexus-is250-2013-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
       }
     ]
   }

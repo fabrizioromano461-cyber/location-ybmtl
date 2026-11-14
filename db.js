@@ -123,10 +123,11 @@ const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE mak
   { make: 'Acura',     model: 'MDX',         rate: 300, deposit: 500 },
   { make: 'BMW',       model: '328i',        rate: 400, deposit: 800 },
   { make: 'Honda',     model: 'Pilot',       rate: 200, deposit: 300 },
-  { make: 'Acura',     model: 'RDX',         year: 2011, rate: 250, deposit: 500 },
   { make: 'Acura',     model: 'RDX',         year: 2015, rate: 375, deposit: 800 },
+  { make: 'Toyota',    model: 'Prius',       year: 2018, rate: 400, deposit: 750 },
+  { make: 'Infiniti',  model: 'M37',         year: 2012, rate: 350, deposit: 750 },
+  { make: 'Lexus',     model: 'IS 250',      year: 2013, rate: 375, deposit: 750 },
   { make: 'Nissan',    model: 'Rogue',       rate: 275, deposit: 500 },
-  { make: 'Ford',      model: 'Focus',       rate: 275, deposit: 500 },
   { make: 'BMW',       model: 'X1',          rate: 400, deposit: 800 },
   { make: 'Hyundai',   model: 'Santa Fe',    rate: 250, deposit: 400 },
   { make: 'Honda',     model: 'Insight',     rate: 250, deposit: 350 },
@@ -161,14 +162,6 @@ if (_nbVeh > 0) {
         { filename: 'nissan-rogue-face.jpg', sort_order: 0, is_primary: 1 },
         { filename: 'nissan-rogue-arriere.jpg', sort_order: 10, is_primary: 0 },
         { filename: 'nissan-rogue-interieur.jpg', sort_order: 20, is_primary: 0 },
-      ],
-    },
-    {
-      make: 'Acura', model: 'RDX', year: 2011, transmission: 'Automatique', doors: 4,
-      weekly_rate: 300, security_deposit: 500, mileage_policy: 'Kilometrage illimite',
-      description: "Sportif, confortable et polyvalent, l'Acura RDX offre une conduite agréable et un intérieur spacieux. Un excellent choix pour les déplacements quotidiens, les voyages et les escapades de fin de semaine.",
-      photos: [
-        { filename: 'acura-rdx-arriere.jpg', sort_order: 0, is_primary: 1 },
       ],
     },
     {
@@ -222,6 +215,39 @@ if (_nbVeh > 0) {
         { filename: 'acura-rdx-2015-profil.jpg', sort_order: 10, is_primary: 0 },
         { filename: 'acura-rdx-2015-arriere.jpg', sort_order: 20, is_primary: 0 },
         { filename: 'acura-rdx-2015-interieur.jpg', sort_order: 30, is_primary: 0 },
+      ],
+    },
+    {
+      make: 'Toyota', model: 'Prius', year: 2018, transmission: 'Automatique', doors: 4,
+      weekly_rate: 400, security_deposit: 750, mileage_policy: 'Kilométrage illimité',
+      description: "Hybride reconnue pour sa fiabilité, la Toyota Prius consomme très peu d'essence : vous économisez à chaque plein. Confortable, silencieuse et pratique grâce à son grand hayon, elle est idéale pour les déplacements quotidiens, le travail et les longs trajets.",
+      photos: [
+        { filename: 'toyota-prius-2018-profil.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'toyota-prius-2018-face.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'toyota-prius-2018-avant.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'toyota-prius-2018-arriere.jpg', sort_order: 30, is_primary: 0 },
+        { filename: 'toyota-prius-2018-interieur.jpg', sort_order: 40, is_primary: 0 },
+      ],
+    },
+    {
+      make: 'Infiniti', model: 'M37', year: 2012, transmission: 'Automatique', doors: 4,
+      weekly_rate: 350, security_deposit: 750, mileage_policy: 'Kilométrage illimité',
+      description: "Berline de luxe à traction intégrale, l'Infiniti M37 offre un moteur V6 puissant, un intérieur raffiné et un confort haut de gamme. Parfaite pour les rendez-vous d'affaires, les sorties en ville et les longues routes, en toute saison.",
+      photos: [
+        { filename: 'infiniti-m37-2012-profil.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'infiniti-m37-2012-face.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'infiniti-m37-2012-arriere.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'infiniti-m37-2012-interieur.jpg', sort_order: 30, is_primary: 0 },
+      ],
+    },
+    {
+      make: 'Lexus', model: 'IS 250', year: 2013, transmission: 'Automatique', doors: 4,
+      weekly_rate: 375, security_deposit: 750, mileage_policy: 'Kilométrage illimité',
+      description: "Berline sport de luxe, la Lexus IS 250 allie élégance, fiabilité et plaisir de conduire. Sa traction intégrale assure une excellente adhérence en toute saison et son intérieur soigné rend chaque trajet agréable. Idéale en ville comme sur la route.",
+      photos: [
+        { filename: 'lexus-is250-2013-profil.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'lexus-is250-2013-face.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'lexus-is250-2013-arriere.jpg', sort_order: 20, is_primary: 0 },
       ],
     },
   ];
@@ -337,10 +363,23 @@ if (_nbVeh > 0) {
   }
 }
 
+// Vehicules VENDUS / qui ne font plus partie du parc (idempotent) : retires de la base
+// (photos et dates bloquees partent avec, les demandes restent sans lien). Ils ne sont plus
+// dans seed-catalog.json, donc absents du site en ligne. 2026-11-14 : RDX 2011, Altima, Focus.
+{
+  const _vendus = [
+    ['Acura', 'RDX', 2011],
+    ['Nissan', 'Altima', 2010],
+    ['Ford', 'Focus', 2013],
+  ];
+  const _delVendu = db.prepare('DELETE FROM vehicles WHERE make = ? AND model = ? AND year = ?');
+  for (const [make, model, year] of _vendus) _delVendu.run(make, model, year);
+}
+
 // Vehicule(s) mis en vedette « NOUVEL ARRIVE » en haut du site (idempotent).
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015)").run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015) OR (make = 'Toyota' AND model = 'Prius' AND year = 2018) OR (make = 'Infiniti' AND model = 'M37' AND year = 2012) OR (make = 'Lexus' AND model = 'IS 250' AND year = 2013)").run();
 
 module.exports = db;

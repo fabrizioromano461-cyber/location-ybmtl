@@ -53,9 +53,9 @@ function seedVehicles() {
 
   const insertVehicle = db.prepare(
     `INSERT INTO vehicles
-     (make, model, year, transmission, doors, weekly_rate, security_deposit,
+     (id, make, model, year, transmission, doors, weekly_rate, security_deposit,
       mileage_policy, description, is_published, show_year, coming_soon)
-     VALUES (@make, @model, @year, @transmission, @doors, @weekly_rate, @security_deposit,
+     VALUES (@id, @make, @model, @year, @transmission, @doors, @weekly_rate, @security_deposit,
       @mileage_policy, @description, @is_published, @show_year, @coming_soon)`
   );
   const insertPhoto = db.prepare(
@@ -66,6 +66,9 @@ function seedVehicles() {
   const seedAll = db.transaction((items) => {
     for (const v of items) {
       const info = insertVehicle.run({
+        // Numero FIXE (seed-catalog.json « id ») : les adresses /vehicule/N ne changent pas
+        // quand on retire une voiture du catalogue. Sans « id », SQLite en donne un nouveau.
+        id: v.id != null ? v.id : null,
         make: v.make,
         model: v.model,
         year: v.year,
@@ -97,7 +100,7 @@ function runSeed() {
   // base est recréée à neuf. Pour changer la vedette : modifier le WHERE.
   // Pour n'en mettre AUCUNE : commenter la 2e ligne.
   db.prepare('UPDATE vehicles SET is_new = 0').run();
-  db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015)").run();
+  db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015) OR (make = 'Toyota' AND model = 'Prius' AND year = 2018) OR (make = 'Infiniti' AND model = 'M37' AND year = 2012) OR (make = 'Lexus' AND model = 'IS 250' AND year = 2013)").run();
 }
 
 // Si lance directement (`node seed.js`), on execute tout de suite.
