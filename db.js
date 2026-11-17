@@ -115,17 +115,19 @@ db.prepare(
 const _majTarif = db.prepare('UPDATE vehicles SET weekly_rate = ? WHERE make = ? AND model = ? AND (? IS NULL OR year = ?)');
 const _majDepot = db.prepare('UPDATE vehicles SET security_deposit = ? WHERE make = ? AND model = ? AND (? IS NULL OR year = ?)');
 [
-  { make: 'Audi',      model: 'S5 Coupé',    rate: 600, deposit: 1500 },
+  { make: 'Audi',      model: 'S5 Coupé',    rate: 500, deposit: 1000 },
   { make: 'Infiniti',  model: 'QX70',        rate: 350, deposit: 700 },
   { make: 'Kia',       model: 'Sorento',     rate: 400, deposit: 700 },
-  { make: 'Mazda',     model: '6',           rate: 400, deposit: 700 },
+  { make: 'Mazda',     model: '6',           rate: 300, deposit: 500 },
   { make: 'Acura',     model: 'MDX',         rate: 300, deposit: 500 },
-  { make: 'BMW',       model: '328i',        rate: 400, deposit: 800 },
+  { make: 'BMW',       model: '328i',        rate: 350, deposit: 700 },
   { make: 'Honda',     model: 'Pilot',       rate: 200, deposit: 300 },
   { make: 'Acura',     model: 'RDX',         year: 2015, rate: 375, deposit: 800 },
   { make: 'Toyota',    model: 'Prius',       year: 2018, rate: 400, deposit: 750 },
-  { make: 'Infiniti',  model: 'M37',         year: 2012, rate: 350, deposit: 750 },
+  { make: 'Infiniti',  model: 'M37',         year: 2012, rate: 300, deposit: 600 },
+  { make: 'Cadillac',  model: 'ATS-V',       year: 2016, rate: 400, deposit: 700 },
   { make: 'Lexus',     model: 'IS 250',      year: 2013, rate: 375, deposit: 750 },
+  { make: 'Hyundai',   model: 'Sonata',      year: 2013, rate: 280, deposit: 600 },
   { make: 'Nissan',    model: 'Rogue',       rate: 275, deposit: 500 },
   { make: 'BMW',       model: 'X1',          rate: 400, deposit: 800 },
   { make: 'Hyundai',   model: 'Santa Fe',    rate: 250, deposit: 400 },
@@ -185,7 +187,7 @@ if (_nbVeh > 0) {
     },
     {
       make: 'Cadillac', model: 'ATS-V', year: 2016, transmission: 'Automatique', doors: 4,
-      weekly_rate: 350, security_deposit: 800, mileage_policy: 'Kilométrage illimité',
+      weekly_rate: 400, security_deposit: 700, mileage_policy: 'Kilométrage illimité',
       description: "Berline sport de luxe au caractère affirmé. La Cadillac ATS-V séduit par sa conduite dynamique, sa silhouette élégante et son intérieur en cuir soigné avec toit ouvrant. Un véhicule qui allie prestance et plaisir de conduire, autant en ville que sur la route.",
       photos: [
         { filename: 'cadillac-ats-face.jpg', sort_order: 0, is_primary: 1 },
@@ -230,7 +232,7 @@ if (_nbVeh > 0) {
     },
     {
       make: 'Infiniti', model: 'M37', year: 2012, transmission: 'Automatique', doors: 4,
-      weekly_rate: 350, security_deposit: 750, mileage_policy: 'Kilométrage illimité',
+      weekly_rate: 300, security_deposit: 600, mileage_policy: 'Kilométrage illimité',
       description: "Berline de luxe à traction intégrale, l'Infiniti M37 offre un moteur V6 puissant, un intérieur raffiné et un confort haut de gamme. Parfaite pour les rendez-vous d'affaires, les sorties en ville et les longues routes, en toute saison.",
       photos: [
         { filename: 'infiniti-m37-2012-profil.jpg', sort_order: 0, is_primary: 1 },
@@ -247,6 +249,17 @@ if (_nbVeh > 0) {
         { filename: 'lexus-is250-2013-profil.jpg', sort_order: 0, is_primary: 1 },
         { filename: 'lexus-is250-2013-face.jpg', sort_order: 10, is_primary: 0 },
         { filename: 'lexus-is250-2013-arriere.jpg', sort_order: 20, is_primary: 0 },
+      ],
+    },
+    {
+      make: 'Hyundai', model: 'Sonata', year: 2013, transmission: 'Automatique', doors: 4,
+      weekly_rate: 280, security_deposit: 600, mileage_policy: 'Kilométrage illimité',
+      description: "Berline hybride confortable et économique : la Hyundai Sonata consomme très peu d'essence et offre une conduite douce et silencieuse. Spacieuse et bien aménagée, c'est un excellent choix pour le travail, les déplacements de tous les jours et les longs trajets.",
+      photos: [
+        { filename: 'hyundai-sonata-2013-profil.jpg', sort_order: 0, is_primary: 1 },
+        { filename: 'hyundai-sonata-2013-face.jpg', sort_order: 10, is_primary: 0 },
+        { filename: 'hyundai-sonata-2013-arriere.jpg', sort_order: 20, is_primary: 0 },
+        { filename: 'hyundai-sonata-2013-interieur.jpg', sort_order: 30, is_primary: 0 },
       ],
     },
   ];
@@ -380,6 +393,6 @@ if (_nbVeh > 0) {
 // Pour changer la voiture vedette : modifier le WHERE ci-dessous.
 // Pour ne mettre AUCUNE voiture en vedette : commenter la 2e ligne.
 db.prepare('UPDATE vehicles SET is_new = 0').run();
-db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015) OR (make = 'Toyota' AND model = 'Prius' AND year = 2018) OR (make = 'Infiniti' AND model = 'M37' AND year = 2012) OR (make = 'Lexus' AND model = 'IS 250' AND year = 2013)").run();
+db.prepare("UPDATE vehicles SET is_new = 1 WHERE (make = 'BMW' AND model = '750') OR (make = 'Acura' AND model = 'RDX' AND year = 2015) OR (make = 'Toyota' AND model = 'Prius' AND year = 2018) OR (make = 'Infiniti' AND model = 'M37' AND year = 2012) OR (make = 'Lexus' AND model = 'IS 250' AND year = 2013) OR (make = 'Hyundai' AND model = 'Sonata' AND year = 2013)").run();
 
 module.exports = db;

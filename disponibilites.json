@@ -1,0 +1,13 @@
+{
+  "_aide": "Mis a jour CHAQUE DIMANCHE avec YB. 'voitures' : « Marque Modele » -> \"libre\" (disponible maintenant) ou \"AAAA-MM-JJ\" = premier jour DISPONIBLE (bloquee a la reservation avant). 'autres_jusqu_au' : toutes les AUTRES voitures (non listees, hors bientot disponible) sont bloquees d'aujourd'hui jusqu'a cette date INCLUSE. Lu a chaque demarrage du serveur (la base en ligne est refaite a chaque demarrage) ; une date passee ne bloque plus rien.",
+  "maj": "2026-11-17",
+  "autres_jusqu_au": "2026-11-22",
+  "voitures": {
+    "Audi S5 Coupé": "libre",
+    "Hyundai Sonata": "libre",
+    "Mazda 6": "2026-11-18",
+    "BMW 328i": "2026-11-19",
+    "Cadillac ATS-V": "2026-11-19",
+    "Infiniti M37": "2026-11-20"
+  }
+}

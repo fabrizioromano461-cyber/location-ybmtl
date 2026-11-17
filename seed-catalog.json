@@ -6,8 +6,8 @@
     "year": 2012,
     "transmission": "Automatique",
     "doors": 2,
-    "weekly_rate": 600,
-    "security_deposit": 1500,
+    "weekly_rate": 500,
+    "security_deposit": 1000,
     "mileage_policy": "Kilométrage illimité",
     "description": "Coupé sportif alliant performance, confort et élégance. Son moteur puissant, son intérieur raffiné et sa conduite dynamique en font un excellent choix pour vos déplacements ou occasions spéciales.",
     "is_published": 1,
@@ -83,8 +83,8 @@
     "year": 2013,
     "transmission": "Automatique",
     "doors": 4,
-    "weekly_rate": 400,
-    "security_deposit": 800,
+    "weekly_rate": 350,
+    "security_deposit": 700,
     "mileage_policy": "Kilométrage illimité",
     "description": "Berline élégante offrant un parfait équilibre entre confort, performance et économie de carburant. Idéale pour les déplacements quotidiens comme les longs trajets grâce à sa conduite agréable et son intérieur raffiné.",
     "is_published": 1,
@@ -155,8 +155,8 @@
     "year": 2016,
     "transmission": "Automatique",
     "doors": 4,
-    "weekly_rate": 400,
-    "security_deposit": 700,
+    "weekly_rate": 300,
+    "security_deposit": 500,
     "mileage_policy": "Kilométrage illimité",
     "description": "Berline élégante et économique offrant une conduite confortable agréable. Son design moderne et son intérieur spacieux en font un excellent choix pour les déplacements quotidiens ou les longs trajets.",
     "is_published": 1,
@@ -482,8 +482,8 @@
     "year": 2016,
     "transmission": "Automatique",
     "doors": 4,
-    "weekly_rate": 350,
-    "security_deposit": 800,
+    "weekly_rate": 400,
+    "security_deposit": 700,
     "mileage_policy": "Kilométrage illimité",
     "description": "Berline sport de luxe au caractère affirmé. La Cadillac ATS-V séduit par sa conduite dynamique, sa silhouette élégante et son intérieur en cuir soigné avec toit ouvrant. Un véhicule qui allie prestance et plaisir de conduire, autant en ville que sur la route.",
     "is_published": 1,
@@ -670,8 +670,8 @@
     "year": 2012,
     "transmission": "Automatique",
     "doors": 4,
-    "weekly_rate": 350,
-    "security_deposit": 750,
+    "weekly_rate": 300,
+    "security_deposit": 600,
     "mileage_policy": "Kilométrage illimité",
     "description": "Berline de luxe à traction intégrale, l'Infiniti M37 offre un moteur V6 puissant, un intérieur raffiné et un confort haut de gamme. Parfaite pour les rendez-vous d'affaires, les sorties en ville et les longues routes, en toute saison.",
     "is_published": 1,
@@ -727,6 +727,42 @@
         "filename": "lexus-is250-2013-arriere.jpg",
         "is_primary": 0,
         "sort_order": 20
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "make": "Hyundai",
+    "model": "Sonata",
+    "year": 2013,
+    "transmission": "Automatique",
+    "doors": 4,
+    "weekly_rate": 280,
+    "security_deposit": 600,
+    "mileage_policy": "Kilométrage illimité",
+    "description": "Berline hybride confortable et économique : la Hyundai Sonata consomme très peu d'essence et offre une conduite douce et silencieuse. Spacieuse et bien aménagée, c'est un excellent choix pour le travail, les déplacements de tous les jours et les longs trajets.",
+    "is_published": 1,
+    "show_year": 1,
+    "photos": [
+      {
+        "filename": "hyundai-sonata-2013-profil.jpg",
+        "is_primary": 1,
+        "sort_order": 0
+      },
+      {
+        "filename": "hyundai-sonata-2013-face.jpg",
+        "is_primary": 0,
+        "sort_order": 10
+      },
+      {
+        "filename": "hyundai-sonata-2013-arriere.jpg",
+        "is_primary": 0,
+        "sort_order": 20
+      },
+      {
+        "filename": "hyundai-sonata-2013-interieur.jpg",
+        "is_primary": 0,
+        "sort_order": 30
       }
     ]
   }
