@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1d4ed8">
+  <title>Contrat de location — Location YBMTL</title>
+  <link rel="stylesheet" href="/css/styles.css?v=<%= locals.assetV %>">
+  <link rel="stylesheet" href="/css/contrat.css?v=<%= locals.assetV %>">
+  <link rel="stylesheet" href="/css/contrat-client.css?v=<%= locals.assetV %>">
+  <link rel="icon" href="/img/logo.png">
+</head>
+<body class="cc-body">
+  <header class="cc-header">
+    <a class="cc-brand" href="/"><img src="/img/logo-rogne.png" alt="Location YBMTL"></a>
+    <a class="cc-aide" href="tel:<%= tel.replace(/[^0-9+]/g, '') %>">Besoin d'aide ?<strong><%= tel %></strong></a>
+  </header>
+
+  <main class="cc-main">
+    <div class="contrat-page" id="contratPage"
+         data-generer="/contrat/generer"
+         data-depot="<%= depotTexte %>"
+         data-lignes="<%= JSON.stringify(lignes) %>">
+
+      <noscript><p class="c-erreur">Cette page a besoin de JavaScript pour fonctionner. Appelez-nous au <%= tel %>.</p></noscript>
+
+      <ol class="cc-progress" id="progress" aria-label="Progression">
+        <li class="actif" data-etape="1"><span>1</span>Vos infos</li>
+        <li data-etape="2"><span>2</span>Signature</li>
+      </ol>
+
+      <form id="contratForm" novalidate autocomplete="on">
+        <!-- Le lien privé : il contient la voiture, les dates et le prix (signés, non modifiables) -->
+        <input type="hidden" name="lien" value="<%= lien %>">
+        <!-- Champ-piège anti-robots : invisible pour les humains -->
+        <div class="hp-field" aria-hidden="true"><label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
+
+        <!-- ÉTAPE 1 : votre location + vos informations -->
+        <section id="etape1" class="cc-step">
+          <div class="c-head">
+            <h1>Votre contrat de location</h1>
+            <p class="muted">Vérifiez votre location, entrez vos informations, puis lisez et signez (environ 3 minutes). Vous recevrez votre copie par courriel.</p>
+          </div>
+
+          <div class="c-card">
+            <h2><span class="c-num">1</span> Votre location</h2>
+            <dl class="c-resume">
+              <% lignes.forEach(function (l) { %>
+                <dt><%= l[0] %></dt><dd><%= l[1] %></dd>
+              <% }); %>
+            </dl>
+            <p class="muted small cc-note">Ces informations viennent de Location YBMTL. Une erreur ? Appelez-nous avant de signer : <a href="tel:<%= tel.replace(/[^0-9+]/g, '') %>"><%= tel %></a>.</p>
+          </div>
+
+          <div class="c-card">
+            <h2><span class="c-num">2</span> Locataire</h2>
+            <p class="muted small cc-note">Elles servent uniquement à établir votre contrat. Rien n'est conservé sur notre site : le contrat est envoyé par courriel (<a href="/confidentialite" target="_blank" rel="noopener">confidentialité</a>).</p>
+            <label><span class="c-lab">Nom complet <em>*</em></span>
+              <input type="text" name="nom" id="nom" required maxlength="120" autocomplete="name" autocapitalize="words" placeholder="Prénom et nom">
+            </label>
+            <label><span class="c-lab">Adresse <em>*</em></span>
+              <input type="text" name="adresse" id="adresse" required maxlength="200" autocomplete="street-address" autocapitalize="words" placeholder="No, rue, app., ville, code postal">
+            </label>
+            <label><span class="c-lab">Téléphone <em>*</em></span>
+              <input type="tel" name="telephone" id="telephone" required maxlength="40" autocomplete="tel" inputmode="tel" placeholder="(514) 000-0000">
+            </label>
+            <label><span class="c-lab">Courriel <span class="c-opt">(pour recevoir votre copie)</span></span>
+              <input type="email" name="courriel" id="courriel" maxlength="120" autocomplete="email" inputmode="email" autocapitalize="none" placeholder="vous@exemple.com">
+            </label>
+            <label><span class="c-lab">Date de naissance <em>*</em></span>
+              <input type="date" name="naissance" id="naissance" required autocomplete="bday">
+            </label>
+            <p class="c-warn" id="ageHint" hidden></p>
+            <label><span class="c-lab">N° de permis de conduire <em>*</em></span>
+              <input type="text" name="permis" id="permis" required maxlength="40" autocomplete="off" autocapitalize="characters">
+            </label>
+            <p class="muted small cc-note">Le conducteur principal doit avoir 25 ans minimum et un permis valide depuis au moins 3 ans. Vous présenterez votre permis et une pièce d'identité à la remise du véhicule.</p>
+          </div>
+          <p class="c-erreur" id="erreur1" role="alert" hidden></p>
+          <button type="button" class="btn btn-primary btn-block c-big" id="suivant1">Continuer &rarr;</button>
+        </section>
+
+        <!-- ÉTAPE 2 : conditions et signature -->
+        <section id="etape2" class="cc-step" hidden>
+          <div class="c-head">
+            <button type="button" class="c-back" data-retour="1">&larr; Retour</button>
+            <h1>Conditions et signature</h1>
+            <p class="muted">Lisez le contrat jusqu'en bas, acceptez-le, puis signez.</p>
+          </div>
+
+          <section class="c-card">
+            <h2>Résumé</h2>
+            <dl class="c-resume" id="resume"></dl>
+          </section>
+
+          <section class="c-card c-conditions">
+            <h2>Conditions du contrat de location</h2>
+            <p class="muted small">Faites défiler et lisez tous les articles, jusqu'en bas.</p>
+            <%- include('../admin/partials/contrat-texte', { texte: texte }) %>
+            <div id="finConditions" aria-hidden="true"></div>
+            <a class="c-lien-pdf" href="/docs/Contrat-Location-YBMTL-FR.pdf" target="_blank" rel="noopener">Ouvrir la version PDF du contrat</a>
+          </section>
+
+          <section class="c-card">
+            <label class="c-check c-check-off" id="blocAccepte">
+              <input type="checkbox" id="accepte" disabled>
+              <span>J'ai lu et j'accepte les conditions du contrat de location.</span>
+            </label>
+            <p class="muted small" id="aideAccepte">Faites défiler le contrat ci-dessus jusqu'en bas pour pouvoir cocher cette case.</p>
+          </section>
+
+          <section class="c-card">
+            <h2>Votre signature</h2>
+            <div class="c-modes" role="group" aria-label="Façon de signer">
+              <button type="button" class="c-mode actif" data-cible="Loc" data-mode="dessin" aria-pressed="true">Dessiner au doigt</button>
+              <button type="button" class="c-mode" data-cible="Loc" data-mode="clavier" aria-pressed="false">Taper au clavier</button>
+            </div>
+            <div class="c-zone" id="zoneDessinLoc">
+              <div class="c-pad" id="boiteLoc"><canvas id="padLoc"></canvas><span class="c-pad-hint">Signez ici avec le doigt</span></div>
+              <button type="button" class="btn btn-sm btn-outline" id="effLoc">Effacer</button>
+            </div>
+            <div class="c-zone" id="zoneClavierLoc" hidden>
+              <label><span class="c-lab">Tapez votre nom pour signer</span>
+                <input type="text" id="texteLoc" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Prénom Nom">
+              </label>
+              <div class="c-apercu" id="apercuLoc"><span class="c-pad-hint">Votre signature apparaîtra ici</span><div class="c-apercu-cible"></div></div>
+            </div>
+            <p class="muted small cc-note" id="noteCopie"></p>
+          </section>
+
+          <p class="c-erreur" id="erreur2" role="alert" hidden></p>
+          <button type="button" class="btn btn-primary btn-block c-big" id="btnTerminer">Signer et envoyer mon contrat</button>
+        </section>
+      </form>
+
+      <!-- TERMINÉ -->
+      <div id="etapeFin" class="c-fin" hidden>
+        <div class="c-ok">&#10003;</div>
+        <h1>Merci, votre contrat est signé !</h1>
+        <p class="muted" id="finRef"></p>
+        <ul class="c-mails" id="finMails"></ul>
+        <a class="btn btn-primary btn-block c-big" id="btnTelecharger" href="#" download>Télécharger mon contrat (PDF)</a>
+        <p class="muted small">Location YBMTL a bien reçu votre contrat. À la remise du véhicule, apportez votre permis de conduire et une pièce d'identité. Une question ? <a href="tel:<%= tel.replace(/[^0-9+]/g, '') %>"><%= tel %></a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/contrat-client.js?v=<%= locals.assetV %>" defer></script>
+</body>
+</html>

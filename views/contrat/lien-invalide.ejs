@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1d4ed8">
+  <title>Contrat de location — Location YBMTL</title>
+  <link rel="stylesheet" href="/css/styles.css?v=<%= locals.assetV %>">
+  <link rel="stylesheet" href="/css/contrat.css?v=<%= locals.assetV %>">
+  <link rel="stylesheet" href="/css/contrat-client.css?v=<%= locals.assetV %>">
+  <link rel="icon" href="/img/logo.png">
+</head>
+<body class="cc-body">
+  <header class="cc-header">
+    <a class="cc-brand" href="/"><img src="/img/logo-rogne.png" alt="Location YBMTL"></a>
+    <a class="cc-aide" href="tel:<%= tel.replace(/[^0-9+]/g, '') %>">Besoin d'aide ?<strong><%= tel %></strong></a>
+  </header>
+  <main class="cc-main">
+    <div class="contrat-page">
+      <div class="c-card cc-vide">
+        <h1>Contrat de location</h1>
+        <p><%= texte %></p>
+        <a class="btn btn-primary btn-block c-big" href="tel:<%= tel.replace(/[^0-9+]/g, '') %>">Appeler Location YBMTL — <%= tel %></a>
+        <p class="muted small"><a href="/">Retour au site</a></p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
