@@ -1,0 +1,87 @@
+<%- include('partials/head', { title: 'Lien client' }) %>
+<link rel="stylesheet" href="/css/contrat.css">
+<link rel="stylesheet" href="/css/contrat-lien.css">
+
+<div class="contrat-page" id="lienPage" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>" data-aujourdhui="<%= aujourdhui %>">
+
+  <div class="c-head">
+    <h1>Lien pour le client</h1>
+    <p class="muted">Quand la réservation est <strong>confirmée</strong>, crée le lien de cette location et envoie-le au client. Il remplit ses infos, lit le contrat et signe sur son cellulaire. Le lien ne marche que pour cette location, et toi seul peux le créer.</p>
+  </div>
+
+  <% if (!actif) { %>
+    <div class="c-alert">Les liens ne sont pas disponibles pour le moment (clé secrète du site absente). Demande à Claude de régler ça.</div>
+  <% } %>
+
+  <form id="lienForm" autocomplete="off">
+    <section class="c-card">
+      <h2><span class="c-num">1</span> Location confirmée</h2>
+      <label><span class="c-lab">Voiture <em>*</em></span>
+        <select name="vehiculeId" id="vehiculeSel" required>
+          <option value="">Choisissez une voiture…</option>
+          <% vehicles.forEach(function (v) { %>
+            <option value="<%= v.id %>"
+                    data-tarif="<%= v.weekly_rate %>" data-depot="<%= v.security_deposit %>"
+                    <%= String(pre.vehiculeId) === String(v.id) ? 'selected' : '' %>>
+              <%= v.make %> <%= v.model %> (<%= v.year %>)<%= v.is_published ? '' : ' — masqué du site' %>
+            </option>
+          <% }); %>
+        </select>
+      </label>
+      <div class="c-row c-row-date">
+        <label><span class="c-lab">Départ <em>*</em></span>
+          <input type="date" name="departDate" id="departDate" required value="<%= pre.departDate || '' %>">
+        </label>
+        <label><span class="c-lab">Heure</span>
+          <input type="time" name="departHeure" id="departHeure" value="12:00">
+        </label>
+      </div>
+      <div class="c-row c-row-date">
+        <label><span class="c-lab">Retour <em>*</em></span>
+          <input type="date" name="retourDate" id="retourDate" required value="<%= pre.retourDate || '' %>">
+        </label>
+        <label><span class="c-lab">Heure</span>
+          <input type="time" name="retourHeure" id="retourHeure" value="12:00">
+        </label>
+      </div>
+    </section>
+
+    <section class="c-card">
+      <h2><span class="c-num">2</span> Prix</h2>
+      <p class="muted small">Le prix du site s'écrit tout seul. Change-le ici si tu as fait un prix spécial à ce client.</p>
+      <div class="c-row">
+        <label><span class="c-lab">Tarif / sem. ($) <em>*</em></span>
+          <input type="text" name="tarifHebdo" id="tarifHebdo" required inputmode="decimal">
+        </label>
+        <label><span class="c-lab">Dépôt ($) <em>*</em></span>
+          <input type="text" name="depot" id="depot" required inputmode="decimal">
+        </label>
+      </div>
+      <div class="c-recap" id="recapPrix">Choisissez la voiture et les dates pour voir le total.</div>
+    </section>
+
+    <p class="c-erreur" id="lienErreur" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary btn-block c-big" id="btnCreer" <%= actif ? '' : 'disabled' %>>Créer le lien</button>
+  </form>
+
+  <!-- Résultat -->
+  <div id="lienResultat" hidden>
+    <section class="c-card lien-ok">
+      <div class="c-ok">&#10003;</div>
+      <h2>Le lien est prêt</h2>
+      <dl class="c-resume" id="lienResume"></dl>
+      <label><span class="c-lab">Lien du client</span>
+        <input type="text" id="lienUrl" readonly class="lien-url" onfocus="this.select()">
+      </label>
+      <button type="button" class="btn btn-primary btn-block c-big" id="btnPartager" hidden>Envoyer au client (texto, WhatsApp…)</button>
+      <button type="button" class="btn btn-outline btn-block c-big" id="btnCopier">Copier le lien</button>
+      <a class="btn btn-outline btn-block" id="btnOuvrir" href="#" target="_blank" rel="noopener">Ouvrir pour voir ce que le client voit</a>
+      <p class="muted small" id="lienExpire"></p>
+      <p class="muted small">Le lien ne marche que pour cette voiture et ces dates. Dès que le client signe, tu reçois le contrat par courriel (et lui aussi, s'il met son courriel).</p>
+    </section>
+    <button type="button" class="btn btn-outline btn-block" id="btnAutre">Créer un autre lien</button>
+  </div>
+</div>
+
+<script src="/js/contrat-lien.js" defer></script>
+<%- include('partials/foot') %>

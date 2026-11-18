@@ -41,6 +41,7 @@
           <% } %>
         </div>
         <div class="request-actions">
+          <a href="/admin/contrat/lien?demande=<%= r.id %>" class="btn btn-sm btn-outline">Lien client</a>
           <a href="/admin/contrat?demande=<%= r.id %>" class="btn btn-sm btn-outline">Créer le contrat</a>
           <form method="post" action="/admin/demandes/<%= r.id %>/statut">
             <button type="submit" class="btn btn-sm <%= r.status === 'nouvelle' ? 'btn-primary' : 'btn-outline' %>">
