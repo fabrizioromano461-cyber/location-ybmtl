@@ -17,7 +17,8 @@
         <a href="/admin" class="<%= path === '/admin' ? 'active' : '' %>"><span class="nav-full">Tableau de bord</span><span class="nav-short">Accueil</span></a>
         <a href="/admin/vehicules" class="<%= path.startsWith('/admin/vehicules') ? 'active' : '' %>">Véhicules</a>
         <a href="/admin/demandes" class="<%= path.startsWith('/admin/demandes') ? 'active' : '' %>">Demandes</a>
-        <a href="/admin/contrat" class="<%= path.startsWith('/admin/contrat') ? 'active' : '' %>">Contrat</a>
+        <a href="/admin/contrat" class="<%= path.startsWith('/admin/contrat') && !path.startsWith('/admin/contrat/lien') ? 'active' : '' %>">Contrat</a>
+        <a href="/admin/contrat/lien" class="<%= path.startsWith('/admin/contrat/lien') ? 'active' : '' %>"><span class="nav-full">Lien client</span><span class="nav-short">Lien</span></a>
       </nav>
       <div class="admin-user">
         <a href="/" target="_blank" class="admin-viewsite">Voir le site &#8599;</a>
