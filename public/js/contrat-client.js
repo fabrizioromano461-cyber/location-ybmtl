@@ -13,6 +13,21 @@
 
   form.addEventListener('submit', (e) => e.preventDefault()); // jamais d'envoi par la touche Entrée
 
+  // Forme d'une adresse courriel (même règle que sur le serveur, lib/courriel.js).
+  const LOCAL = /^[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*$/;
+  const ETIQUETTE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$/;
+  function courrielValide(c) {
+    if (typeof c !== 'string' || c.length > 254 || /\s/.test(c)) return false;
+    const i = c.lastIndexOf('@');
+    if (i < 1 || c.indexOf('@') !== i) return false;
+    const local = c.slice(0, i);
+    const morceaux = c.slice(i + 1).split('.');
+    if (local.length > 64 || !LOCAL.test(local)) return false;
+    if (morceaux.length < 2 || !morceaux.every((m) => ETIQUETTE.test(m))) return false;
+    const fin = morceaux[morceaux.length - 1];
+    return /^[A-Za-z]{2,}$/.test(fin) || /^xn--[A-Za-z0-9-]+$/.test(fin);
+  }
+
   // ---------- Âge (information, jamais bloquant au-dessus de 18 ans) ----------
   function ageDe(iso) {
     const n = new Date(iso + 'T00:00:00');
@@ -71,9 +86,8 @@
     if (form.adresse.value.trim().length < 6) return erreur('erreur1', 'Entrez votre adresse complète.', form.adresse), false;
     if (form.telephone.value.replace(/\D/g, '').length < 7) return erreur('erreur1', 'Entrez votre numéro de téléphone.', form.telephone), false;
     const courriel = form.courriel.value.trim();
-    if (courriel && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(courriel)) {
-      return erreur('erreur1', 'Votre courriel ne semble pas valide. Corrigez-le ou laissez la case vide.', form.courriel), false;
-    }
+    if (!courriel) return erreur('erreur1', 'Entrez votre courriel : vous y recevrez votre copie du contrat.', form.courriel), false;
+    if (!courrielValide(courriel)) return erreur('erreur1', 'Votre courriel ne semble pas valide. Vérifiez-le (exemple : nom@gmail.com).', form.courriel), false;
     if (!form.naissance.value) return erreur('erreur1', 'Entrez votre date de naissance.', form.naissance), false;
     const age = ageDe(form.naissance.value);
     if (age == null || age < 18 || age > 100) return erreur('erreur1', 'Vérifiez votre date de naissance.', form.naissance), false;
@@ -85,7 +99,7 @@
     const dl = $('resume');
     dl.textContent = '';
     const courriel = form.courriel.value.trim();
-    const lignes = [['Locataire', form.nom.value.trim()]].concat(LIGNES);
+    const lignes = [['Locataire', form.nom.value.trim()], ['Courriel', courriel]].concat(LIGNES);
     lignes.forEach(([k, v]) => {
       const dt = document.createElement('dt');
       dt.textContent = k;
