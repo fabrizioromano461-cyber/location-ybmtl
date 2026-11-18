@@ -1,0 +1,50 @@
+/* ============================================================
+   Page publique /contrat : le client remplit et signe son contrat.
+   Pensée pour le cellulaire : gros champs, gros boutons, 3 étapes.
+   (Complète contrat.css : cartes, champs, signature, conditions.)
+   ============================================================ */
+.cc-body { background: var(--bg); min-height: 100vh; }
+.cc-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .6rem 1rem; background: #fff; border-bottom: 1px solid var(--border);
+}
+.cc-brand img { height: 46px; width: auto; display: block; }
+.cc-aide {
+  display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2;
+  font-size: .78rem; color: var(--muted); text-decoration: none;
+}
+.cc-aide strong { font-size: .95rem; color: var(--primary); }
+.cc-main { padding: 1rem 1rem 3rem; }
+.cc-body .contrat-page { max-width: 600px; }
+
+/* Barre de progression : 3 étapes */
+.cc-progress { list-style: none; display: flex; gap: .4rem; padding: 0; margin: 0 0 1.1rem; }
+.cc-progress li {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: .45rem;
+  padding: .45rem .3rem; border-radius: 999px; background: #e9edf5; color: var(--muted);
+  font-size: .8rem; font-weight: 700;
+}
+.cc-progress li span {
+  display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+  border-radius: 50%; background: #fff; color: var(--muted); font-size: .75rem;
+}
+.cc-progress li.actif { background: var(--primary); color: #fff; }
+.cc-progress li.actif span { color: var(--primary); }
+.cc-progress li.fait { background: var(--green-bg); color: #0b6b3a; }
+.cc-progress li.fait span { background: var(--green); color: #fff; }
+
+.cc-step .c-head h1 { font-size: 1.45rem; }
+.cc-note { margin: 0; line-height: 1.45; }
+.cc-body .c-card select { background: #fff; }
+.cc-body .c-big { min-height: 54px; }
+
+/* Champ-piège : jamais visible, jamais atteint au clavier */
+.hp-field { position: absolute !important; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* Écran final : lien de téléchargement bien visible */
+.cc-body .c-fin h1 { font-size: 1.5rem; }
+
+/* Page « lien invalide ou expiré » */
+.cc-vide { text-align: center; padding: 1.6rem 1.2rem; }
+.cc-vide h1 { font-size: 1.35rem; margin: 0 0 .7rem; }
+.cc-vide p { margin: 0 0 1rem; line-height: 1.5; }
