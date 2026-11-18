@@ -1,0 +1,8 @@
+/* Page admin « Lien client » (complète contrat.css) */
+.lien-ok { text-align: center; }
+.lien-ok h2 { margin-top: .2rem; }
+.lien-ok .c-resume { text-align: left; }
+.lien-ok .c-ok { margin: 0 auto .4rem; }
+.lien-url { width: 100%; font-size: .85rem; text-overflow: ellipsis; }
+#lienResultat .btn-block + .btn-block, #lienResultat label + .btn-block { margin-top: .6rem; }
+#lienResultat .btn-block { display: block; text-align: center; }
