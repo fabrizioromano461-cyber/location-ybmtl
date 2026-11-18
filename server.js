@@ -105,6 +105,8 @@ app.use((req, res, next) => {
 // Routes.
 app.use('/', require('./routes/public'));
 app.use('/admin', require('./routes/admin'));
+// Contrat des clients : accessible seulement avec un lien prive signe cree par Location YBMTL (voir routes/contrat.js).
+app.use('/contrat', require('./routes/contrat'));
 
 // Page 404.
 app.use((req, res) => {
