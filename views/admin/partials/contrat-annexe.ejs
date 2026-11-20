@@ -1,0 +1,34 @@
+<%
+// Annexe A du contrat (lib/contrat-annexe.js) : lue à l'écran à la suite des articles 1 à 20, avant la case « J'ai lu et j'accepte ».
+// **gras** devient du gras. Le même texte est dans le PDF du contrat signé et dans le PDF public de la page /conditions.
+function fmtA(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+%>
+<div class="c-texte c-annexe" id="texteAnnexe" aria-label="Annexe A du contrat de location">
+  <p class="c-texte-titre"><%= annexe.titre %><br><small><%= annexe.societe %> · version du <%= annexe.versionTexte %></small></p>
+  <p><%- fmtA(annexe.intro) %></p>
+  <% annexe.articles.forEach(function (art) { %>
+    <h4 class="c-art"><%= art.titre %></h4>
+    <% art.blocs.forEach(function (b) { %>
+      <% if (b.table) { %>
+        <div class="c-frais-box">
+          <table class="c-frais">
+            <thead><tr><% b.table.entetes.forEach(function (h) { %><th scope="col"><%= h %></th><% }); %></tr></thead>
+            <tbody>
+              <% b.table.lignes.forEach(function (l) { %><tr><% l.forEach(function (c) { %><td><%- fmtA(c) %></td><% }); %></tr><% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else if (b.ul) { %>
+        <ul>
+          <% b.ul.forEach(function (li) { %><li><%- fmtA(li) %></li><% }); %>
+        </ul>
+      <% } else { %>
+        <p><% if (b.lead) { %><strong><%= b.lead %></strong> <% } %><%- fmtA(b.p) %></p>
+      <% } %>
+    <% }); %>
+  <% }); %>
+</div>
