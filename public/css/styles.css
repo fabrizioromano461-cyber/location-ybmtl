@@ -800,3 +800,11 @@ body.menu-open { overflow: hidden; }
   .request-main { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
   .request-actions { flex-wrap: wrap; min-width: 0; }
 }
+
+/* Tableau des frais (page Conditions / Terms) */
+.table-scroll { overflow-x: auto; margin: 1rem 0; }
+.frais-table { width: 100%; border-collapse: collapse; font-size: .95rem; line-height: 1.45; }
+.frais-table th, .frais-table td { border: 1px solid var(--border); padding: .6rem .75rem; text-align: left; vertical-align: top; }
+.frais-table th { background: #eef3fd; color: #1b2f6b; }
+.frais-table td:last-child { font-weight: 600; }
+@media (max-width: 560px) { .frais-table { font-size: .88rem; } .frais-table th, .frais-table td { padding: .5rem .55rem; } }

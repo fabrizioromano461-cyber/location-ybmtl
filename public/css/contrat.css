@@ -192,3 +192,11 @@
 .c-photo-etat { margin: 0; font-size: .85rem; line-height: 1.35; min-height: 1.15em; }
 .c-photo-etat.ok { color: #0b6b3a; }
 .c-photo-etat.bad { color: var(--danger); font-weight: 600; }
+
+/* ---------- Annexe A du contrat : tableau des frais ---------- */
+.c-annexe { margin-top: 1rem; }
+.c-frais-box { overflow-x: auto; margin: .3rem 0 .8rem; }
+.c-frais { width: 100%; border-collapse: collapse; font-size: .88rem; line-height: 1.4; }
+.c-frais th, .c-frais td { border: 1px solid #dbe4f7; padding: .45rem .55rem; text-align: left; vertical-align: top; }
+.c-frais th { background: #eef3fd; color: #1b2f6b; }
+.c-frais td:last-child { font-weight: 600; white-space: normal; }
