@@ -116,6 +116,16 @@
   if ($('vehiculeSel').value) remplirVehicule(); // préremplissage depuis une demande
   majPrix();
 
+  // ---------- Permis du client (photos recto et verso) : voir photos-permis.js ----------
+  // Le nom du contrat est affiché à côté des photos ; si on le change après avoir coché la confirmation, la case se décoche.
+  function majNomContrat() {
+    $('nomContrat').textContent = form.nom.value.replace(/\s+/g, ' ').trim() || '—';
+  }
+  form.nom.addEventListener('input', () => { majNomContrat(); $('nomOk').checked = false; });
+  form.nom.addEventListener('change', majNomContrat);
+  majNomContrat(); // nom prérempli depuis une demande de réservation
+  document.addEventListener('permis-photo', () => afficherErreur($('erreurForm'), ''));
+
   // ---------- Étapes ----------
   const etapes = { form: $('contratForm'), sig: $('etapeSignature'), fin: $('etapeFin') };
   function montrer(nom) {
@@ -133,6 +143,7 @@
     dl.textContent = '';
     const lignes = [
       ['Locataire', form.nom.value],
+      ['Permis de conduire', 'photos du recto et du verso ajoutées'],
       ['Véhicule', form.vehicule.value + ' ' + form.annee.value + ' · ' + form.plaque.value],
       ['Départ', dateFr(form.departDate.value) + ', ' + heureFr(form.departHeure.value)],
       ['Retour', dateFr(form.retourDate.value) + ', ' + heureFr(form.retourHeure.value)],
@@ -435,6 +446,7 @@
   function majPapier() {
     const on = $('papier').checked;
     $('papierBloc').hidden = !on;
+    $('cartePermis').hidden = on; // une copie de contrat papier n'a pas de photos du permis
     $('btnContinuer').textContent = on ? 'Créer la copie du contrat' : 'Continuer vers la signature →';
     if (on && !$('signeLe').value && form.departDate.value) $('signeLe').value = form.departDate.value;
     majTaxesPapier();
@@ -476,6 +488,18 @@
       return;
     }
     if ($('papier').checked) { creerCopiePapier(); return; }
+    // Permis du client : photos recto et verso + confirmation que le nom est identique à celui du contrat.
+    if (!window.PhotosPermis) { afficherErreur(err, "Cette page n'a pas pu se charger complètement. Rechargez-la."); return; }
+    if (PhotosPermis.occupe()) { afficherErreur(err, 'Patientez : une photo est en cours de préparation.'); return; }
+    const manque = PhotosPermis.manque();
+    if (manque) {
+      afficherErreur(err, 'Ajoutez la photo du ' + (manque === 'recto' ? 'recto (devant)' : 'verso (derrière)') + ' du permis du client.');
+      return;
+    }
+    if (!$('nomOk').checked) {
+      afficherErreur(err, 'Cochez la case qui confirme que le nom sur le permis est identique au nom du contrat.');
+      return;
+    }
     remplirResume(c);
     const courriel = form.courriel.value.trim();
     $('courrielClient').textContent = courriel;
@@ -550,6 +574,9 @@
     fd.set('sigModeLocataire', modes.Loc);
     fd.set('sigRepresentant', sigRep, 'signature-representant.png');
     fd.set('sigModeRepresentant', modeRep);
+    // Photos du permis : réduites par ce téléphone (voir photos-permis.js), jamais gardées par le site.
+    PhotosPermis.ajouter(fd);
+    fd.set('permisNomOk', '1');
 
     const r = await poster(fd, $('btnTerminer'), err, courriel);
     if (!r) return;
@@ -597,6 +624,7 @@
           yb: res.headers.get('X-Courriel-YB'),
           client: res.headers.get('X-Courriel-Client'),
           courriel,
+          permis: fd.has('permisRecto'), // le PDF du proprio contient l'annexe avec les photos du permis
         },
       };
     } catch (e) {
@@ -623,8 +651,8 @@
       li.textContent = texte;
       ul.appendChild(li);
     };
-    if (info.yb === 'envoye') ligne('ok', 'Votre copie a été envoyée par courriel.');
-    else if (info.yb === 'echec') ligne('bad', "Votre copie n'a pas pu être envoyée par courriel. Gardez le PDF ci-dessous.");
+    if (info.yb === 'envoye') ligne('ok', info.permis ? 'Votre copie a été envoyée par courriel, avec les photos du permis (page 5 du PDF).' : 'Votre copie a été envoyée par courriel.');
+    else if (info.yb === 'echec') ligne('bad', "Votre copie n'a pas pu être envoyée par courriel" + (info.permis ? ' (les photos du permis non plus : reprenez-les avec votre téléphone)' : '') + '. Gardez le PDF ci-dessous.');
     else ligne('bad', "Aucun service courriel n'est configuré : gardez le PDF ci-dessous.");
     if (info.client === 'envoye') ligne('ok', 'Copie envoyée au client : ' + info.courriel);
     else if (info.client === 'echec') ligne('bad', "La copie du client n'a pas pu être envoyée par courriel : utilisez « Partager le PDF ».");

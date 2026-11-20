@@ -56,7 +56,7 @@
   form.naissance.addEventListener('input', majAge);
 
   // ---------- Étapes ----------
-  const etapes = { 1: $('etape1'), 2: $('etape2') };
+  const etapes = { 1: $('etape1'), 2: $('etape2'), 3: $('etape3') };
   function majProgression(n, fini) {
     document.querySelectorAll('#progress li').forEach((li) => {
       const e = parseInt(li.dataset.etape, 10);
@@ -99,7 +99,7 @@
     const dl = $('resume');
     dl.textContent = '';
     const courriel = form.courriel.value.trim();
-    const lignes = [['Locataire', form.nom.value.trim()], ['Courriel', courriel]].concat(LIGNES);
+    const lignes = [['Locataire', form.nom.value.trim()], ['Courriel', courriel], ['Permis de conduire', 'photos du recto et du verso ajoutées']].concat(LIGNES);
     lignes.forEach(([k, v]) => {
       const dt = document.createElement('dt');
       dt.textContent = k;
@@ -116,14 +116,37 @@
 
   $('suivant1').addEventListener('click', () => {
     if (!validerEtape1()) return;
-    remplirResume();
+    majNomContrat();
     montrer(2);
+  });
+  $('suivant2').addEventListener('click', () => {
+    if (!validerEtape2()) return;
+    remplirResume();
+    montrer(3);
     initSignature();
     surveillerConditions();
   });
   document.querySelectorAll('[data-retour]').forEach((b) => {
     b.addEventListener('click', () => montrer(parseInt(b.dataset.retour, 10)));
   });
+
+  // ---------- Photos du permis (recto et verso) : voir photos-permis.js ----------
+  function majNomContrat() {
+    $('nomContrat').textContent = form.nom.value.replace(/\s+/g, ' ').trim();
+  }
+  // Si le nom change après la confirmation, la case est décochée : le client confirme à nouveau avec le bon nom.
+  form.nom.addEventListener('input', () => { $('nomOk').checked = false; });
+  document.addEventListener('permis-photo', () => erreur('erreur2', ''));
+
+  function validerEtape2() {
+    erreur('erreur2', '');
+    if (!window.PhotosPermis) return erreur('erreur2', 'Cette page n\'a pas pu se charger complètement. Rechargez-la.'), false;
+    if (PhotosPermis.occupe()) return erreur('erreur2', 'Patientez : une photo est en cours de préparation.'), false;
+    const m = PhotosPermis.manque();
+    if (m) return erreur('erreur2', 'Ajoutez la photo du ' + (m === 'recto' ? 'recto (devant)' : 'verso (derrière)') + ' de votre permis.'), false;
+    if (!$('nomOk').checked) return erreur('erreur2', 'Cochez la case qui confirme que le nom sur votre permis est identique au nom du contrat.', $('nomOk')), false;
+    return true;
+  }
 
   // ---------- Lecture des conditions : la case « J'ai lu et j'accepte » s'ouvre au bas du contrat ----------
   let conditionsLues = false;
@@ -138,7 +161,7 @@
   function verifierFinConditions() {
     const fin = $('finConditions');
     if (!fin) { debloquerAccepte(); return; }
-    if (etapes[2].hidden || fin.offsetParent === null) return;
+    if (etapes[3].hidden || fin.offsetParent === null) return;
     if (fin.getBoundingClientRect().top <= window.innerHeight) debloquerAccepte();
   }
   function surveillerConditions() {
@@ -328,22 +351,23 @@
   }
   $('effLoc').addEventListener('click', () => padLoc && padLoc.effacer());
   window.addEventListener('resize', () => {
-    if (etapes[2].hidden || !padLoc) return;
+    if (etapes[3].hidden || !padLoc) return;
     if (Math.abs(padLoc.c.getBoundingClientRect().width - padLoc.larg) > 1) padLoc.init();
   });
 
   // ---------- Envoi du contrat ----------
   async function terminer() {
-    erreur('erreur2', '');
-    if (!conditionsLues) return erreur('erreur2', "Faites défiler le contrat jusqu'en bas, puis cochez « J'ai lu et j'accepte les conditions »."), undefined;
-    if (!$('accepte').checked) return erreur('erreur2', "Cochez la case « J'ai lu et j'accepte les conditions du contrat de location »."), undefined;
+    erreur('erreur3', '');
+    if (!validerEtape2()) { montrer(2); return undefined; }
+    if (!conditionsLues) return erreur('erreur3', "Faites défiler le contrat jusqu'en bas, puis cochez « J'ai lu et j'accepte les conditions »."), undefined;
+    if (!$('accepte').checked) return erreur('erreur3', "Cochez la case « J'ai lu et j'accepte les conditions du contrat de location »."), undefined;
     let sig;
     if (mode === 'clavier') {
       const c = canevasTexte($('texteLoc').value);
-      if (!c) return erreur('erreur2', 'Tapez votre nom pour signer.', $('texteLoc')), undefined;
+      if (!c) return erreur('erreur3', 'Tapez votre nom pour signer.', $('texteLoc')), undefined;
       sig = await blobDe(c);
     } else {
-      if (padLoc.vide()) return erreur('erreur2', 'Signez dans le cadre avec votre doigt.'), undefined;
+      if (padLoc.vide()) return erreur('erreur3', 'Signez dans le cadre avec votre doigt.'), undefined;
       sig = await padLoc.blob();
     }
     const courriel = form.courriel.value.trim();
@@ -351,6 +375,9 @@
     fd.set('accepte', '1');
     fd.set('sigLocataire', sig, 'signature-locataire.png');
     fd.set('sigModeLocataire', mode);
+    // Photos du permis : réduites par ce navigateur (voir photos-permis.js), jamais gardées par le site.
+    PhotosPermis.ajouter(fd);
+    fd.set('permisNomOk', '1');
 
     const btn = $('btnTerminer');
     const texte = btn.textContent;
@@ -375,7 +402,7 @@
         courriel,
       });
     } catch (e) {
-      erreur('erreur2', e && e.message ? e.message : 'Erreur de réseau. Vérifiez votre connexion et réessayez.');
+      erreur('erreur3', e && e.message ? e.message : 'Erreur de réseau. Vérifiez votre connexion et réessayez.');
       btn.disabled = false;
       btn.textContent = texte;
     }
@@ -396,14 +423,14 @@
       li.textContent = texte;
       ul.appendChild(li);
     };
-    if (info.yb === 'envoye') ligne('ok', 'Votre contrat a été transmis à Location YBMTL.');
-    else ligne('bad', "Votre contrat n'a pas pu être transmis automatiquement à Location YBMTL. Téléchargez le PDF ci-dessous et envoyez-le-nous, ou appelez-nous.");
+    if (info.yb === 'envoye') ligne('ok', 'Votre contrat a été transmis à Location YBMTL, avec les photos de votre permis.');
+    else ligne('bad', "Votre contrat n'a pas pu être transmis automatiquement à Location YBMTL. Téléchargez le PDF ci-dessous et envoyez-le-nous avec les photos de votre permis, ou appelez-nous.");
     if (info.client === 'envoye') ligne('ok', 'Une copie vous a été envoyée par courriel : ' + info.courriel + ' (vérifiez aussi vos pourriels).');
     else if (info.client === 'echec') ligne('bad', "Votre copie n'a pas pu être envoyée par courriel : téléchargez-la ci-dessous.");
     else ligne('info', "Pas de courriel indiqué : téléchargez votre copie ci-dessous.");
     Object.keys(etapes).forEach((k) => { etapes[k].hidden = true; });
     $('etapeFin').hidden = false;
-    majProgression(2, true);
+    majProgression(3, true);
     window.scrollTo(0, 0);
   }
 })();
