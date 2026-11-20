@@ -76,7 +76,7 @@
             <label><span class="c-lab">N° de permis de conduire <em>*</em></span>
               <input type="text" name="permis" id="permis" required maxlength="40" autocomplete="off" autocapitalize="characters">
             </label>
-            <p class="muted small cc-note">Le conducteur principal doit avoir 25 ans minimum et un permis valide depuis au moins 3 ans. Vous présenterez votre permis et une pièce d'identité à la remise du véhicule.</p>
+            <p class="muted small cc-note">Le conducteur principal doit avoir 25 ans minimum et un permis valide depuis au moins 3 ans. Vous présenterez votre permis et une pièce d'identité au départ.</p>
           </div>
           <p class="c-erreur" id="erreur1" role="alert" hidden></p>
           <button type="button" class="btn btn-primary btn-block c-big" id="suivant1">Continuer &rarr;</button>
@@ -133,16 +133,18 @@
 
           <section class="c-card c-conditions">
             <h2>Conditions du contrat de location</h2>
-            <p class="muted small">Faites défiler et lisez tous les articles, jusqu'en bas.</p>
+            <p class="muted small">Faites défiler et lisez tous les articles et l'Annexe A (tableau des frais), jusqu'en bas.</p>
             <%- include('../admin/partials/contrat-texte', { texte: texte }) %>
+            <%- include('../admin/partials/contrat-annexe', { annexe: annexe }) %>
             <div id="finConditions" aria-hidden="true"></div>
             <a class="c-lien-pdf" href="/docs/Contrat-Location-YBMTL-FR.pdf" target="_blank" rel="noopener">Ouvrir la version PDF du contrat</a>
+            <a class="c-lien-pdf" href="/docs/Annexe-A-Conditions-Complementaires-YBMTL-FR.pdf" target="_blank" rel="noopener">Ouvrir la version PDF de l'Annexe A</a>
           </section>
 
           <section class="c-card">
             <label class="c-check c-check-off" id="blocAccepte">
               <input type="checkbox" id="accepte" disabled>
-              <span>J'ai lu et j'accepte les conditions du contrat de location.</span>
+              <span>J'ai lu et j'accepte les conditions du contrat de location, y compris l'Annexe A (conditions complémentaires et tableau des frais).</span>
             </label>
             <p class="muted small" id="aideAccepte">Faites défiler le contrat ci-dessus jusqu'en bas pour pouvoir cocher cette case.</p>
           </section>
@@ -178,7 +180,7 @@
         <p class="muted" id="finRef"></p>
         <ul class="c-mails" id="finMails"></ul>
         <a class="btn btn-primary btn-block c-big" id="btnTelecharger" href="#" download>Télécharger mon contrat (PDF)</a>
-        <p class="muted small">Location YBMTL a bien reçu votre contrat. À la remise du véhicule, apportez votre permis de conduire et une pièce d'identité. Une question ? <a href="tel:<%= tel.replace(/[^0-9+]/g, '') %>"><%= tel %></a></p>
+        <p class="muted small">Location YBMTL a bien reçu votre contrat. Au départ, apportez votre permis de conduire et une pièce d'identité. Une question ? <a href="tel:<%= tel.replace(/[^0-9+]/g, '') %>"><%= tel %></a></p>
       </div>
     </div>
   </main>
