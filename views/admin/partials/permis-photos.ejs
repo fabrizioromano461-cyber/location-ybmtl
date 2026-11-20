@@ -1,0 +1,27 @@
+<%# Les deux cases « photo du permis » (recto et verso) : partagées par la page du client (/contrat/<lien>) et la page admin (/admin/contrat).
+    Les champs « fichier » n'ont volontairement PAS de nom : la photo brute ne part jamais avec le formulaire, c'est public/js/photos-permis.js
+    qui la réduit puis l'ajoute. -%>
+<div class="c-photos">
+  <div class="c-photo" id="tuileRecto">
+    <p class="c-photo-titre">Recto <span>(devant)</span></p>
+    <div class="c-photo-cadre">
+      <img id="apercuRecto" alt="Aperçu du recto du permis" hidden>
+      <span class="c-photo-vide" id="videRecto">Aucune photo</span>
+    </div>
+    <label class="btn btn-outline c-photo-btn"><span id="texteBtnRecto">Prendre ou choisir la photo</span>
+      <input type="file" id="fichierRecto" class="c-file-input" accept="image/*" data-cote="recto">
+    </label>
+    <p class="c-photo-etat" id="etatRecto" role="status"></p>
+  </div>
+  <div class="c-photo" id="tuileVerso">
+    <p class="c-photo-titre">Verso <span>(derrière)</span></p>
+    <div class="c-photo-cadre">
+      <img id="apercuVerso" alt="Aperçu du verso du permis" hidden>
+      <span class="c-photo-vide" id="videVerso">Aucune photo</span>
+    </div>
+    <label class="btn btn-outline c-photo-btn"><span id="texteBtnVerso">Prendre ou choisir la photo</span>
+      <input type="file" id="fichierVerso" class="c-file-input" accept="image/*" data-cote="verso">
+    </label>
+    <p class="c-photo-etat" id="etatVerso" role="status"></p>
+  </div>
+</div>
