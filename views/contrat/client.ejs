@@ -27,7 +27,8 @@
 
       <ol class="cc-progress" id="progress" aria-label="Progression">
         <li class="actif" data-etape="1"><span>1</span>Vos infos</li>
-        <li data-etape="2"><span>2</span>Signature</li>
+        <li data-etape="2"><span>2</span>Permis</li>
+        <li data-etape="3"><span>3</span>Signature</li>
       </ol>
 
       <form id="contratForm" novalidate autocomplete="on">
@@ -40,7 +41,7 @@
         <section id="etape1" class="cc-step">
           <div class="c-head">
             <h1>Votre contrat de location</h1>
-            <p class="muted">Vérifiez votre location, entrez vos informations, puis lisez et signez (environ 3 minutes). Vous recevrez votre copie par courriel.</p>
+            <p class="muted">Vérifiez votre location, entrez vos informations, ajoutez les photos de votre permis, puis lisez et signez (environ 4 minutes). Vous recevrez votre copie par courriel.</p>
           </div>
 
           <div class="c-card">
@@ -56,7 +57,7 @@
           <div class="c-card">
             <h2><span class="c-num">2</span> Locataire</h2>
             <p class="muted small cc-note">Elles servent uniquement à établir votre contrat. Rien n'est conservé sur notre site : le contrat est envoyé par courriel (<a href="/confidentialite" target="_blank" rel="noopener">confidentialité</a>).</p>
-            <label><span class="c-lab">Nom complet <em>*</em></span>
+            <label><span class="c-lab">Nom complet <em>*</em> <span class="c-opt">(exactement comme sur votre permis)</span></span>
               <input type="text" name="nom" id="nom" required maxlength="120" autocomplete="name" autocapitalize="words" placeholder="Prénom et nom">
             </label>
             <label><span class="c-lab">Adresse <em>*</em></span>
@@ -81,10 +82,46 @@
           <button type="button" class="btn btn-primary btn-block c-big" id="suivant1">Continuer &rarr;</button>
         </section>
 
-        <!-- ÉTAPE 2 : conditions et signature -->
+        <!-- ÉTAPE 2 : photos du permis de conduire (recto et verso) -->
         <section id="etape2" class="cc-step" hidden>
           <div class="c-head">
             <button type="button" class="c-back" data-retour="1">&larr; Retour</button>
+            <h1>Votre permis de conduire</h1>
+            <p class="muted">Prenez en photo le devant (recto) et le derrière (verso) de votre permis.</p>
+          </div>
+
+          <div class="c-card">
+            <h2><span class="c-num">1</span> Le nom doit être le même</h2>
+            <p class="c-nomcontrat"><span>Nom inscrit au contrat</span><strong id="nomContrat"></strong></p>
+            <p class="muted small cc-note">Le nom sur votre permis doit être <strong>identique</strong> à celui-ci. Une faute dans le nom ? <button type="button" class="c-lien" data-retour="1">Corriger le nom</button></p>
+          </div>
+
+          <div class="c-card">
+            <h2><span class="c-num">2</span> Photos du permis</h2>
+            <ul class="c-conseils muted small">
+              <li>Posez le permis à plat, avec une bonne lumière.</li>
+              <li>Évitez les reflets et gardez les doigts hors du texte.</li>
+              <li>Tout le permis doit être visible et lisible.</li>
+            </ul>
+            <%- include('../admin/partials/permis-photos') %>
+          </div>
+
+          <div class="c-card">
+            <label class="c-check" id="blocNomOk">
+              <input type="checkbox" id="nomOk">
+              <span>Je confirme que ce permis est <strong>le mien</strong> et que le nom qui y est inscrit est <strong>identique</strong> au nom du contrat.</span>
+            </label>
+            <p class="muted small cc-note">Vos photos sont envoyées seulement à Location YBMTL, par courriel, pour vérifier votre permis. Elles ne sont pas gardées sur notre site et ne figurent pas sur votre copie du contrat (<a href="/confidentialite" target="_blank" rel="noopener">confidentialité</a>).</p>
+          </div>
+
+          <p class="c-erreur" id="erreur2" role="alert" hidden></p>
+          <button type="button" class="btn btn-primary btn-block c-big" id="suivant2">Continuer &rarr;</button>
+        </section>
+
+        <!-- ÉTAPE 3 : conditions et signature -->
+        <section id="etape3" class="cc-step" hidden>
+          <div class="c-head">
+            <button type="button" class="c-back" data-retour="2">&larr; Retour</button>
             <h1>Conditions et signature</h1>
             <p class="muted">Lisez le contrat jusqu'en bas, acceptez-le, puis signez.</p>
           </div>
@@ -129,7 +166,7 @@
             <p class="muted small cc-note" id="noteCopie"></p>
           </section>
 
-          <p class="c-erreur" id="erreur2" role="alert" hidden></p>
+          <p class="c-erreur" id="erreur3" role="alert" hidden></p>
           <button type="button" class="btn btn-primary btn-block c-big" id="btnTerminer">Signer et envoyer mon contrat</button>
         </section>
       </form>
@@ -146,6 +183,7 @@
     </div>
   </main>
 
+  <script src="/js/photos-permis.js?v=<%= locals.assetV %>" defer></script>
   <script src="/js/contrat-client.js?v=<%= locals.assetV %>" defer></script>
 </body>
 </html>
