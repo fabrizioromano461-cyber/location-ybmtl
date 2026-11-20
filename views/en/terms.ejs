@@ -17,9 +17,9 @@
           <span class="doc-text"><strong>English</strong><small>Courtesy translation · PDF</small></span>
           <span class="doc-dl">Download&nbsp;→</span>
         </a>
-        <a class="doc-card" href="/docs/Contrat-Location-YBMTL-FR.pdf" download>
+        <a class="doc-card" href="/docs/Contrat-Location-YBMTL-FR-avec-Annexe-A.pdf" download>
           <span class="doc-flag">🇫🇷</span>
-          <span class="doc-text"><strong>Français</strong><small>Official version · PDF</small></span>
+          <span class="doc-text"><strong>Français</strong><small>Official version · agreement + Annex A · PDF</small></span>
           <span class="doc-dl">Télécharger&nbsp;→</span>
         </a>
         <a class="doc-card" href="/docs/Contrato-de-Alquiler-YBMTL-ES.pdf" download>
@@ -28,7 +28,38 @@
           <span class="doc-dl">Descargar&nbsp;→</span>
         </a>
       </div>
-      <p class="muted small">4 pages · PDF · The French version is the official version of the agreement.</p>
+      <p class="muted small">Agreement (4 pages) + Annex A (3 pages) · PDF · The French version is the official version; the English and Spanish versions are courtesy translations, annex included.</p>
+    </div>
+
+    <div class="contract-section" id="fees">
+      <h2>Annex A: fee schedule and additional terms</h2>
+      <p>Every possible fee is written down in advance. Annex A is an integral part of the agreement: cancellation, deposit refund, accident or breakdown, use of the vehicle, additional driver, and more. The table below is a courtesy summary in English; the French Annex A is the official version.</p>
+      <div class="table-scroll">
+        <table class="frais-table">
+          <thead><tr><% annexe.tableEn.entetes.forEach(function (h) { %><th scope="col"><%= h %></th><% }); %></tr></thead>
+          <tbody>
+            <% annexe.tableEn.lignes.forEach(function (l) { %><tr><% l.forEach(function (c) { %><td><%= c %></td><% }); %></tr><% }); %>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small">These fees may be deducted from the security deposit. Taxes are added where they apply.</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="/docs/Annex-A-Additional-Terms-YBMTL-EN.pdf" download>
+          <span class="doc-flag">🇬🇧</span>
+          <span class="doc-text"><strong>Annex A</strong><small>Courtesy translation · PDF</small></span>
+          <span class="doc-dl">Download&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Annexe-A-Conditions-Complementaires-YBMTL-FR.pdf" download>
+          <span class="doc-flag">🇫🇷</span>
+          <span class="doc-text"><strong>Annexe A</strong><small>Official version (French) · PDF</small></span>
+          <span class="doc-dl">Télécharger&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Anexo-A-Condiciones-Complementarias-YBMTL-ES.pdf" download>
+          <span class="doc-flag">🇪🇸</span>
+          <span class="doc-text"><strong>Anexo A</strong><small>Courtesy translation (Spanish) · PDF</small></span>
+          <span class="doc-dl">Descargar&nbsp;→</span>
+        </a>
+      </div>
     </div>
 
     <div class="contract-section">
@@ -52,11 +83,13 @@
       <h2>Summary of the main terms</h2>
       <ul>
         <li><strong>Booking:</strong> Bookings are made by online request. We confirm by phone or email.</li>
-        <li><strong>Payment:</strong> No online payment. Payment is made directly to Location YBMTL at the time of the rental (cheque, bank transfer, cash, debit or credit card).</li>
+        <li><strong>Payment:</strong> No online payment. The rental and the security deposit are paid directly to Location YBMTL, no later than when the vehicle is handed over: Interac e-transfer or cash. No credit card is required.</li>
         <li><strong>Taxes:</strong> Starting October 1, 2026, GST (5%) and QST (9.975%) are added to the rental price, excluding the security deposit. The prices shown are before taxes.</li>
-        <li><strong>Insurance:</strong> Car insurance is mandatory. We accept your personal insurance, or you can take out our rental insurance.</li>
-        <li><strong>Security deposit:</strong> A security deposit may be requested, depending on the length of the rental and the options chosen.</li>
-        <li><strong>Mileage:</strong> The mileage terms (limited or unlimited) are specific to each vehicle and confirmed when we confirm your booking.</li>
+        <li><strong>Insurance:</strong> Every rental includes basic insurance (third-party liability). Damage to the rented vehicle remains the renter's responsibility: see our &ldquo;who pays what&rdquo; guide above.</li>
+        <li><strong>Security deposit:</strong> A security deposit is required before the vehicle is handed over (amount shown on each vehicle's page). It is refunded within 3 days after the return, minus any amounts owed, with a $150 precautionary hold kept for 14 days.</li>
+        <li><strong>Mileage:</strong> Unlimited.</li>
+        <li><strong>Cancellation:</strong> Free up to 24 hours before departure; after that, or if you do not show up, $50.</li>
+        <li><strong>Use:</strong> No paid ride-sharing, passenger transport or delivery work (Uber, DoorDash, etc.) without our written permission; no smoking or vaping. Driving in Canada and the United States is allowed.</li>
         <li><strong>Vehicle condition:</strong> A condition report is completed before and after the rental to protect everyone.</li>
         <li><strong>Minimum age:</strong> The main driver must be at least 25 years old and hold a driver's licence that has been valid for at least 3 years.</li>
       </ul>
