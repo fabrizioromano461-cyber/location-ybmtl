@@ -12,9 +12,9 @@
       <h2>Contrat de location</h2>
       <p>Consultez et téléchargez notre contrat de location complet. Il est disponible en <strong>trois langues</strong>.</p>
       <div class="doc-grid">
-        <a class="doc-card" href="/docs/Contrat-Location-YBMTL-FR.pdf" download>
+        <a class="doc-card" href="/docs/Contrat-Location-YBMTL-FR-avec-Annexe-A.pdf" download>
           <span class="doc-flag">🇫🇷</span>
-          <span class="doc-text"><strong>Français</strong><small>Version officielle · PDF</small></span>
+          <span class="doc-text"><strong>Français</strong><small>Version officielle · contrat + Annexe A · PDF</small></span>
           <span class="doc-dl">Télécharger&nbsp;→</span>
         </a>
         <a class="doc-card" href="/docs/Vehicle-Rental-Agreement-YBMTL-EN.pdf" download>
@@ -28,7 +28,38 @@
           <span class="doc-dl">Descargar&nbsp;→</span>
         </a>
       </div>
-      <p class="muted small">4 pages · PDF · La version française est la version officielle du contrat.</p>
+      <p class="muted small">Contrat (4 pages) + Annexe A (3 pages) · PDF · La version française est la version officielle ; l'anglais et l'espagnol sont des traductions de courtoisie, annexe comprise.</p>
+    </div>
+
+    <div class="contract-section" id="frais">
+      <h2>Annexe A : tableau des frais et conditions complémentaires</h2>
+      <p>Tous les montants possibles sont écrits à l'avance. L'Annexe A fait partie intégrante du contrat : annulation, remboursement du dépôt, accident ou panne, usage du véhicule, conducteur additionnel, etc.</p>
+      <div class="table-scroll">
+        <table class="frais-table">
+          <thead><tr><% annexe.tableFrais.entetes.forEach(function (h) { %><th scope="col"><%= h %></th><% }); %></tr></thead>
+          <tbody>
+            <% annexe.tableFrais.lignes.forEach(function (l) { %><tr><% l.forEach(function (c) { %><td><%= c %></td><% }); %></tr><% }); %>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small">Ces frais peuvent être prélevés sur le dépôt de garantie. Taxes en sus lorsqu'elles s'appliquent.</p>
+      <div class="doc-grid">
+        <a class="doc-card" href="/docs/Annexe-A-Conditions-Complementaires-YBMTL-FR.pdf" download>
+          <span class="doc-flag">📄</span>
+          <span class="doc-text"><strong>Annexe A</strong><small>Conditions complémentaires et frais · PDF</small></span>
+          <span class="doc-dl">Télécharger&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Annex-A-Additional-Terms-YBMTL-EN.pdf" download>
+          <span class="doc-flag">🇬🇧</span>
+          <span class="doc-text"><strong>Annex A</strong><small>Courtesy translation · PDF</small></span>
+          <span class="doc-dl">Download&nbsp;→</span>
+        </a>
+        <a class="doc-card" href="/docs/Anexo-A-Condiciones-Complementarias-YBMTL-ES.pdf" download>
+          <span class="doc-flag">🇪🇸</span>
+          <span class="doc-text"><strong>Anexo A</strong><small>Traducción de cortesía · PDF</small></span>
+          <span class="doc-dl">Descargar&nbsp;→</span>
+        </a>
+      </div>
     </div>
 
     <div class="contract-section">
@@ -52,11 +83,13 @@
       <h2>Résumé des conditions principales</h2>
       <ul>
         <li><strong>Réservation :</strong> Les réservations se font par demande en ligne. Nous confirmons par téléphone ou courriel.</li>
-        <li><strong>Paiement :</strong> Aucun paiement en ligne. Le paiement se fait directement avec Location YBMTL au moment de la location (chèque, virement, cash, carte débit ou crédit).</li>
+        <li><strong>Paiement :</strong> Aucun paiement en ligne. La location et le dépôt de garantie se paient directement à Location YBMTL, au plus tard au départ, à la prise du véhicule : virement Interac ou argent comptant. Aucune carte de crédit n'est obligatoire.</li>
         <li><strong>Taxes :</strong> À compter du 1<sup>er</sup> octobre 2026, la TPS (5 %) et la TVQ (9,975 %) sont ajoutées au prix de location, excluant le montant du dépôt de garantie. Les prix affichés sont avant taxes.</li>
-        <li><strong>Assurance :</strong> Une assurance automobile est obligatoire. Nous acceptons votre assurance personnelle ou vous pouvez souscrire à notre assurance location.</li>
-        <li><strong>Dépôt de garantie :</strong> Un dépôt de garantie peut être demandé, selon la durée de la location et les options choisies.</li>
-        <li><strong>Kilométrage :</strong> Les conditions de kilométrage (limité ou illimité) sont spécifiques à chaque véhicule et précisées lors de la confirmation.</li>
+        <li><strong>Assurance :</strong> Chaque location comprend une assurance de base (responsabilité civile). Les dommages causés au véhicule loué restent à la charge du locataire : consultez notre guide « qui paie quoi » ci-dessus.</li>
+        <li><strong>Dépôt de garantie :</strong> Un dépôt de garantie est exigé avant le départ (montant indiqué sur la fiche de chaque véhicule). Il est remboursé dans les 3 jours suivant le retour, moins les sommes dues, avec une retenue préventive de 150 $ gardée 14 jours.</li>
+        <li><strong>Kilométrage :</strong> Illimité.</li>
+        <li><strong>Annulation :</strong> Sans frais jusqu'à 24 heures avant le départ ; ensuite, ou en cas de non-présentation, 50 $.</li>
+        <li><strong>Usage :</strong> Pas de covoiturage payant, de transport de personnes ni de livraison (Uber, DoorDash, etc.) sans notre autorisation écrite ; défense de fumer ou de vapoter. Conduite permise au Canada et aux États-Unis.</li>
         <li><strong>État du véhicule :</strong> Un état des lieux est établi avant et après la location pour la protection de chacun.</li>
         <li><strong>Âge minimum :</strong> Le conducteur principal doit être âgé de 25 ans minimum et posséder un permis de conduire valide depuis au moins 3 ans.</li>
       </ul>
