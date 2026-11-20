@@ -651,7 +651,7 @@
       li.textContent = texte;
       ul.appendChild(li);
     };
-    if (info.yb === 'envoye') ligne('ok', info.permis ? 'Votre copie a été envoyée par courriel, avec les photos du permis (page 5 du PDF).' : 'Votre copie a été envoyée par courriel.');
+    if (info.yb === 'envoye') ligne('ok', info.permis ? 'Votre copie a été envoyée par courriel, avec les photos du permis (dernière page du PDF).' : 'Votre copie a été envoyée par courriel.');
     else if (info.yb === 'echec') ligne('bad', "Votre copie n'a pas pu être envoyée par courriel" + (info.permis ? ' (les photos du permis non plus : reprenez-les avec votre téléphone)' : '') + '. Gardez le PDF ci-dessous.');
     else ligne('bad', "Aucun service courriel n'est configuré : gardez le PDF ci-dessous.");
     if (info.client === 'envoye') ligne('ok', 'Copie envoyée au client : ' + info.courriel);
