@@ -208,12 +208,12 @@ router.get('/en/privacy', (req, res) => {
 router.get('/conditions', (req, res) => {
   const config = require('../config');
   res.locals.altPath = '/en/terms';
-  res.render('conditions', { company: config.company });
+  res.render('conditions', { company: config.company, annexe: require('../lib/contrat-annexe') });
 });
 router.get('/en/terms', (req, res) => {
   const config = require('../config');
   res.locals.altPath = '/conditions';
-  res.render('en/terms', { company: config.company });
+  res.render('en/terms', { company: config.company, annexe: require('../lib/contrat-annexe') });
 });
 
 // PAGE DETAIL D'UN VEHICULE (francais : « /vehicule/12 », anglais : « /en/vehicle/12 »)
