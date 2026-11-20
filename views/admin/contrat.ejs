@@ -144,7 +144,7 @@
         <input type="checkbox" id="nomOk">
         <span>J'ai vérifié le permis : le nom qui y est inscrit est <strong>identique</strong> au nom du contrat.</span>
       </label>
-      <p class="muted small">Les photos sont envoyées seulement à votre courriel, dans le PDF du contrat (page 5). Elles ne figurent pas sur la copie du client et ne sont pas gardées sur le site.</p>
+      <p class="muted small">Les photos sont envoyées seulement à votre courriel, dans le PDF du contrat (dernière page). Elles ne figurent pas sur la copie du client et ne sont pas gardées sur le site.</p>
     </section>
 
     <p class="c-erreur" id="erreurForm" role="alert" hidden></p>
@@ -166,16 +166,18 @@
 
     <section class="c-card c-conditions">
       <h2>Conditions du contrat de location</h2>
-      <p class="muted small">Lisez tous les articles en faisant défiler, jusqu'en bas.</p>
+      <p class="muted small">Lisez tous les articles et l'Annexe A (tableau des frais) en faisant défiler, jusqu'en bas.</p>
       <%- include('partials/contrat-texte', { texte: texte }) %>
+      <%- include('partials/contrat-annexe', { annexe: annexe }) %>
       <div id="finConditions" aria-hidden="true"></div>
       <a class="c-lien-pdf" href="/docs/Contrat-Location-YBMTL-FR.pdf" target="_blank" rel="noopener">Ouvrir la version PDF du contrat</a>
+      <a class="c-lien-pdf" href="/docs/Annexe-A-Conditions-Complementaires-YBMTL-FR.pdf" target="_blank" rel="noopener">Ouvrir la version PDF de l'Annexe A</a>
     </section>
 
     <section class="c-card">
       <label class="c-check c-check-off" id="blocAccepte">
         <input type="checkbox" id="accepte" disabled>
-        <span>J'ai lu et j'accepte les conditions du contrat de location.</span>
+        <span>J'ai lu et j'accepte les conditions du contrat de location, y compris l'Annexe A (conditions complémentaires et tableau des frais).</span>
       </label>
       <p class="muted small" id="aideAccepte">Faites défiler le contrat ci-dessus jusqu'en bas pour pouvoir cocher cette case.</p>
       <label><span class="c-lab">Fait à</span>
