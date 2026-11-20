@@ -4,7 +4,7 @@
 <% } else { -%>
 <%- include('partials/head', { title: 'Nouveau contrat' }) %>
 <% } -%>
-<link rel="stylesheet" href="/css/contrat.css">
+<link rel="stylesheet" href="/css/contrat.css?v=<%= locals.assetV %>">
 
 <div class="contrat-page" id="contratPage" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>"
      data-generer="<%= typeof actionGenerer !== 'undefined' ? actionGenerer : '/admin/contrat/generer' %>"
@@ -19,7 +19,7 @@
   <form id="contratForm" autocomplete="off">
     <div class="c-head">
       <h1>Nouveau contrat</h1>
-      <p class="muted">Remplissez les infos, puis passez le téléphone au client pour qu'il lise et signe. Le contrat est envoyé par courriel : rien n'est gardé sur le site.</p>
+      <p class="muted">Remplissez les infos et photographiez le permis du client (recto et verso), puis passez-lui le téléphone pour qu'il lise et signe. Le contrat est envoyé par courriel : rien n'est gardé sur le site.</p>
     </div>
 
     <section class="c-card c-papier">
@@ -134,6 +134,19 @@
       </label>
     </section>
 
+    <!-- Permis du client : photos recto et verso + le nom doit être le même que sur le contrat (pas pour une copie de contrat papier) -->
+    <section class="c-card" id="cartePermis">
+      <h2><span class="c-num">5</span> Permis de conduire du client</h2>
+      <p class="c-nomcontrat"><span>Nom inscrit au contrat</span><strong id="nomContrat">—</strong></p>
+      <p class="muted small">Photographiez le <strong>devant (recto)</strong> et le <strong>derrière (verso)</strong> du permis du client. Le nom doit être <strong>identique</strong> à celui du contrat.</p>
+      <%- include('partials/permis-photos') %>
+      <label class="c-check" id="blocNomOk">
+        <input type="checkbox" id="nomOk">
+        <span>J'ai vérifié le permis : le nom qui y est inscrit est <strong>identique</strong> au nom du contrat.</span>
+      </label>
+      <p class="muted small">Les photos sont envoyées seulement à votre courriel, dans le PDF du contrat (page 5). Elles ne figurent pas sur la copie du client et ne sont pas gardées sur le site.</p>
+    </section>
+
     <p class="c-erreur" id="erreurForm" role="alert" hidden></p>
     <button type="button" class="btn btn-primary btn-block c-big" id="btnContinuer">Continuer vers la signature &rarr;</button>
   </form>
@@ -241,7 +254,8 @@
   </div>
 </div>
 
-<script src="/js/contrat.js" defer></script>
+<script src="/js/photos-permis.js?v=<%= locals.assetV %>" defer></script>
+<script src="/js/contrat.js?v=<%= locals.assetV %>" defer></script>
 <% if (publicMode) { -%>
 <%- include('../contrat/partials/foot') %>
 <% } else { -%>
