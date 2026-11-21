@@ -27,41 +27,87 @@
 
   form.departDate.min = AUJ;
 
-  // ---------- Prix (celui du site, modifiable) et total en direct ----------
+  // ---------- Prix (celui du site, modifiable), type de prix et total en direct ----------
+  // Par semaine : le prix du site s'écrit tout seul. Par jour / Prix spécial : tu tapes le montant (avant taxes).
+  // Ce que tu as tapé pour chaque type est gardé si tu changes d'avis.
   const sel = $('vehiculeSel');
+  const champTarif = $('tarifHebdo');
+  const TYPES = {
+    semaine: { label: 'Tarif / sem. ($)', exemple: '' },
+    jour: { label: 'Prix / jour ($)', exemple: 'ex. 80' },
+    forfait: { label: 'Prix total ($)', exemple: 'ex. 250' },
+  };
+  let mode = 'semaine';
+  const montants = { semaine: '', jour: '', forfait: '' };
   function prixDuSite() {
     const o = sel.options[sel.selectedIndex];
     if (!o || !o.value) return;
-    $('tarifHebdo').value = o.dataset.tarif;
+    montants.semaine = o.dataset.tarif;
+    if (mode === 'semaine') champTarif.value = o.dataset.tarif;
     $('depot').value = o.dataset.depot;
   }
+  function choisirType(t) {
+    if (!TYPES[t] || t === mode) return;
+    montants[mode] = champTarif.value;
+    mode = t;
+    $('typePrix').value = t;
+    document.querySelectorAll('[data-type]').forEach((b) => {
+      const on = b.dataset.type === t;
+      b.classList.toggle('actif', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    $('tarifTexte').textContent = TYPES[t].label;
+    champTarif.placeholder = TYPES[t].exemple;
+    champTarif.value = montants[t] || '';
+    if (t !== 'semaine' && !champTarif.value) champTarif.focus();
+    majRecap();
+  }
+  document.querySelectorAll('[data-type]').forEach((b) => b.addEventListener('click', () => choisirType(b.dataset.type)));
+
   function majRecap() {
     const box = $('recapPrix');
-    const tarif = montant($('tarifHebdo').value);
+    const tarif = montant(champTarif.value);
     const a = form.departDate.value;
     const b = form.retourDate.value;
     const t0 = Date.parse(a + 'T00:00:00Z');
     const t1 = Date.parse(b + 'T00:00:00Z');
     if (!tarif || !a || !b || isNaN(t0) || isNaN(t1) || t1 <= t0) {
-      box.textContent = 'Choisissez la voiture et les dates pour voir le total.';
+      box.textContent = mode === 'semaine'
+        ? 'Choisissez la voiture et les dates pour voir le total.'
+        : 'Entrez le prix et les dates pour voir le total.';
       return;
     }
     const days = Math.round((t1 - t0) / 86400000);
     const weeks = Math.ceil(days / 7);
-    const subtotal = weeks * tarif;
+    const s = days > 1 ? 's' : '';
+    let subtotal;
+    let ligne1;
+    if (mode === 'jour') {
+      subtotal = days * tarif;
+      ligne1 = '<strong>' + days + ' jour' + s + '</strong> × ' + argent(tarif) + ' par jour';
+    } else if (mode === 'forfait') {
+      subtotal = tarif;
+      ligne1 = '<strong>Prix spécial</strong> pour ' + days + ' jour' + s + ' : ' + argent(tarif);
+    } else {
+      subtotal = weeks * tarif;
+      ligne1 = '<strong>' + weeks + ' semaine' + (weeks > 1 ? 's' : '') + '</strong> (' + days + ' jour' + s + ') × ' + argent(tarif);
+    }
     const tps = Math.round((subtotal * TPS_K) / 100000);
     const tvq = Math.round((subtotal * TVQ_K) / 100000);
     const depot = montant($('depot').value);
-    box.innerHTML =
-      '<strong>' + weeks + ' semaine' + (weeks > 1 ? 's' : '') + '</strong> (' + days + ' jours) × ' + argent(tarif) + '<br>' +
+    const conseil = mode === 'semaine' && days < 7
+      ? '<br><span class="c-recap-conseil">Location de ' + days + ' jour' + s + ' : au prix par semaine, le client paie une semaine complète. Pour 1 à 6 jours, choisis « Par jour » ou « Prix spécial ».</span>'
+      : '';
+    box.innerHTML = ligne1 + '<br>' +
       'Sous-total ' + argent(subtotal) + ' · TPS ' + argent(tps) + ' · TVQ ' + argent(tvq) + '<br>' +
       '<strong>Total taxes incluses : ' + argent(subtotal + tps + tvq) + '</strong>' +
-      (depot != null ? '<br>Dépôt de garantie (non taxé) : ' + argent(depot) : '');
+      (depot != null ? '<br>Dépôt de garantie (non taxé) : ' + argent(depot) : '') + conseil;
   }
   sel.addEventListener('change', () => { prixDuSite(); majRecap(); });
   form.departDate.addEventListener('change', () => {
     const d = form.departDate.value;
-    if (d && (!form.retourDate.value || form.retourDate.value <= d)) form.retourDate.value = ajouterJours(d, 7);
+    // Retour proposé : 7 jours plus tard au prix par semaine, le lendemain sinon (modifiable).
+    if (d && (!form.retourDate.value || form.retourDate.value <= d)) form.retourDate.value = ajouterJours(d, mode === 'semaine' ? 7 : 1);
     majRecap();
   });
   ['retourDate', 'tarifHebdo', 'depot'].forEach((n) => {
@@ -70,6 +116,12 @@
   });
   if (sel.value) prixDuSite(); // voiture déjà choisie (depuis la liste des demandes)
   majRecap();
+
+  // ---------- Note sur le contrat (facultative) : compteur de caractères ----------
+  const note = $('note');
+  const majCompte = () => { $('noteCompte').textContent = String(Array.from(note.value).length); };
+  note.addEventListener('input', majCompte);
+  majCompte();
 
   // ---------- Création du lien ----------
   function erreur(msg) {

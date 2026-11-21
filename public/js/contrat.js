@@ -30,6 +30,33 @@
     return m[2] === '00' ? parseInt(m[1], 10) + '\u00a0h' : parseInt(m[1], 10) + '\u00a0h\u00a0' + m[2];
   };
 
+  // ---------- Type de prix : par semaine (prix du site), par jour, ou prix spécial pour toute la location ----------
+  // Ce que tu as tapé pour chaque type est gardé si tu changes d'avis.
+  const TYPES = {
+    semaine: { label: 'Tarif / sem. ($)', exemple: '' },
+    jour: { label: 'Prix / jour ($)', exemple: 'ex. 80' },
+    forfait: { label: 'Prix total ($)', exemple: 'ex. 250' },
+  };
+  let mode = 'semaine';
+  const montants = { semaine: '', jour: '', forfait: '' };
+  function choisirType(t) {
+    if (!TYPES[t] || t === mode) return;
+    montants[mode] = form.tarifHebdo.value;
+    mode = t;
+    $('typePrix').value = t;
+    document.querySelectorAll('[data-type]').forEach((b) => {
+      const on = b.dataset.type === t;
+      b.classList.toggle('actif', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    $('tarifTexte').textContent = TYPES[t].label;
+    form.tarifHebdo.placeholder = TYPES[t].exemple;
+    form.tarifHebdo.value = montants[t] || '';
+    if (t !== 'semaine' && !form.tarifHebdo.value) form.tarifHebdo.focus();
+    majPrix();
+  }
+  document.querySelectorAll('[data-type]').forEach((b) => b.addEventListener('click', () => choisirType(b.dataset.type)));
+
   // ---------- Prix en direct ----------
   function calcul() {
     const rate = num(form.tarifHebdo.value);
@@ -42,26 +69,41 @@
     const rateCents = Math.round(rate * 100);
     const days = Math.round((t1 - t0) / 86400000);
     const weeks = Math.ceil(days / 7);
-    const subtotal = weeks * rateCents;
+    const subtotal = mode === 'jour' ? days * rateCents : mode === 'forfait' ? rateCents : weeks * rateCents;
     const tps = Math.round((subtotal * TPS_K) / 100000);
     const tvq = Math.round((subtotal * TVQ_K) / 100000);
     return { days, weeks, rateCents, subtotal, tps, tvq, total: subtotal + tps + tvq };
+  }
+
+  // Le prix en une ligne (même texte que le serveur : decrirePrix dans lib/contrat-pdf.js).
+  function decrirePrix(c) {
+    const s = c.days > 1 ? 's' : '';
+    if (mode === 'jour') return c.days + ' jour' + s + ' à ' + argent(c.rateCents) + ' par jour (avant taxes)';
+    if (mode === 'forfait') return 'Prix spécial de ' + argent(c.rateCents) + ' pour ' + c.days + ' jour' + s + ' (avant taxes)';
+    return c.weeks + ' semaine' + (c.weeks > 1 ? 's' : '') + ' à ' + argent(c.rateCents) + ' par semaine (avant taxes)';
   }
 
   function majPrix() {
     const c = calcul();
     const box = $('recapPrix');
     if (!c) {
-      box.textContent = 'Choisissez les dates (retour après le départ) et le tarif pour voir le total.';
+      box.textContent = 'Choisissez les dates (retour après le départ) et le prix pour voir le total.';
       return;
     }
     const depot = num(form.depot.value);
-    box.innerHTML =
-      '<strong>' + c.weeks + ' semaine' + (c.weeks > 1 ? 's' : '') + '</strong> (' +
-      c.days + ' jour' + (c.days > 1 ? 's' : '') + ') × ' + argent(c.rateCents) + '<br>' +
-      'Sous-total\u00a0' + argent(c.subtotal) + ' · TPS\u00a0' + argent(c.tps) + ' · TVQ\u00a0' + argent(c.tvq) + '<br>' +
+    const s = c.days > 1 ? 's' : '';
+    const ligne1 = mode === 'jour'
+      ? '<strong>' + c.days + ' jour' + s + '</strong> × ' + argent(c.rateCents) + ' par jour'
+      : mode === 'forfait'
+        ? '<strong>Prix spécial</strong> pour ' + c.days + ' jour' + s + ' : ' + argent(c.rateCents)
+        : '<strong>' + c.weeks + ' semaine' + (c.weeks > 1 ? 's' : '') + '</strong> (' + c.days + ' jour' + s + ') × ' + argent(c.rateCents);
+    const conseil = mode === 'semaine' && c.days < 7
+      ? '<br><span class="c-recap-conseil">Location de ' + c.days + ' jour' + s + ' : au prix par semaine, le client paie une semaine complète. Pour 1 à 6 jours, choisis « Par jour » ou « Prix spécial ».</span>'
+      : '';
+    box.innerHTML = ligne1 + '<br>' +
+      'Sous-total ' + argent(c.subtotal) + ' · TPS ' + argent(c.tps) + ' · TVQ ' + argent(c.tvq) + '<br>' +
       '<strong>Total taxes incluses : ' + argent(c.total) + '</strong>' +
-      (depot != null ? '<br>Dépôt de garantie (non taxé) : ' + argent(Math.round(depot * 100)) : '');
+      (depot != null ? '<br>Dépôt de garantie (non taxé) : ' + argent(Math.round(depot * 100)) : '') + conseil;
   }
 
   function majAge() {
@@ -91,17 +133,18 @@
     if (!o || !o.dataset.nom) return; // « Autre véhicule » : les champs restent libres
     $('vehiculeNom').value = o.dataset.nom;
     $('annee').value = o.dataset.annee;
-    form.tarifHebdo.value = o.dataset.tarif;
+    montants.semaine = o.dataset.tarif; // le prix du site est un prix PAR SEMAINE
+    if (mode === 'semaine') form.tarifHebdo.value = o.dataset.tarif;
     form.depot.value = o.dataset.depot;
   }
   $('vehiculeSel').addEventListener('change', () => { remplirVehicule(); majPrix(); });
 
-  // Quand on choisit le départ, le retour se met 7 jours plus tard (modifiable).
+  // Quand on choisit le départ, le retour se met 7 jours plus tard au prix par semaine, le lendemain sinon (modifiable).
   form.departDate.addEventListener('change', () => {
     const d = form.departDate.value;
     if (d && (!form.retourDate.value || form.retourDate.value <= d)) {
       const t = new Date(d + 'T00:00:00Z');
-      t.setUTCDate(t.getUTCDate() + 7);
+      t.setUTCDate(t.getUTCDate() + (mode === 'semaine' ? 7 : 1));
       form.retourDate.value = t.toISOString().slice(0, 10);
     }
     majPrix();
@@ -115,6 +158,12 @@
 
   if ($('vehiculeSel').value) remplirVehicule(); // préremplissage depuis une demande
   majPrix();
+
+  // Note sur le contrat (facultative) : compteur de caractères.
+  const champNote = $('note');
+  const majCompte = () => { $('noteCompte').textContent = String(Array.from(champNote.value).length); };
+  champNote.addEventListener('input', majCompte);
+  majCompte();
 
   // ---------- Permis du client (photos recto et verso) : voir photos-permis.js ----------
   // Le nom du contrat est affiché à côté des photos ; si on le change après avoir coché la confirmation, la case se décoche.
@@ -147,9 +196,12 @@
       ['Véhicule', form.vehicule.value + ' ' + form.annee.value + ' · ' + form.plaque.value],
       ['Départ', dateFr(form.departDate.value) + ', ' + heureFr(form.departHeure.value)],
       ['Retour', dateFr(form.retourDate.value) + ', ' + heureFr(form.retourHeure.value)],
+      ['Prix', decrirePrix(c)],
       ['Total', argent(c.total) + ' (taxes incluses)'],
       ['Dépôt', argent(Math.round((num(form.depot.value) || 0) * 100))],
     ];
+    const note = champNote.value.replace(/\s+/g, ' ').trim();
+    if (note) lignes.push(['Note', note]);
     lignes.forEach(([k, v]) => {
       const dt = document.createElement('dt');
       dt.textContent = k;
@@ -392,7 +444,8 @@
       $('texte' + cible).focus({ preventScroll: true });
     }
   }
-  document.querySelectorAll('.c-mode').forEach((b) => {
+  // Seulement les boutons de la SIGNATURE (data-cible) : les boutons « type de prix » ont le même style mais pas ce rôle.
+  document.querySelectorAll('.c-mode[data-cible]').forEach((b) => {
     b.addEventListener('click', () => choisirMode(b.dataset.cible, b.dataset.mode));
   });
   ['Loc', 'Rep'].forEach((cible) => {
