@@ -1,6 +1,6 @@
 <%- include('partials/head', { title: 'Lien client' }) %>
-<link rel="stylesheet" href="/css/contrat.css">
-<link rel="stylesheet" href="/css/contrat-lien.css">
+<link rel="stylesheet" href="/css/contrat.css?v=<%= locals.assetV %>">
+<link rel="stylesheet" href="/css/contrat-lien.css?v=<%= locals.assetV %>">
 
 <div class="contrat-page" id="lienPage" data-tps="<%= tax.tps %>" data-tvq="<%= tax.tvq %>" data-aujourdhui="<%= aujourdhui %>">
 
@@ -48,9 +48,15 @@
 
     <section class="c-card">
       <h2><span class="c-num">2</span> Prix</h2>
-      <p class="muted small">Le prix du site s'écrit tout seul. Change-le ici si tu as fait un prix spécial à ce client.</p>
+      <p class="muted small">Le prix du site (par semaine) et le dépôt s'écrivent tout seuls. Pour un deal : choisis <strong>Par jour</strong> (1, 2, 3 jours…) ou <strong>Prix spécial</strong> (un montant pour toute la location), et change le dépôt si tu veux. Les prix sont avant taxes.</p>
+      <div class="c-modes c-modes-3" role="group" aria-label="Type de prix">
+        <button type="button" class="c-mode actif" data-type="semaine" aria-pressed="true">Par semaine</button>
+        <button type="button" class="c-mode" data-type="jour" aria-pressed="false">Par jour</button>
+        <button type="button" class="c-mode" data-type="forfait" aria-pressed="false">Prix spécial</button>
+      </div>
+      <input type="hidden" name="typePrix" id="typePrix" value="semaine">
       <div class="c-row">
-        <label><span class="c-lab">Tarif / sem. ($) <em>*</em></span>
+        <label><span class="c-lab"><span id="tarifTexte">Tarif / sem. ($)</span> <em>*</em></span>
           <input type="text" name="tarifHebdo" id="tarifHebdo" required inputmode="decimal">
         </label>
         <label><span class="c-lab">Dépôt ($) <em>*</em></span>
@@ -58,6 +64,10 @@
         </label>
       </div>
       <div class="c-recap" id="recapPrix">Choisissez la voiture et les dates pour voir le total.</div>
+      <label><span class="c-lab">Note sur le contrat <span class="c-opt">(facultatif)</span></span>
+        <textarea name="note" id="note" rows="2" maxlength="200" placeholder="Ex. : prix spécial pour 3 jours ; siège d'enfant inclus"></textarea>
+      </label>
+      <p class="muted small c-compte"><span id="noteCompte">0</span>/200 · écrite sur le contrat, le client la voit avant de signer</p>
     </section>
 
     <p class="c-erreur" id="lienErreur" role="alert" hidden></p>
@@ -83,5 +93,5 @@
   </div>
 </div>
 
-<script src="/js/contrat-lien.js" defer></script>
+<script src="/js/contrat-lien.js?v=<%= locals.assetV %>" defer></script>
 <%- include('partials/foot') %>

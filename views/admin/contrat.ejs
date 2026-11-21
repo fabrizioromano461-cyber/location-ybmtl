@@ -119,8 +119,15 @@
 
     <section class="c-card">
       <h2><span class="c-num">4</span> Prix</h2>
+      <p class="muted small">Le prix du site (par semaine) et le dépôt s'écrivent tout seuls. Pour un deal : choisis <strong>Par jour</strong> (1, 2, 3 jours…) ou <strong>Prix spécial</strong> (un montant pour toute la location). Les prix sont avant taxes.</p>
+      <div class="c-modes c-modes-3" role="group" aria-label="Type de prix">
+        <button type="button" class="c-mode actif" data-type="semaine" aria-pressed="true">Par semaine</button>
+        <button type="button" class="c-mode" data-type="jour" aria-pressed="false">Par jour</button>
+        <button type="button" class="c-mode" data-type="forfait" aria-pressed="false">Prix spécial</button>
+      </div>
+      <input type="hidden" name="typePrix" id="typePrix" value="semaine">
       <div class="c-row">
-        <label><span class="c-lab">Tarif / sem. ($) <em>*</em></span>
+        <label><span class="c-lab"><span id="tarifTexte">Tarif / sem. ($)</span> <em>*</em></span>
           <input type="text" name="tarifHebdo" id="tarifHebdo" required inputmode="decimal">
         </label>
         <label><span class="c-lab">Dépôt ($) <em>*</em></span>
@@ -132,6 +139,10 @@
         <input type="checkbox" name="recap" value="1" checked>
         <span>Inscrire le récapitulatif des taxes au bas de la page 1 du contrat</span>
       </label>
+      <label><span class="c-lab">Note sur le contrat <span class="c-opt">(facultatif)</span></span>
+        <textarea name="note" id="note" rows="2" maxlength="200" placeholder="Ex. : prix spécial pour 3 jours ; siège d'enfant inclus"></textarea>
+      </label>
+      <p class="muted small c-compte"><span id="noteCompte">0</span>/200 · écrite au bas de la page 1 du contrat</p>
     </section>
 
     <!-- Permis du client : photos recto et verso + le nom doit être le même que sur le contrat (pas pour une copie de contrat papier) -->
