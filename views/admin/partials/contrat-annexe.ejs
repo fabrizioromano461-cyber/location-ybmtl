@@ -8,7 +8,7 @@ function fmtA(s) {
 }
 %>
 <div class="c-texte c-annexe" id="texteAnnexe" aria-label="Annexe A du contrat de location">
-  <p class="c-texte-titre"><%= annexe.titre %><br><small><%= annexe.societe %> · version du <%= annexe.versionTexte %></small></p>
+  <p class="c-texte-titre"><%= annexe.titre %><br><small><%= annexe.societe %></small></p>
   <p><%- fmtA(annexe.intro) %></p>
   <% annexe.articles.forEach(function (art) { %>
     <h4 class="c-art"><%= art.titre %></h4>
