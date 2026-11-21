@@ -8,7 +8,7 @@ const router = express.Router();
 const db = require('../db');
 const service = require('../lib/contrat-service');
 const lienPrive = require('../lib/contrat-lien');
-const { calculerLocation, fmtDateHeure, argent } = require('../lib/contrat-pdf');
+const { calculerLocation, decrirePrix, fmtDateHeure, argent } = require('../lib/contrat-pdf');
 const { todayMontreal } = require('../lib/format');
 
 router.get('/', (req, res) => {
@@ -60,9 +60,13 @@ router.post('/lien', service.memeOrigine, (req, res) => {
     : null;
   if (!v) return erreur('Choisissez la voiture.');
   if (!txt(body.departDate) || !txt(body.retourDate)) return erreur('Choisissez la date de départ et la date de retour.');
+  // Type de prix : par semaine (défaut, celui du site), par jour (1, 2, 3 jours…) ou prix spécial pour toute la location.
+  const mode = lienPrive.MODES.includes(txt(body.typePrix)) ? txt(body.typePrix) : 'semaine';
   const tarifCents = cents(body.tarifHebdo);
   const depotCents = cents(body.depot);
-  if (tarifCents == null || tarifCents <= 0) return erreur('Indiquez le tarif par semaine.');
+  if (tarifCents == null || tarifCents <= 0) {
+    return erreur({ jour: 'Indiquez le prix par jour.', forfait: 'Indiquez le prix spécial (pour toute la location).' }[mode] || 'Indiquez le tarif par semaine.');
+  }
   if (depotCents == null) return erreur('Indiquez le dépôt (0 s’il n’y en a pas).');
 
   const auj = todayMontreal();
@@ -70,12 +74,13 @@ router.post('/lien', service.memeOrigine, (req, res) => {
     vehiculeId: v.id,
     departDate: txt(body.departDate), departHeure: txt(body.departHeure),
     retourDate: txt(body.retourDate), retourHeure: txt(body.retourHeure),
-    tarifCents, depotCents,
+    tarifCents, depotCents, mode,
+    note: String(un(body.note) == null ? '' : un(body.note)),
   }, auj);
   if (r.erreur) return erreur(r.erreur);
 
   const lien = lienPrive.creerHmac(r.loc, auj);
-  const calc = calculerLocation(r.loc.departDate, r.loc.retourDate, r.loc.tarifCents);
+  const calc = calculerLocation(r.loc.departDate, r.loc.retourDate, r.loc.tarifCents, r.loc.mode);
   // Les clients reçoivent toujours l'adresse officielle du site (jamais l'adresse Render).
   const hote = req.get('host') || '';
   const base = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(hote) ? 'http://' + hote : 'https://locationybmtl.ca';
@@ -87,8 +92,10 @@ router.post('/lien', service.memeOrigine, (req, res) => {
       ['Voiture', `${v.make} ${v.model} (${v.year})`],
       ['Départ', fmtDateHeure(r.loc.departDate, r.loc.departHeure)],
       ['Retour', fmtDateHeure(r.loc.retourDate, r.loc.retourHeure)],
+      ['Prix', decrirePrix(calc, r.loc.tarifCents)],
       ['Total', `${argent(calc.total)} (taxes incluses)`],
       ['Dépôt', `${argent(r.loc.depotCents)} (non taxé)`],
+      ...(r.loc.note ? [['Note', r.loc.note]] : []),
     ],
   });
 });
