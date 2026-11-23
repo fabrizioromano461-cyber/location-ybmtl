@@ -6,7 +6,7 @@
 
   <div class="c-head">
     <h1>Lien pour le client</h1>
-    <p class="muted">Quand la réservation est <strong>confirmée</strong>, crée le lien de cette location et envoie-le au client. Il remplit ses infos, photographie son permis (recto et verso), lit le contrat et signe sur son cellulaire. Le lien ne marche que pour cette location, et toi seul peux le créer.</p>
+    <p class="muted">Quand la réservation est <strong>confirmée</strong>, crée le lien de cette location et envoie-le au client. Il remplit ses infos, photographie son permis (recto et verso), prend un selfie en direct, lit le contrat et signe sur son cellulaire. Le lien ne marche que pour cette location, et toi seul peux le créer.</p>
   </div>
 
   <% if (!actif) { %>
@@ -87,7 +87,7 @@
       <button type="button" class="btn btn-outline btn-block c-big" id="btnCopier">Copier le lien</button>
       <a class="btn btn-outline btn-block" id="btnOuvrir" href="#" target="_blank" rel="noopener">Ouvrir pour voir ce que le client voit</a>
       <p class="muted small" id="lienExpire"></p>
-      <p class="muted small">Le lien ne marche que pour cette voiture et ces dates. Dès que le client signe, tu reçois le contrat par courriel avec les photos de son permis (dernière page du PDF) ; lui reçoit sa copie, sans les photos.</p>
+      <p class="muted small">Le lien ne marche que pour cette voiture et ces dates. Dès que le client signe, tu reçois le contrat par courriel avec les photos de son permis et son selfie (dernière page du PDF) ; lui reçoit sa copie, sans les photos.</p>
     </section>
     <button type="button" class="btn btn-outline btn-block" id="btnAutre">Créer un autre lien</button>
   </div>
