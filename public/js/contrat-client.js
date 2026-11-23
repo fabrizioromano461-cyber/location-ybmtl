@@ -99,7 +99,7 @@
     const dl = $('resume');
     dl.textContent = '';
     const courriel = form.courriel.value.trim();
-    const lignes = [['Locataire', form.nom.value.trim()], ['Courriel', courriel], ['Permis de conduire', 'photos du recto et du verso ajoutées']].concat(LIGNES);
+    const lignes = [['Locataire', form.nom.value.trim()], ['Courriel', courriel], ['Permis de conduire', 'photos du recto et du verso + selfie ajoutés']].concat(LIGNES);
     lignes.forEach(([k, v]) => {
       const dt = document.createElement('dt');
       dt.textContent = k;
@@ -143,7 +143,8 @@
     if (!window.PhotosPermis) return erreur('erreur2', 'Cette page n\'a pas pu se charger complètement. Rechargez-la.'), false;
     if (PhotosPermis.occupe()) return erreur('erreur2', 'Patientez : une photo est en cours de préparation.'), false;
     const m = PhotosPermis.manque();
-    if (m) return erreur('erreur2', 'Ajoutez la photo du ' + (m === 'recto' ? 'recto (devant)' : 'verso (derrière)') + ' de votre permis.'), false;
+    const MANQUE = { recto: 'la photo du recto (devant) de votre permis', verso: 'la photo du verso (derrière) de votre permis', selfie: 'votre selfie (une photo de votre visage)' };
+    if (m) return erreur('erreur2', 'Ajoutez ' + MANQUE[m] + '.'), false;
     if (!$('nomOk').checked) return erreur('erreur2', 'Cochez la case qui confirme que le nom sur votre permis est identique au nom du contrat.', $('nomOk')), false;
     return true;
   }
