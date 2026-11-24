@@ -82,12 +82,12 @@
           <button type="button" class="btn btn-primary btn-block c-big" id="suivant1">Continuer &rarr;</button>
         </section>
 
-        <!-- ÉTAPE 2 : photos du permis de conduire (recto et verso) + selfie pris en direct -->
+        <!-- ÉTAPE 2 : photos du permis de conduire (recto et verso) -->
         <section id="etape2" class="cc-step" hidden>
           <div class="c-head">
             <button type="button" class="c-back" data-retour="1">&larr; Retour</button>
             <h1>Votre permis de conduire</h1>
-            <p class="muted">Prenez en photo le devant (recto) et le derrière (verso) de votre permis, puis prenez un selfie : il sert à vérifier que le permis est bien le vôtre.</p>
+            <p class="muted">Prenez en photo le devant (recto) et le derrière (verso) de votre permis.</p>
           </div>
 
           <div class="c-card">
@@ -97,12 +97,11 @@
           </div>
 
           <div class="c-card">
-            <h2><span class="c-num">2</span> Photos du permis et selfie</h2>
+            <h2><span class="c-num">2</span> Photos du permis</h2>
             <ul class="c-conseils muted small">
               <li>Posez le permis à plat, avec une bonne lumière.</li>
               <li>Évitez les reflets et gardez les doigts hors du texte.</li>
               <li>Tout le permis doit être visible et lisible.</li>
-              <li>Selfie : la caméra s'ouvre ; regardez-la de face, visage bien éclairé, sans lunettes de soleil ni casquette. Autorisez la caméra si votre téléphone le demande.</li>
             </ul>
             <%- include('../admin/partials/permis-photos') %>
           </div>
@@ -110,9 +109,9 @@
           <div class="c-card">
             <label class="c-check" id="blocNomOk">
               <input type="checkbox" id="nomOk">
-              <span>Je confirme que ce permis est <strong>le mien</strong>, que le nom qui y est inscrit est <strong>identique</strong> au nom du contrat et que le selfie est bien <strong>moi</strong>.</span>
+              <span>Je confirme que ce permis est <strong>le mien</strong> et que le nom qui y est inscrit est <strong>identique</strong> au nom du contrat.</span>
             </label>
-            <p class="muted small cc-note">Vos photos (permis et selfie) sont envoyées seulement à Location YBMTL, par courriel, pour vérifier votre permis et votre identité : Location YBMTL compare le selfie avec la photo du permis, à l'œil (aucune reconnaissance faciale automatique). Elles ne sont pas gardées sur notre site et ne figurent pas sur votre copie du contrat (<a href="/confidentialite" target="_blank" rel="noopener">confidentialité</a>).</p>
+            <p class="muted small cc-note">Vos photos sont envoyées seulement à Location YBMTL, par courriel, pour vérifier votre permis. Elles ne sont pas gardées sur notre site et ne figurent pas sur votre copie du contrat (<a href="/confidentialite" target="_blank" rel="noopener">confidentialité</a>).</p>
           </div>
 
           <p class="c-erreur" id="erreur2" role="alert" hidden></p>
