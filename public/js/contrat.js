@@ -192,7 +192,7 @@
     dl.textContent = '';
     const lignes = [
       ['Locataire', form.nom.value],
-      ['Permis de conduire', 'photos du recto et du verso + photo du visage ajoutées'],
+      ['Permis de conduire', 'photos du recto et du verso ajoutées'],
       ['Véhicule', form.vehicule.value + ' ' + form.annee.value + ' · ' + form.plaque.value],
       ['Départ', dateFr(form.departDate.value) + ', ' + heureFr(form.departHeure.value)],
       ['Retour', dateFr(form.retourDate.value) + ', ' + heureFr(form.retourHeure.value)],
@@ -546,8 +546,7 @@
     if (PhotosPermis.occupe()) { afficherErreur(err, 'Patientez : une photo est en cours de préparation.'); return; }
     const manque = PhotosPermis.manque();
     if (manque) {
-      const MANQUE = { recto: 'la photo du recto (devant) du permis du client', verso: 'la photo du verso (derrière) du permis du client', selfie: 'la photo du visage du client' };
-      afficherErreur(err, 'Ajoutez ' + MANQUE[manque] + '.');
+      afficherErreur(err, 'Ajoutez la photo du ' + (manque === 'recto' ? 'recto (devant)' : 'verso (derrière)') + ' du permis du client.');
       return;
     }
     if (!$('nomOk').checked) {
