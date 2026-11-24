@@ -145,17 +145,17 @@
       <p class="muted small c-compte"><span id="noteCompte">0</span>/200 · écrite au bas de la page 1 du contrat</p>
     </section>
 
-    <!-- Permis du client : photos recto et verso + photo du visage (prise en direct) + le nom doit être le même que sur le contrat (pas pour une copie de contrat papier) -->
+    <!-- Permis du client : photos recto et verso + le nom doit être le même que sur le contrat (pas pour une copie de contrat papier) -->
     <section class="c-card" id="cartePermis">
       <h2><span class="c-num">5</span> Permis de conduire du client</h2>
       <p class="c-nomcontrat"><span>Nom inscrit au contrat</span><strong id="nomContrat">—</strong></p>
-      <p class="muted small">Photographiez le <strong>devant (recto)</strong> et le <strong>derrière (verso)</strong> du permis du client, puis son <strong>visage</strong> (la caméra s'ouvre en direct ; « Changer de caméra » pour utiliser celle de derrière). Le nom doit être <strong>identique</strong> à celui du contrat.</p>
-      <%- include('partials/permis-photos', { selfieTitre: 'Photo du client', selfieSousTitre: '(visage)', selfieAlt: 'Aperçu de la photo du visage du client' }) %>
+      <p class="muted small">Photographiez le <strong>devant (recto)</strong> et le <strong>derrière (verso)</strong> du permis du client. Le nom doit être <strong>identique</strong> à celui du contrat.</p>
+      <%- include('partials/permis-photos') %>
       <label class="c-check" id="blocNomOk">
         <input type="checkbox" id="nomOk">
-        <span>J'ai vérifié le permis : le nom qui y est inscrit est <strong>identique</strong> au nom du contrat et la personne devant moi est bien celle du permis.</span>
+        <span>J'ai vérifié le permis : le nom qui y est inscrit est <strong>identique</strong> au nom du contrat.</span>
       </label>
-      <p class="muted small">Les photos (permis et visage) sont envoyées seulement à votre courriel, dans le PDF du contrat (dernière page). Elles ne figurent pas sur la copie du client et ne sont pas gardées sur le site.</p>
+      <p class="muted small">Les photos sont envoyées seulement à votre courriel, dans le PDF du contrat (dernière page). Elles ne figurent pas sur la copie du client et ne sont pas gardées sur le site.</p>
     </section>
 
     <p class="c-erreur" id="erreurForm" role="alert" hidden></p>
