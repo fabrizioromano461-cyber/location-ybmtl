@@ -1,7 +1,6 @@
-<%# Les cases « photo » : recto et verso du permis + selfie (photo du visage), partagées par la page du client (/contrat/<lien>)
-    et la page admin (/admin/contrat). Les champs « fichier » n'ont volontairement PAS de nom : la photo brute ne part jamais avec le
-    formulaire, c'est public/js/photos-permis.js qui la réduit puis l'ajoute.
-    Options (facultatives) : selfieTitre, selfieSousTitre, selfieAlt. -%>
+<%# Les deux cases « photo du permis » (recto et verso) : partagées par la page du client (/contrat/<lien>) et la page admin (/admin/contrat).
+    Les champs « fichier » n'ont volontairement PAS de nom : la photo brute ne part jamais avec le formulaire, c'est public/js/photos-permis.js
+    qui la réduit puis l'ajoute. -%>
 <div class="c-photos">
   <div class="c-photo" id="tuileRecto">
     <p class="c-photo-titre">Recto <span>(devant)</span></p>
@@ -24,35 +23,5 @@
       <input type="file" id="fichierVerso" class="c-file-input" accept="image/*" data-cote="verso">
     </label>
     <p class="c-photo-etat" id="etatVerso" role="status"></p>
-  </div>
-  <div class="c-photo c-photo-selfie" id="tuileSelfie">
-    <p class="c-photo-titre"><%= locals.selfieTitre || 'Selfie' %> <span><%= locals.selfieSousTitre || '(votre visage)' %></span></p>
-    <div class="c-photo-cadre">
-      <img id="apercuSelfie" alt="<%= locals.selfieAlt || 'Aperçu du selfie' %>" hidden>
-      <span class="c-photo-vide" id="videSelfie">Aucune photo</span>
-    </div>
-    <%# Le selfie se prend EN DIRECT : la caméra s'ouvre dans la page (aucune photo de la galerie). Si la caméra ne peut pas
-        s'ouvrir dans la page, le bouton de repli ouvre l'appareil photo du téléphone (champ « capture »). -%>
-    <button type="button" class="btn btn-outline c-photo-btn" id="btnSelfie"><span id="texteBtnSelfie">Prendre le selfie</span></button>
-    <label class="btn btn-outline c-photo-btn" id="repliSelfie" hidden><span>Ouvrir l'appareil photo</span>
-      <input type="file" id="fichierSelfie" class="c-file-input" accept="image/*" capture="user" data-cote="selfie">
-    </label>
-    <p class="c-photo-etat" id="etatSelfie" role="status"></p>
-  </div>
-</div>
-
-<div class="c-camera" id="cameraSelfie" hidden role="dialog" aria-modal="true" aria-labelledby="cameraTitre">
-  <div class="c-camera-boite">
-    <p class="c-camera-titre" id="cameraTitre">Placez le visage dans l'ovale, bien éclairé</p>
-    <div class="c-camera-video" id="cameraVideo">
-      <video id="videoSelfie" playsinline muted autoplay></video>
-      <div class="c-camera-ovale" aria-hidden="true"></div>
-    </div>
-    <p class="c-camera-etat" id="cameraEtat" role="status"></p>
-    <button type="button" class="btn btn-primary c-camera-prendre" id="cameraPrendre" disabled>Prendre la photo</button>
-    <div class="c-camera-actions">
-      <button type="button" class="btn c-camera-secondaire" id="cameraAnnuler">Annuler</button>
-      <button type="button" class="btn c-camera-secondaire" id="cameraTourner" hidden>Changer de caméra</button>
-    </div>
   </div>
 </div>
